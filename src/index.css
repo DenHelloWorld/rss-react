@@ -1,1 +1,27 @@
 @import 'tailwindcss';
+
+@layer components {
+  .app-wrapper {
+    @apply min-h-screen bg-gray-50 flex flex-col font-sans;
+  }
+
+  .header-wrapper {
+    @apply w-full p-4 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-10;
+  }
+
+  .search-input {
+    @apply flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all text-black;
+  }
+
+  .search-button {
+    @apply px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 active:scale-95 transition-all;
+  }
+
+  .results-container {
+    @apply bg-white rounded-xl shadow-sm border border-gray-100 p-6 min-h-125;
+  }
+
+  .cards-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+  }
+}
