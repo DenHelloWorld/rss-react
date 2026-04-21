@@ -16,14 +16,21 @@ const BASE_URL = 'https://api.artic.edu/api/v1/artworks';
 
 export const AICApiService = {
   async search(query: string | undefined): Promise<AICResponse> {
-    const fields = 'id,title,artist_display,image_id,thumbnail';
-    const limit = 9;
+    const params = new URLSearchParams({
+      fields: 'id,title,artist_display,image_id,thumbnail',
+      limit: '9',
+      page: '1',
+    });
 
-    const endpoint = query
-      ? `${BASE_URL}/search?q=${query}&fields=${fields}&limit=${limit}`
-      : `${BASE_URL}?fields=${fields}&limit=${limit}`;
+    if (query) {
+      params.append('q', query);
+    }
 
-    const response = await fetch(endpoint);
+    const url = query
+      ? `${BASE_URL}/search?${params.toString()}`
+      : `${BASE_URL}?${params.toString()}`;
+
+    const response = await fetch(url);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
