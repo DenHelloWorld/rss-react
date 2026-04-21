@@ -38,8 +38,7 @@ export const AICApiService = {
     return response.json();
   },
 
-  getImageUrl(imageId: string | null): string {
-    if (!imageId) return 'https://via.placeholder.com/400x300?text=No+Image';
+  getImageUrl(imageId: string): string {
     return `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
   },
 };

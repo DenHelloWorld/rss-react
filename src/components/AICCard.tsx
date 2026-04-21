@@ -3,7 +3,7 @@ import React from 'react';
 
 interface AICCardProps {
   art: AICArtwork;
-  getImageUrl: (id: string | null) => string;
+  getImageUrl: (id: string) => string;
 }
 
 interface AICCardState {
