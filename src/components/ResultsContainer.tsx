@@ -20,7 +20,7 @@ export class ResultsContainer extends React.Component<ResultsContainerProps> {
 
         {errorMessage && (
           <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4 border border-red-100">
-            ⚠️ {errorMessage}
+            {errorMessage}
           </div>
         )}
 

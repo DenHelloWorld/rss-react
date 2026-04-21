@@ -10,12 +10,6 @@ import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
 import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
 
-/*
- * <svg className="icon" role="presentation" aria-hidden="true">
- *    <use href="/icons.svg#documentation-icon"></use>
- * </svg>
- **/
-
 interface AppState {
   searchTerm: string;
   isLoading: boolean;

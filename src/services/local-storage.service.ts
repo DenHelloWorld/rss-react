@@ -9,7 +9,7 @@ class LocalStorageService {
     try {
       localStorage.setItem(key, JSON.stringify(value));
     } catch (error) {
-      console.error('Error saving to localStorage', error);
+      console.warn('Error saving to localStorage', error);
     }
   }
 
@@ -19,7 +19,7 @@ class LocalStorageService {
       if (item === null) return null;
       return JSON.parse(item) as T;
     } catch (error) {
-      console.error('Error reading from localStorage', error);
+      console.warn('Error reading from localStorage', error);
       return null;
     }
   }
@@ -28,7 +28,7 @@ class LocalStorageService {
     try {
       localStorage.removeItem(key);
     } catch (error) {
-      console.error('Error removing from localStorage', error);
+      console.warn('Error removing from localStorage', error);
     }
   }
 
@@ -36,7 +36,7 @@ class LocalStorageService {
     try {
       localStorage.clear();
     } catch (error) {
-      console.error('Error clearing localStorage', error);
+      console.warn('Error clearing localStorage', error);
     }
   }
 }
