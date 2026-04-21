@@ -6,6 +6,8 @@ import {
   localStorageService,
   STORAGE_KEYS,
 } from './services/local-storage.service.ts';
+import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
+import AICCard from './components/AICCard.tsx';
 
 /*
  * <svg className="icon" role="presentation" aria-hidden="true">
@@ -16,6 +18,8 @@ import {
 interface AppState {
   searchTerm: string;
   isLoading: boolean;
+  arts: AICArtwork[] | null;
+  errorMessage: string | null;
 }
 
 class App extends React.Component<object, AppState> {
@@ -26,43 +30,78 @@ class App extends React.Component<object, AppState> {
       localStorageService.getItem<string>(STORAGE_KEYS.SEARCH_TERM) || '';
 
     this.state = {
+      arts: null,
       searchTerm,
       isLoading: false,
+      errorMessage: null,
     };
   }
+
+  async componentDidMount() {
+    await this.#performSearch(this.state.searchTerm);
+  }
+
+  #performSearch = async (query: string) => {
+    this.setState({ isLoading: true, errorMessage: null });
+
+    try {
+      const response = await AICApiService.search(query);
+      this.setState({ arts: response.data });
+    } catch (e) {
+      const errorMessage =
+        e instanceof Error ? e.message : 'An unknown error occurred';
+
+      this.setState({
+        errorMessage,
+      });
+    } finally {
+      this.setState({ isLoading: false });
+    }
+  };
+
   #handleSearch = (value: string) => {
     const searchTerm = value.trim();
 
     if (searchTerm !== this.state.searchTerm) {
       localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, searchTerm);
-      this.setState({ searchTerm });
+      this.setState({ searchTerm }, async () => {
+        await this.#performSearch(searchTerm);
+      });
     }
   };
 
   render() {
+    const { arts, isLoading, errorMessage, searchTerm } = this.state;
+
     return (
       <div className="app-wrapper">
-        {/* Header / Search Section */}
         <Header>
-          <SearchBar
-            initialValue={this.state.searchTerm}
-            onSearch={this.#handleSearch}
-          />
+          <SearchBar initialValue={searchTerm} onSearch={this.#handleSearch} />
         </Header>
 
-        {/* Main / Results Section */}
         <main className="flex-1 w-full p-4 md:p-8">
-          <div className="container mx-auto">
-            <div className="results-container">
-              <h2 className="text-2xl font-bold text-gray-800 mb-6">
-                Search Results
-              </h2>
-              <div className="cards-grid">
-                {/* Cards will be here */}
-                <p className="text-gray-400 italic">
-                  No items. Start searching!
+          <div className="results-container container mx-auto">
+            <h2 className="subtitle">
+              {searchTerm ? `Results for "${searchTerm}"` : 'Art Collection'}
+            </h2>
+
+            {errorMessage && <p className="error-message">{errorMessage}</p>}
+
+            <div className="cards-grid">
+              {arts &&
+                arts.map((art) => (
+                  <AICCard
+                    key={art.id}
+                    art={art}
+                    getImageUrl={AICApiService.getImageUrl}
+                  />
+                ))}
+
+              {!isLoading && !errorMessage && (!arts || arts.length === 0) && (
+                <p className="text-gray-400 italic col-span-full text-center py-10">
+                  No items found. Try another request!
                 </p>
-              </div>
+              )}
             </div>
           </div>
         </main>
