@@ -1,5 +1,11 @@
 import './App.css';
 import React from 'react';
+import SearchBar from './components/SearchBar.tsx';
+import Header from './components/Header.tsx';
+import {
+  localStorageService,
+  STORAGE_KEYS,
+} from './services/local-storage.service.ts';
 
 /*
  * <svg className="icon" role="presentation" aria-hidden="true">
@@ -7,21 +13,42 @@ import React from 'react';
  * </svg>
  **/
 
-class App extends React.Component {
+interface AppState {
+  searchTerm: string;
+  isLoading: boolean;
+}
+
+class App extends React.Component<object, AppState> {
+  constructor(props: object) {
+    super(props);
+
+    const searchTerm =
+      localStorageService.getItem<string>(STORAGE_KEYS.SEARCH_TERM) || '';
+
+    this.state = {
+      searchTerm,
+      isLoading: false,
+    };
+  }
+  #handleSearch = (value: string) => {
+    const searchTerm = value.trim();
+
+    if (searchTerm !== this.state.searchTerm) {
+      localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, searchTerm);
+      this.setState({ searchTerm });
+    }
+  };
+
   render() {
     return (
       <div className="app-wrapper">
         {/* Header / Search Section */}
-        <header className="header-wrapper">
-          <div className="container mx-auto flex gap-4">
-            <input
-              type="text"
-              placeholder="Search items..."
-              className="search-input"
-            />
-            <button className="search-button">Search</button>
-          </div>
-        </header>
+        <Header>
+          <SearchBar
+            initialValue={this.state.searchTerm}
+            onSearch={this.#handleSearch}
+          />
+        </Header>
 
         {/* Main / Results Section */}
         <main className="flex-1 w-full p-4 md:p-8">
