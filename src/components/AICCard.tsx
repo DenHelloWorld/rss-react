@@ -8,30 +8,42 @@ interface AICCardProps {
 
 interface AICCardState {
   isImageLoadError: boolean;
+  isImageLoaded: boolean;
 }
 
 class AICCard extends React.Component<AICCardProps, AICCardState> {
   constructor(props: AICCardProps) {
     super(props);
-    this.state = { isImageLoadError: false };
+    this.state = { isImageLoadError: false, isImageLoaded: false };
   }
 
   render() {
     const { art, getImageUrl } = this.props;
-    const { isImageLoadError } = this.state;
+    const { isImageLoadError, isImageLoaded } = this.state;
+
+    const hasNoImage = !art.image_id || isImageLoadError;
 
     return (
       <article className="card">
         <div className="card-image-container">
-          {isImageLoadError || !art.image_id ? (
-            <svg className="card-placeholder" role="presentation">
-              <use href="/icons.svg#broken-image" />
-            </svg>
-          ) : (
+          {hasNoImage && (
+            <div className="card-placeholder-wrapper">
+              <svg className="card-placeholder" role="presentation">
+                <use href="/icons.svg#broken-image" />
+              </svg>
+            </div>
+          )}
+
+          {!isImageLoaded && !hasNoImage && <div className="skeleton"></div>}
+
+          {art.image_id && !isImageLoadError && (
             <img
               src={getImageUrl(art.image_id)}
               alt={art.thumbnail?.alt_text || art.artist_display}
-              className="card-image"
+              className={`card-image ${
+                isImageLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
+              onLoad={() => this.setState({ isImageLoaded: true })}
               onError={() => this.setState({ isImageLoadError: true })}
             />
           )}
