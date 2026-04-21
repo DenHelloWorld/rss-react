@@ -54,8 +54,8 @@
   }
 
   .card {
-    @apply bg-white rounded-xl border border-gray-100 shadow-md
-    overflow-hidden transition-all duration-300 flex flex-col h-full;
+    @apply bg-white rounded-xl   shadow-md
+    duration-300 flex flex-col relative;
 
     &:hover {
       @apply shadow-2xl -translate-y-1.5;
@@ -63,31 +63,27 @@
 
     .card-image-container {
       @apply relative w-full aspect-4/3 overflow-hidden bg-gray-50
-      flex items-center justify-center border-b border-gray-100;
+      flex items-center justify-center;
     }
 
     .card-image {
-      @apply w-full h-full object-cover transition-transform duration-500;
+      @apply w-auto h-full object-fill transition-transform duration-500;
     }
 
     .card-placeholder {
       @apply w-16 h-16 text-gray-300;
     }
 
-    &:hover .card-image {
-      @apply scale-110;
-    }
-
     .card-content {
-      @apply p-5 flex flex-col flex-1 gap-2;
+      @apply p-5 flex flex-col gap-2;
     }
 
     .card-title {
-      @apply text-lg font-bold text-gray-800 line-clamp-2 leading-tight;
+      @apply text-lg font-bold  line-clamp-2 leading-tight;
     }
 
     .card-description {
-      @apply text-sm text-gray-500 line-clamp-3 italic leading-relaxed mt-auto;
+      @apply text-sm text-gray-500  italic leading-relaxed;
     }
   }
 }

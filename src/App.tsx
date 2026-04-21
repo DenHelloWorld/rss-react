@@ -8,6 +8,7 @@ import {
 } from './services/local-storage.service.ts';
 import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
 import AICCard from './components/AICCard.tsx';
+import { ResultsContainer } from './components/ResultsContainer.tsx';
 
 /*
  * <svg className="icon" role="presentation" aria-hidden="true">
@@ -80,30 +81,21 @@ class App extends React.Component<object, AppState> {
         </Header>
 
         <main className="flex-1 w-full p-4 md:p-8">
-          <div className="results-container container mx-auto">
-            <h2 className="subtitle">
-              {searchTerm ? `Results for "${searchTerm}"` : 'Art Collection'}
-            </h2>
-
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-
-            <div className="cards-grid">
-              {arts &&
-                arts.map((art) => (
-                  <AICCard
-                    key={art.id}
-                    art={art}
-                    getImageUrl={AICApiService.getImageUrl}
-                  />
-                ))}
-
-              {!isLoading && !errorMessage && (!arts || arts.length === 0) && (
-                <p className="text-gray-400 italic col-span-full text-center py-10">
-                  No items found. Try another request!
-                </p>
-              )}
-            </div>
-          </div>
+          <ResultsContainer
+            searchTerm={searchTerm}
+            isLoading={isLoading}
+            errorMessage={errorMessage}
+            isEmpty={!arts || arts.length === 0}
+          >
+            {arts &&
+              arts.map((art) => (
+                <AICCard
+                  key={art.id}
+                  art={art}
+                  getImageUrl={AICApiService.getImageUrl}
+                />
+              ))}
+          </ResultsContainer>
         </main>
       </div>
     );
