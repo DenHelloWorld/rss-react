@@ -9,6 +9,7 @@ import {
 import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
 import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
+import ErrorTrigger from './components/ErrorTrigger.tsx';
 
 interface AppState {
   searchTerm: string;
@@ -74,7 +75,7 @@ class App extends React.Component<object, AppState> {
           <SearchBar initialValue={searchTerm} onSearch={this.#handleSearch} />
         </Header>
 
-        <main className="flex-1 w-full p-4 md:p-8">
+        <main className="main">
           <ResultsContainer
             searchTerm={searchTerm}
             isLoading={isLoading}
@@ -90,6 +91,8 @@ class App extends React.Component<object, AppState> {
                 />
               ))}
           </ResultsContainer>
+
+          <ErrorTrigger />
         </main>
       </div>
     );

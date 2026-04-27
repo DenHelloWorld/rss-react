@@ -13,7 +13,7 @@ export class ResultsContainer extends React.Component<ResultsContainerProps> {
       this.props;
 
     return (
-      <section className="results-container container mx-auto">
+      <section className="results-container">
         <h2 className="text-2xl font-bold text-gray-800 mb-6">
           {searchTerm ? `Results for "${searchTerm}"` : 'Art Collection'}
         </h2>
