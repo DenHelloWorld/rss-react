@@ -25,7 +25,7 @@ class ErrorTrigger extends React.Component<object, ErrorTriggerState> {
     }
 
     return (
-      <button onClick={this.#onTriggerError} className="button">
+      <button onClick={this.#onTriggerError} className="button button--warning">
         <svg>
           <use href="/icons.svg#bomb" />
         </svg>

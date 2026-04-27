@@ -1,4 +1,5 @@
 export const KEYBOARD_KEYS = {
   ENTER: 'Enter',
-  ESC: 'Escape',
+  ESCAPE: 'Escape',
+  ESC: 'Esc',
 } as const;

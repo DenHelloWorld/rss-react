@@ -31,6 +31,10 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
     this.props.onSearch(cleanedQuery);
   };
 
+  #onClear = () => {
+    this.setState({ query: '' });
+  };
+
   #onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === KEYBOARD_KEYS.ENTER) {
       this.#onSearch();
@@ -40,7 +44,7 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
   render() {
     return (
       <>
-        <div className="container mx-auto flex gap-4">
+        <div className="container mx-auto flex gap-4 px-4">
           <input
             value={this.state.query}
             onChange={this.#onInputChange}
@@ -49,7 +53,15 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
             placeholder="Search items..."
             className="input"
           />
-          <button onClick={this.#onSearch} className="button">
+          {this.state.query && (
+            <button onClick={this.#onClear} className="button">
+              <svg>
+                <use href="/icons.svg#search-off" />
+              </svg>
+              Clear
+            </button>
+          )}
+          <button onClick={this.#onSearch} className="button button--success">
             <svg>
               <use href="/icons.svg#search-icon" />
             </svg>

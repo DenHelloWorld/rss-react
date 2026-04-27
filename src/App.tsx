@@ -76,6 +76,8 @@ class App extends React.Component<object, AppState> {
         </Header>
 
         <main className="main">
+          <ErrorTrigger />
+
           <ResultsContainer
             searchTerm={searchTerm}
             isLoading={isLoading}
@@ -91,8 +93,6 @@ class App extends React.Component<object, AppState> {
                 />
               ))}
           </ResultsContainer>
-
-          <ErrorTrigger />
         </main>
       </div>
     );

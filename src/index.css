@@ -6,15 +6,15 @@
   }
 
   .header {
-    @apply w-full p-4 bg-white border-b border-gray-200 shadow-lg sticky top-0 z-10;
+    @apply w-full py-4 bg-white border-b border-gray-200 shadow-lg sticky top-0 z-10;
   }
 
   .main {
-    @apply flex flex-col flex-1 w-full p-4 md:p-8 gap-4 items-end container mx-auto;
+    @apply flex flex-col flex-1 w-full p-4 gap-4 items-end container mx-auto;
   }
 
   .error-boundary-template {
-    @apply container m-auto h-screen flex flex-col items-center justify-center gap-4 p-4 md:p-8;
+    @apply container m-auto h-screen flex flex-col items-center justify-center gap-4 p-4;
   }
 
   .input {
@@ -22,7 +22,7 @@
     transition-all duration-300 outline-none;
 
     &:focus {
-      @apply ring-2 ring-red-400;
+      @apply ring-1 ring-gray-500 outline-none;
     }
   }
 
@@ -32,7 +32,7 @@
     gap-2 transition-all duration-300 outline-none;
 
     &:focus {
-      @apply ring-2 ring-red-400;
+      @apply ring-1 ring-gray-500 outline-none;
     }
 
     svg {
@@ -50,6 +50,10 @@
 
     &.button--success {
       @apply bg-green-500;
+    }
+
+    &.button--warning {
+      @apply bg-yellow-500 text-gray-800;
     }
   }
 
