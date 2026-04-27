@@ -21,14 +21,11 @@ class ErrorTrigger extends React.Component<object, ErrorTriggerState> {
 
   render() {
     if (this.state.isError) {
-      throw new Error('Test crash triggered by user!');
+      throw new Error('Test crash triggered by ErrorTrigger component!');
     }
 
     return (
-      <button
-        onClick={this.#onTriggerError}
-        className={`button ${this.state.isError ? 'button--error' : ''}`}
-      >
+      <button onClick={this.#onTriggerError} className="button">
         <svg>
           <use href="/icons.svg#bomb" />
         </svg>
