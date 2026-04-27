@@ -12,7 +12,10 @@ export interface AICResponse {
   data: AICArtwork[];
 }
 
-const BASE_URL = 'https://api.artic.edu/api/v1/artworks';
+const API_URL = {
+  baseURL: 'https://api.artic.edu/api/v1/artworks',
+  searchEndpoint: 'search',
+};
 
 export const AICApiService = {
   async search(query: string | undefined): Promise<AICResponse> {
@@ -26,9 +29,12 @@ export const AICApiService = {
       params.append('q', query);
     }
 
-    const url = query
-      ? `${BASE_URL}/search?${params.toString()}`
-      : `${BASE_URL}?${params.toString()}`;
+    const url = new URL(
+      query ? API_URL.searchEndpoint : '',
+      API_URL.baseURL + '/'
+    );
+
+    url.search = params.toString();
 
     const response = await fetch(url);
     if (!response.ok) {
