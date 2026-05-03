@@ -46,7 +46,7 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
   render() {
     return (
       <>
-        <div className="container mx-auto flex gap-4 px-4">
+        <div className="container mx-auto flex gap-4 px-4 flex-wrap">
           <input
             value={this.state.query}
             onChange={this.#onInputChange}
@@ -56,18 +56,22 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
             className="input"
           />
           {this.state.query && (
-            <button onClick={this.#onClear} className="button">
+            <button
+              onClick={this.#onClear}
+              className="button button--error button--icon"
+            >
               <svg>
                 <use href="/icons.svg#search-off" />
               </svg>
-              Clear
             </button>
           )}
-          <button onClick={this.#onSearch} className="button button--success">
+          <button
+            onClick={this.#onSearch}
+            className="button button--success button--icon"
+          >
             <svg>
               <use href="/icons.svg#search-icon" />
             </svg>
-            Search
           </button>
         </div>
       </>

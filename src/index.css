@@ -55,6 +55,10 @@
     &.button--warning {
       @apply bg-yellow-500 text-gray-800;
     }
+
+    &.button--icon {
+      @apply px-3;
+    }
   }
 
   .results-container {
