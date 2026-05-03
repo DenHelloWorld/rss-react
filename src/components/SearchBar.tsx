@@ -26,9 +26,11 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
   };
 
   #onSearch = () => {
-    const cleanedQuery = this.state.query.trim();
+    const query = this.state.query.trim();
 
-    this.props.onSearch(cleanedQuery);
+    this.setState({ query }, () => {
+      this.props.onSearch(query);
+    });
   };
 
   #onClear = () => {
