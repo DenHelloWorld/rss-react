@@ -41,10 +41,11 @@ export const AICApiService = {
       throw new Error('Network response was not ok');
     }
 
-    return response.json();
+    //TODO: ask about zod?
+    return (await response.json()) as AICResponse;
   },
 
-  getImageUrl(imageId: string): string {
+  getImageUrl: (imageId: string): string => {
     return `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
   },
 };

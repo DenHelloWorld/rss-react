@@ -1,5 +1,5 @@
 import './App.css';
-import React from 'react';
+import React, { type JSX } from 'react';
 import SearchBar from './components/SearchBar.tsx';
 import Header from './components/Header.tsx';
 import {
@@ -23,7 +23,7 @@ class App extends React.Component<object, AppState> {
     super(props);
 
     const searchTerm =
-      localStorageService.getItem<string>(STORAGE_KEYS.SEARCH_TERM) || '';
+      localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ?? '';
 
     this.state = {
       arts: null,
@@ -33,8 +33,8 @@ class App extends React.Component<object, AppState> {
     };
   }
 
-  async componentDidMount() {
-    await this.#performSearch(this.state.searchTerm);
+  componentDidMount(): void {
+    void this.#performSearch(this.state.searchTerm);
   }
 
   #performSearch = async (query: string) => {
@@ -60,13 +60,13 @@ class App extends React.Component<object, AppState> {
 
     if (searchTerm !== this.state.searchTerm) {
       localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, searchTerm);
-      this.setState({ searchTerm }, async () => {
-        await this.#performSearch(searchTerm);
+      this.setState({ searchTerm }, () => {
+        void this.#performSearch(searchTerm);
       });
     }
   };
 
-  render() {
+  render(): JSX.Element {
     const { arts, isLoading, errorMessage, searchTerm } = this.state;
 
     return (
@@ -84,14 +84,13 @@ class App extends React.Component<object, AppState> {
             errorMessage={errorMessage}
             isEmpty={!arts || arts.length === 0}
           >
-            {arts &&
-              arts.map((art) => (
-                <AICCard
-                  key={art.id}
-                  art={art}
-                  getImageUrl={AICApiService.getImageUrl}
-                />
-              ))}
+            {arts?.map((art) => (
+              <AICCard
+                key={art.id}
+                art={art}
+                getImageUrl={AICApiService.getImageUrl}
+              />
+            ))}
           </ResultsContainer>
         </main>
       </div>

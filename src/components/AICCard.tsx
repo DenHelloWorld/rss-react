@@ -1,5 +1,5 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
-import React from 'react';
+import React, { type JSX } from 'react';
 
 interface AICCardProps {
   art: AICArtwork;
@@ -17,7 +17,7 @@ class AICCard extends React.Component<AICCardProps, AICCardState> {
     this.state = { isImageLoadError: false, isImageLoaded: false };
   }
 
-  render() {
+  render(): JSX.Element {
     const { art, getImageUrl } = this.props;
     const { isImageLoadError, isImageLoaded } = this.state;
 
@@ -34,25 +34,28 @@ class AICCard extends React.Component<AICCardProps, AICCardState> {
             </div>
           )}
 
-          {!isImageLoaded && !hasNoImage && <div className="skeleton"></div>}
+          {!isImageLoaded && !hasNoImage && <div className="skeleton" />}
 
           {art.image_id && !isImageLoadError && (
             <img
               src={getImageUrl(art.image_id)}
-              alt={art.thumbnail?.alt_text || art.artist_display}
+              alt={art.thumbnail?.alt_text ?? art.artist_display}
               className={`card-image ${
                 isImageLoaded ? 'opacity-100' : 'opacity-0'
               }`}
-              onLoad={() => this.setState({ isImageLoaded: true })}
-              onError={() => this.setState({ isImageLoadError: true })}
+              onLoad={() => {
+                this.setState({ isImageLoaded: true });
+              }}
+              onError={() => {
+                this.setState({ isImageLoadError: true });
+              }}
             />
           )}
         </div>
         <div className="card-content">
           <h3 className="card-title">{art.title}</h3>
           <p className="card-description">
-            {art.thumbnail?.alt_text ||
-              art.artist_display ||
+            {(art.thumbnail?.alt_text ?? art.artist_display) ||
               'No description available'}
           </p>
         </div>

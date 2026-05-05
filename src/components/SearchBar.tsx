@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
 
 export interface SearchBarProps {
@@ -19,13 +19,13 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
     };
   }
 
-  #onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  private onInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
 
     this.setState({ query });
   };
 
-  #onSearch = () => {
+  private onSearch = () => {
     const query = this.state.query.trim();
 
     this.setState({ query }, () => {
@@ -33,48 +33,46 @@ class SearchBar extends React.Component<SearchBarProps, SearchBarState> {
     });
   };
 
-  #onClear = () => {
+  private onClear = () => {
     this.setState({ query: '' });
   };
 
-  #onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  private onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === KEYBOARD_KEYS.ENTER) {
-      this.#onSearch();
+      this.onSearch();
     }
   };
 
-  render() {
+  render(): JSX.Element {
     return (
-      <>
-        <div className="container mx-auto flex gap-4 px-4 flex-wrap">
-          <input
-            value={this.state.query}
-            onChange={this.#onInputChange}
-            onKeyDown={this.#onKeyDown}
-            type="text"
-            placeholder="Search items..."
-            className="input"
-          />
-          {this.state.query && (
-            <button
-              onClick={this.#onClear}
-              className="button button--error button--icon"
-            >
-              <svg>
-                <use href="/icons.svg#search-off" />
-              </svg>
-            </button>
-          )}
+      <div className="container mx-auto flex gap-4 px-4 flex-wrap">
+        <input
+          value={this.state.query}
+          onChange={this.onInputChange}
+          onKeyDown={this.onKeyDown}
+          type="text"
+          placeholder="Search items..."
+          className="input"
+        />
+        {this.state.query && (
           <button
-            onClick={this.#onSearch}
-            className="button button--success button--icon"
+            onClick={this.onClear}
+            className="button button--error button--icon"
           >
             <svg>
-              <use href="/icons.svg#search-icon" />
+              <use href="/icons.svg#search-off" />
             </svg>
           </button>
-        </div>
-      </>
+        )}
+        <button
+          onClick={this.onSearch}
+          className="button button--success button--icon"
+        >
+          <svg>
+            <use href="/icons.svg#search-icon" />
+          </svg>
+        </button>
+      </div>
     );
   }
 }

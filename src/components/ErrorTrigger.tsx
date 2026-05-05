@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 
 export interface ErrorTriggerState {
   isError: boolean;
@@ -13,19 +13,19 @@ class ErrorTrigger extends React.Component<object, ErrorTriggerState> {
     };
   }
 
-  #onTriggerError = () => {
+  private onTriggerError = () => {
     this.setState({
       isError: true,
     });
   };
 
-  render() {
+  render(): JSX.Element {
     if (this.state.isError) {
       throw new Error('Test crash triggered by ErrorTrigger component!');
     }
 
     return (
-      <button onClick={this.#onTriggerError} className="button button--warning">
+      <button onClick={this.onTriggerError} className="button button--warning">
         <svg>
           <use href="/icons.svg#bomb" />
         </svg>
