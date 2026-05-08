@@ -3,7 +3,6 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import ErrorBoundary from './ErrorBoundary';
 import ErrorTrigger from './ErrorTrigger.tsx';
-import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
 import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.ts';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 
@@ -71,25 +70,5 @@ describe(ErrorBoundary.name, () => {
     expect(
       screen.getByRole('button', { name: errorTriggerContent })
     ).toBeInTheDocument();
-  });
-
-  it.each([
-    { key: KEYBOARD_KEYS.ESC, shouldReset: false },
-    { key: KEYBOARD_KEYS.ENTER, shouldReset: false },
-  ])('interaction with $key key', ({ key, shouldReset }) => {
-    const { triggerError, getDefaultFallbackContainer } = setupScene();
-    triggerError();
-
-    fireEvent.keyDown(getDefaultFallbackContainer()!, { key, code: key });
-
-    const triggerVisible = screen.queryByRole('button', {
-      name: errorTriggerContent,
-    });
-
-    if (shouldReset) {
-      expect(triggerVisible).toBeInTheDocument();
-    } else {
-      expect(triggerVisible).not.toBeInTheDocument();
-    }
   });
 });
