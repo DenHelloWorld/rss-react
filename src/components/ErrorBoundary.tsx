@@ -1,7 +1,7 @@
 import React, { type ReactNode } from 'react';
 
 export interface ErrorBoundaryState {
-  isError: boolean;
+  hasError: boolean;
 }
 
 export interface ErrorBoundaryProps {
@@ -14,11 +14,11 @@ class ErrorBoundary extends React.Component<
 > {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { isError: false };
+    this.state = { hasError: false };
   }
 
   static getDerivedStateFromError(): ErrorBoundaryState {
-    return { isError: true };
+    return { hasError: true };
   }
 
   componentDidCatch(error: Error): void {
@@ -27,12 +27,12 @@ class ErrorBoundary extends React.Component<
 
   private resetErrors = () => {
     this.setState({
-      isError: false,
+      hasError: false,
     });
   };
 
   render(): React.ReactNode {
-    if (this.state.isError) {
+    if (this.state.hasError) {
       return (
         this.props.fallback ?? (
           <div className="error-boundary-template">
