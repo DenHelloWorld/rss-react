@@ -1,0 +1,51 @@
+export interface AICArtwork {
+  id: number;
+  title: string;
+  artist_display: string;
+  image_id: string | null;
+  thumbnail?: {
+    alt_text: string;
+  };
+}
+
+export interface AICResponse {
+  data: AICArtwork[];
+}
+
+const API_URL = {
+  baseURL: 'https://api.artic.edu/api/v1/artworks',
+  searchEndpoint: 'search',
+};
+
+export const AICApiService = {
+  async search(query: string | undefined): Promise<AICResponse> {
+    const params = new URLSearchParams({
+      fields: 'id,title,artist_display,image_id,thumbnail',
+      limit: '9',
+      page: '1',
+    });
+
+    if (query) {
+      params.append('q', query);
+    }
+
+    const url = new URL(
+      query ? API_URL.searchEndpoint : '',
+      API_URL.baseURL + '/'
+    );
+
+    url.search = params.toString();
+
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    //TODO: ask about zod?
+    return (await response.json()) as AICResponse;
+  },
+
+  getImageUrl: (imageId: string): string => {
+    return `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
+  },
+};
