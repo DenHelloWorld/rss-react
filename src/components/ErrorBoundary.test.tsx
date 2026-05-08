@@ -5,10 +5,10 @@ import ErrorBoundary from './ErrorBoundary';
 import ErrorTrigger from './ErrorTrigger.tsx';
 import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
 import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.ts';
-import { UI_TEXT } from '../test-utils/ui-text.const.ts';
+import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 
 describe(ErrorBoundary.name, () => {
-  const errorTriggerContent = UI_TEXT.errorTrigger;
+  const errorTriggerContent = UI_TEST_TEXT.errorTrigger;
 
   const setupScene = (fallback?: React.ReactNode) => {
     const renderResult = render(

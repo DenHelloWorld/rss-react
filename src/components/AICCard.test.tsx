@@ -2,6 +2,7 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import AICCard from './AICCard';
 import type { AICArtwork } from '../services/AICApiService.ts';
+import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 
 describe(AICCard.name, () => {
   const mockArt: AICArtwork = {
@@ -11,21 +12,20 @@ describe(AICCard.name, () => {
     artist_display: 'Vincent van Gogh',
     thumbnail: { alt_text: 'A beautiful night sky' },
   };
-
+  const noDescContent: string = UI_TEST_TEXT.noDescription;
   const mockGetImageUrl = (id: string) => `https://example.com/${id}.jpg`;
 
   it('renders art title and description correctly', () => {
     render(<AICCard art={mockArt} getImageUrl={mockGetImageUrl} />);
 
-    expect(screen.getByText('Starry Night')).toBeInTheDocument();
-    expect(screen.getByText('A beautiful night sky')).toBeInTheDocument();
+    expect(screen.getByText(mockArt.title)).toBeInTheDocument();
+    expect(screen.getByText(mockArt.thumbnail!.alt_text)).toBeInTheDocument();
   });
 
   it('shows skeleton while image is loading', () => {
     const { container } = render(
       <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
     );
-
     const skeleton = container.querySelector('.skeleton');
 
     expect(skeleton).toBeInTheDocument();
@@ -35,7 +35,6 @@ describe(AICCard.name, () => {
     const { container } = render(
       <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
     );
-
     const img = screen.getByRole('img');
 
     fireEvent.load(img);
@@ -50,7 +49,6 @@ describe(AICCard.name, () => {
     const { container } = render(
       <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
     );
-
     const img = screen.getByRole('img');
 
     fireEvent.error(img);
@@ -69,7 +67,7 @@ describe(AICCard.name, () => {
 
     render(<AICCard art={artWithoutAlt} getImageUrl={mockGetImageUrl} />);
 
-    expect(screen.getByText('Vincent van Gogh')).toBeInTheDocument();
+    expect(screen.getByText(artWithoutAlt.artist_display)).toBeInTheDocument();
   });
 
   it('displays fallback text when both alt_text and artist_display are missing', () => {
@@ -81,6 +79,6 @@ describe(AICCard.name, () => {
 
     render(<AICCard art={emptyArt} getImageUrl={mockGetImageUrl} />);
 
-    expect(screen.getByText('No description available')).toBeInTheDocument();
+    expect(screen.getByText(noDescContent)).toBeInTheDocument();
   });
 });

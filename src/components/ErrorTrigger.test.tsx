@@ -1,7 +1,7 @@
 import { Component, type ErrorInfo, type ReactNode } from 'react';
 import ErrorTrigger from './ErrorTrigger.tsx';
 import { render, screen, fireEvent } from '@testing-library/react';
-import { UI_TEXT } from '../test-utils/ui-text.const.ts';
+import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.ts';
 
 class TestBoundary extends Component<
@@ -18,14 +18,15 @@ class TestBoundary extends Component<
 
   render() {
     if (this.state.hasError) {
-      return <h1>Caught</h1>;
+      return <h1>{UI_TEST_TEXT.caught}</h1>;
     }
     return this.props.children;
   }
 }
 
 describe(ErrorTrigger.name, () => {
-  const errorTriggerContent = UI_TEXT.errorTrigger;
+  const errorTriggerContent = UI_TEST_TEXT.errorTrigger;
+  const testBoundaryContent: string = UI_TEST_TEXT.caught;
 
   it('renders the trigger button initially', () => {
     render(<ErrorTrigger />);
@@ -46,7 +47,7 @@ describe(ErrorTrigger.name, () => {
 
     fireEvent.click(button);
 
-    expect(screen.getByText('Caught')).toBeInTheDocument();
+    expect(screen.getByText(testBoundaryContent)).toBeInTheDocument();
 
     expect(CONSOLE_ERROR_SPY).toHaveBeenCalled();
   });
