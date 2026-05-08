@@ -5,6 +5,7 @@ import { CONSOLE_ERROR_SPY } from './console-spies.const.ts';
 
 afterEach(() => {
   cleanup();
+  vi.clearAllMocks();
   CONSOLE_ERROR_SPY.mockClear();
 });
 
