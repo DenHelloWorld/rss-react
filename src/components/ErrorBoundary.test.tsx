@@ -4,10 +4,11 @@ import { describe, it, expect } from 'vitest';
 import ErrorBoundary from './ErrorBoundary';
 import ErrorTrigger from './ErrorTrigger.tsx';
 import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
-import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.test.ts';
+import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.ts';
+import { UI_TEXT } from '../test-utils/ui-text.const.ts';
 
 describe(ErrorBoundary.name, () => {
-  const errorTriggerContent = /triggers an error/i;
+  const errorTriggerContent = UI_TEXT.errorTrigger;
 
   const setupScene = (fallback?: React.ReactNode) => {
     const renderResult = render(

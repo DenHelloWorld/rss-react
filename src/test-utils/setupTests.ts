@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
-import { CONSOLE_ERROR_SPY } from './console-spies.const.test.ts';
+import { CONSOLE_ERROR_SPY } from './console-spies.const.ts';
 
 afterEach(() => {
   cleanup();

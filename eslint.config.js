@@ -9,7 +9,16 @@ import reactCompiler from 'eslint-plugin-react-compiler';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
-  { ignores: ['dist', 'build', 'coverage', '**/*.min.js', 'node_modules'] },
+  {
+    ignores: [
+      'dist',
+      'build',
+      'coverage',
+      '**/*.min.js',
+      'node_modules',
+      'src/test-utils/**',
+    ],
+  },
 
   {
     extends: [
