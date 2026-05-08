@@ -27,6 +27,7 @@ describe(AICCard.name, () => {
     );
 
     const skeleton = container.querySelector('.skeleton');
+
     expect(skeleton).toBeInTheDocument();
   });
 
