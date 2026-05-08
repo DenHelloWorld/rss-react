@@ -2,12 +2,20 @@ import '@testing-library/jest-dom';
 import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import { CONSOLE_ERROR_SPY, CONSOLE_WARN_SPY } from './console-spies.const.ts';
+import { AICServerMock } from './server.ts';
+
+beforeAll(() => AICServerMock.listen({ onUnhandledRequest: 'error' }));
 
 afterEach(() => {
   cleanup();
   vi.clearAllMocks();
   CONSOLE_ERROR_SPY.mockClear();
   CONSOLE_WARN_SPY.mockClear();
+  AICServerMock.resetHandlers();
+});
+
+afterAll(() => {
+  AICServerMock.close();
 });
 
 Object.defineProperty(window, 'matchMedia', {
