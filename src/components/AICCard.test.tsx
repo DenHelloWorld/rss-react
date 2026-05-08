@@ -3,15 +3,10 @@ import { describe, it, expect } from 'vitest';
 import AICCard from './AICCard';
 import type { AICArtwork } from '../services/AICApiService.ts';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
+import { MOCK_ART } from '../test-utils/mock-data.ts';
 
 describe(AICCard.name, () => {
-  const mockArt: AICArtwork = {
-    id: 123,
-    title: 'Starry Night',
-    image_id: 'sample-id',
-    artist_display: 'Vincent van Gogh',
-    thumbnail: { alt_text: 'A beautiful night sky' },
-  };
+  const mockArt: AICArtwork = MOCK_ART;
   const noDescContent: string = UI_TEST_TEXT.noDescription;
   const mockGetImageUrl = (id: string) => `https://example.com/${id}.jpg`;
 
