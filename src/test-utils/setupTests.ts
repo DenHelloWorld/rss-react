@@ -3,6 +3,7 @@ import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import { CONSOLE_ERROR_SPY, CONSOLE_WARN_SPY } from './console-spies.const.ts';
 import { AICServerMock } from './server.ts';
+import { localStorageMock, StorageMock } from './storage-mock.ts';
 
 beforeAll(() => AICServerMock.listen({ onUnhandledRequest: 'error' }));
 
@@ -41,3 +42,15 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
   thresholds: [],
   takeRecords: vi.fn(() => []),
 }));
+
+Object.defineProperty(window, 'localStorage', {
+  value: localStorageMock,
+  configurable: true,
+});
+Object.defineProperty(global, 'localStorage', {
+  value: localStorageMock,
+  configurable: true,
+});
+
+global.Storage = StorageMock;
+window.Storage = StorageMock;
