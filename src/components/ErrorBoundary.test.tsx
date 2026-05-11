@@ -7,7 +7,9 @@ import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.ts';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 
 describe(ErrorBoundary.name, () => {
-  const errorTriggerContent = UI_TEST_TEXT.errorTrigger;
+  const errorTriggerContent: RegExp = UI_TEST_TEXT.errorTrigger;
+  const errorBoundaryContent: RegExp = UI_TEST_TEXT.boundaryWorks;
+  const pushToResetContent: RegExp = UI_TEST_TEXT.pushToReset;
 
   const setupScene = (fallback?: React.ReactNode) => {
     const renderResult = render(
@@ -23,10 +25,10 @@ describe(ErrorBoundary.name, () => {
     };
 
     const getDefaultFallbackContainer = () =>
-      screen.getByText(/Error boundary works/i).parentElement;
+      screen.getByText(errorBoundaryContent).parentElement;
 
     const getResetButton = () =>
-      screen.getByRole('button', { name: /Push to Reset/i });
+      screen.getByRole('button', { name: pushToResetContent });
 
     return {
       ...renderResult,

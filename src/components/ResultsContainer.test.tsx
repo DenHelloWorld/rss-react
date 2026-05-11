@@ -1,8 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import { ResultsContainer } from './ResultsContainer';
+import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 
 describe(ResultsContainer.name, () => {
+  const artCollectionContent: RegExp = UI_TEST_TEXT.artCollection;
+  const noItemsFoundContent: RegExp = UI_TEST_TEXT.noItemsFound;
   const defaultProps = {
     searchTerm: '',
     isLoading: false,
@@ -18,7 +21,7 @@ describe(ResultsContainer.name, () => {
     );
 
     expect(
-      screen.getByRole('heading', { name: /art collection/i })
+      screen.getByRole('heading', { name: artCollectionContent })
     ).toBeInTheDocument();
     expect(screen.getByText('Children Content')).toBeInTheDocument();
   });
@@ -45,7 +48,7 @@ describe(ResultsContainer.name, () => {
     const spinner = container.querySelector('.animate-spin');
 
     expect(spinner).toBeInTheDocument();
-    expect(screen.queryByText('No items found.')).not.toBeInTheDocument();
+    expect(screen.queryByText(noItemsFoundContent)).not.toBeInTheDocument();
   });
 
   it('displays error message when errorMessage is provided', () => {
@@ -57,7 +60,7 @@ describe(ResultsContainer.name, () => {
     );
 
     expect(screen.getByText(error)).toBeInTheDocument();
-    expect(screen.queryByText('No items found.')).not.toBeInTheDocument();
+    expect(screen.queryByText(noItemsFoundContent)).not.toBeInTheDocument();
   });
 
   it('displays "no items found" when isEmpty is true and no error', () => {
@@ -69,7 +72,7 @@ describe(ResultsContainer.name, () => {
 
     const grid = document.querySelector('.cards-grid');
 
-    expect(screen.getByText(/no items found/i)).toBeInTheDocument();
+    expect(screen.getByText(noItemsFoundContent)).toBeInTheDocument();
     expect(grid).not.toBeInTheDocument();
   });
 
