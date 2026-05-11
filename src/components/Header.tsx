@@ -1,9 +1,11 @@
-import React, { type JSX } from 'react';
+import { type JSX, type ReactNode } from 'react';
 
-class Header extends React.Component<{ children: React.ReactNode }> {
-  render(): JSX.Element {
-    return <header className="header">{this.props.children}</header>;
-  }
+interface HeaderProps {
+  children: ReactNode;
 }
+
+const Header = ({ children }: HeaderProps): JSX.Element => {
+  return <header className="header">{children}</header>;
+};
 
 export default Header;
