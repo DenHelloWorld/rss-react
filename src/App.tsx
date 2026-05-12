@@ -1,5 +1,5 @@
 import './App.css';
-import React, { type JSX } from 'react';
+import { type JSX, useCallback, useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar.tsx';
 import Header from './components/Header.tsx';
 import {
@@ -11,91 +11,76 @@ import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
 import ErrorTrigger from './components/ErrorTrigger.tsx';
 
-interface AppState {
-  searchTerm: string;
-  isLoading: boolean;
-  arts: AICArtwork[] | null;
-  errorMessage: string | null;
-}
+const App = (): JSX.Element => {
+  const [searchTerm, setSearchTerm] = useState<string>(
+    () => localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ?? ''
+  );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [arts, setArts] = useState<AICArtwork[] | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-class App extends React.Component<object, AppState> {
-  constructor(props: object) {
-    super(props);
-
-    const searchTerm =
-      localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ?? '';
-
-    this.state = {
-      arts: null,
-      searchTerm,
-      isLoading: false,
-      errorMessage: null,
-    };
-  }
-
-  componentDidMount(): void {
-    void this.#performSearch(this.state.searchTerm);
-  }
-
-  #performSearch = async (query: string) => {
-    this.setState({ isLoading: true, errorMessage: null });
+  const performSearch = useCallback(async (query: string) => {
+    setIsLoading(true);
+    setErrorMessage(null);
 
     try {
       const response = await AICApiService.search(query);
-      this.setState({ arts: response.data });
+      setArts(response.data);
     } catch (e) {
-      const errorMessage =
-        e instanceof Error ? e.message : 'An unknown error occurred';
-
-      this.setState({
-        errorMessage,
-      });
+      setErrorMessage(
+        e instanceof Error ? e.message : 'An unknown error occurred'
+      );
     } finally {
-      this.setState({ isLoading: false });
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    const onComponentDidMount = async () => {
+      await performSearch(
+        localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ?? ''
+      );
+    };
+
+    void onComponentDidMount();
+  }, [performSearch]);
+
+  const handleSearch = (value: string) => {
+    const trimmedValue = value.trim();
+
+    if (trimmedValue !== searchTerm) {
+      localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, trimmedValue);
+      setSearchTerm(trimmedValue);
+
+      void performSearch(trimmedValue);
     }
   };
 
-  #handleSearch = (value: string) => {
-    const searchTerm = value.trim();
+  return (
+    <div className="app-wrapper">
+      <Header>
+        <SearchBar initialValue={searchTerm} onSearch={handleSearch} />
+      </Header>
 
-    if (searchTerm !== this.state.searchTerm) {
-      localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, searchTerm);
-      this.setState({ searchTerm }, () => {
-        void this.#performSearch(searchTerm);
-      });
-    }
-  };
-
-  render(): JSX.Element {
-    const { arts, isLoading, errorMessage, searchTerm } = this.state;
-
-    return (
-      <div className="app-wrapper">
-        <Header>
-          <SearchBar initialValue={searchTerm} onSearch={this.#handleSearch} />
-        </Header>
-
-        <main className="main">
-          <ErrorTrigger />
-
-          <ResultsContainer
-            searchTerm={searchTerm}
-            isLoading={isLoading}
-            errorMessage={errorMessage}
-            isEmpty={!arts || arts.length === 0}
-          >
-            {arts?.map((art) => (
-              <AICCard
-                key={art.id}
-                art={art}
-                getImageUrl={AICApiService.getImageUrl}
-              />
-            ))}
-          </ResultsContainer>
-        </main>
-      </div>
-    );
-  }
-}
+      <main className="main">
+        <ErrorTrigger />
+        <ResultsContainer
+          searchTerm={searchTerm}
+          isLoading={isLoading}
+          errorMessage={errorMessage}
+          isEmpty={!arts || arts.length === 0}
+        >
+          {arts?.map((art) => (
+            <AICCard
+              key={art.id}
+              art={art}
+              getImageUrl={AICApiService.getImageUrl}
+            />
+          ))}
+        </ResultsContainer>
+      </main>
+    </div>
+  );
+};
 
 export default App;
