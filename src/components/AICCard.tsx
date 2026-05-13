@@ -1,5 +1,6 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
-import { type JSX, useState } from 'react';
+import { type JSX } from 'react';
+import LazyImage from './LasyImage.tsx';
 
 interface AICCardProps {
   art: AICArtwork;
@@ -7,39 +8,14 @@ interface AICCardProps {
 }
 
 const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
-  const [isImageLoadError, setIsImageLoadError] = useState(false);
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
-
-  const hasNoImage = !art.image_id || isImageLoadError;
-
   return (
     <article className="card">
       <div className="card-image-container">
-        {hasNoImage && (
-          <div className="card-placeholder-wrapper">
-            <svg className="card-placeholder" role="presentation">
-              <use href="/icons.svg#broken-image" />
-            </svg>
-          </div>
-        )}
-
-        {!isImageLoaded && !hasNoImage && <div className="skeleton" />}
-
-        {art.image_id && !isImageLoadError && (
-          <img
-            src={getImageUrl(art.image_id)}
-            alt={art.thumbnail?.alt_text ?? art.artist_display}
-            className={`card-image ${
-              isImageLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
-            onLoad={() => {
-              setIsImageLoaded(true);
-            }}
-            onError={() => {
-              setIsImageLoadError(true);
-            }}
-          />
-        )}
+        <LazyImage
+          src={getImageUrl(art.image_id ?? '')}
+          alt={art.thumbnail?.alt_text ?? art.artist_display}
+          className="card-image"
+        />
       </div>
       <div className="card-content">
         <h3 className="card-title">{art.title}</h3>
