@@ -14,7 +14,6 @@ const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
         <LazyImage
           src={getImageUrl(art.image_id ?? '')}
           alt={art.thumbnail?.alt_text ?? art.artist_display}
-          className="card-image"
         />
       </div>
       <div className="card-content">

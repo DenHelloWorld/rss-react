@@ -3,7 +3,6 @@ import { type JSX, useState } from 'react';
 interface LazyImageProps {
   src: string;
   alt: string;
-  className?: string;
 }
 
 const LazyImage = (props: LazyImageProps): JSX.Element => {
@@ -11,13 +10,11 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
-    <>
+    <div className="relative w-full h-full flex align-middle justify-center">
       {isImageLoadError && (
-        <div className="card-placeholder-wrapper">
-          <svg className="card-placeholder" role="presentation">
-            <use href="/icons.svg#broken-image" />
-          </svg>
-        </div>
+        <svg className="card-placeholder" role="presentation">
+          <use href="/icons.svg#broken-image" />
+        </svg>
       )}
       {!isImageLoaded && !isImageLoadError && <div className="skeleton" />}
 
@@ -26,9 +23,7 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
           loading="lazy"
           src={props.src}
           alt={props.alt}
-          className={` ${
-            isImageLoaded ? 'opacity-100' : 'opacity-0'
-          } ${props.className ?? ''}`}
+          className={` ${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto`}
           onLoad={() => {
             setIsImageLoaded(true);
           }}
@@ -37,7 +32,7 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
           }}
         />
       )}
-    </>
+    </div>
   );
 };
 

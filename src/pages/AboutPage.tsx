@@ -1,19 +1,25 @@
 import type { JSX } from 'react';
 import { URLs } from '../consts/urls.const.ts';
+import LazyImage from '../components/LasyImage.tsx';
 
 const AboutPage = (): JSX.Element => {
   return (
     <section className="mx-auto container w-full results-container">
       <h1 className="subtitle text-left">About the Project</h1>
-      <div className=" text-center flex flex-col gap-4 w-full md:max-w-1/2 mx-auto">
+      <div className="text-center flex flex-col gap-4 w-full md:max-w-1/2 mx-auto">
         <p className="text-lg text-gray-700">
           This application was developed as part of the React course. It allows
           users to explore the Art Institute of Chicago&#39;s collection using
           their public API.
         </p>
 
-        <div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">Author</h2>
+        <div className="flex flex-col gap-4 items-center">
+          <h2 className="text-xl font-bold text-gray-800">Author</h2>
+
+          <div className="shadow h-70 aspect-square rounded-xl overflow-hidden">
+            <LazyImage src={URLs.authorGithubAvatar} alt="GitHub Avatar" />
+          </div>
+
           <p className="text-gray-600">
             Developed by{' '}
             <a

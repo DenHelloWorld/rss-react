@@ -73,7 +73,6 @@ const App = (): JSX.Element => {
       <main className="main">
         {isRootLocation && (
           <>
-            <ErrorTrigger />
             <ResultsContainer
               searchTerm={searchTerm}
               isLoading={isLoading}
@@ -88,6 +87,8 @@ const App = (): JSX.Element => {
                 />
               ))}
             </ResultsContainer>
+
+            <ErrorTrigger />
           </>
         )}
 
