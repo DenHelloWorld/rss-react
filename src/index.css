@@ -1,8 +1,12 @@
 @import 'tailwindcss';
 
+body {
+  @apply bg-gray-50;
+}
+
 @layer components {
   .app-wrapper {
-    @apply min-h-[97vh] bg-gray-50 flex flex-col font-sans;
+    @apply min-h-[97vh]  flex flex-col font-sans;
   }
 
   .header {
