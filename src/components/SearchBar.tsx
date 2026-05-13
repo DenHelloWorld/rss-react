@@ -34,7 +34,7 @@ export const SearchBar = ({
   };
 
   return (
-    <div className="container mx-auto flex gap-4 px-4 flex-wrap">
+    <div className="container mx-auto flex gap-4 flex-wrap">
       <input
         value={query}
         onChange={onInputChange}

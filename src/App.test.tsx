@@ -8,6 +8,7 @@ import {
 } from './services/local-storage.service.ts';
 import { MOCK_ART } from './test-utils/mock-data.ts';
 import type { ReactNode } from 'react';
+import { MemoryRouter } from 'react-router';
 
 vi.mock('./components/SearchBar.tsx', () => ({
   default: ({
@@ -73,7 +74,11 @@ describe(App.name, () => {
     getItemSpy.mockReturnValue(null);
     searchSpy.mockResolvedValue({ data: [] });
 
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(searchSpy).toHaveBeenCalledWith('');
@@ -85,7 +90,11 @@ describe(App.name, () => {
 
     searchSpy.mockResolvedValue({ data: [mockArt] });
 
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(mockArt.title)).toBeInTheDocument();
@@ -97,7 +106,11 @@ describe(App.name, () => {
   it('should handle non-Error objects in catch block', async () => {
     searchSpy.mockRejectedValue('String Error');
 
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('An unknown error occurred')).toBeInTheDocument();
@@ -109,7 +122,11 @@ describe(App.name, () => {
   it('should handle standard Error objects', async () => {
     searchSpy.mockRejectedValue(new Error('API Down'));
 
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('API Down')).toBeInTheDocument();
@@ -120,7 +137,11 @@ describe(App.name, () => {
     getItemSpy.mockReturnValue('Monet');
     searchSpy.mockResolvedValue({ data: [] });
 
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
 
     const input = screen.getByLabelText('search-input');
 
@@ -137,7 +158,11 @@ describe(App.name, () => {
   it('should update storage and search when term changes', async () => {
     searchSpy.mockResolvedValue({ data: [] });
 
-    render(<App />);
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
+    );
 
     const input = screen.getByLabelText('search-input');
 
