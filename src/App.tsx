@@ -10,7 +10,8 @@ import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
 import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
 import ErrorTrigger from './components/ErrorTrigger.tsx';
-import { Outlet, useMatch } from 'react-router';
+import { Outlet, useMatch, useNavigate } from 'react-router';
+import { ROUTES } from './consts/routes.const.ts';
 
 const App = (): JSX.Element => {
   const [searchTerm, setSearchTerm] = useState<string>(
@@ -19,7 +20,8 @@ const App = (): JSX.Element => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [arts, setArts] = useState<AICArtwork[] | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const isRootLocation = !!useMatch('/');
+  const isRootLocation = !!useMatch(ROUTES.ROOT.path);
+  const navigate = useNavigate();
 
   const performSearch = useCallback(async (query: string) => {
     setIsLoading(true);
@@ -49,6 +51,10 @@ const App = (): JSX.Element => {
 
   const handleSearch = (value: string) => {
     const trimmedValue = value.trim();
+
+    if (!isRootLocation) {
+      void navigate(ROUTES.ROOT.path);
+    }
 
     if (trimmedValue !== searchTerm) {
       localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, trimmedValue);
