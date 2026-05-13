@@ -18,7 +18,7 @@
   }
 
   .link {
-    @apply text-lg transition-colors duration-300 flex active:scale-95;
+    @apply text-lg transition-colors duration-300 inline-flex align-middle active:scale-95 gap-0.5;
 
     &:hover {
       @apply text-green-500;
@@ -35,6 +35,15 @@
 
     &.link--active::after {
       @apply bg-green-500;
+    }
+
+    svg {
+      @apply w-[1.25em] aspect-square transition-transform duration-300;
+    }
+
+    &:hover svg,
+    &:focus svg {
+      @apply scale-120;
     }
   }
 
@@ -70,7 +79,7 @@
 
     &:hover svg,
     &:focus svg {
-      @apply scale-150;
+      @apply scale-120;
     }
 
     &.button--error {
