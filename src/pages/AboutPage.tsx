@@ -10,7 +10,19 @@ const AboutPage = (): JSX.Element => {
         <p className="text-lg text-gray-700">
           This application was developed as part of the React course. It allows
           users to explore the Art Institute of Chicago&#39;s collection using
-          their public API.
+          their{' '}
+          <a
+            href={URLs.articApiDocs}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="link link--active"
+          >
+            <svg>
+              <use href="/icons.svg#open-in-new" />
+            </svg>
+            public API
+          </a>
+          .
         </p>
 
         <div className="flex flex-col gap-4 items-center">
