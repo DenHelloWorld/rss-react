@@ -21,6 +21,8 @@ const App = (): JSX.Element => {
   const [arts, setArts] = useState<AICArtwork[] | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isRootLocation = !!useMatch(ROUTES.ROOT.path);
+  const isDetailsLocation = !!useMatch(`${ROUTES.DETAILS.path}/:id`);
+  const isSearchContext = isRootLocation || isDetailsLocation;
   const navigate = useNavigate();
 
   const performSearch = useCallback(async (query: string) => {
@@ -71,13 +73,15 @@ const App = (): JSX.Element => {
       </Header>
 
       <main className="main">
-        {isRootLocation && (
-          <>
+        {isSearchContext && (
+          <div
+            className={`main-panel ${isDetailsLocation ? 'main-panel--aside' : ''}`}
+          >
             <ResultsContainer
               searchTerm={searchTerm}
               isLoading={isLoading}
               errorMessage={errorMessage}
-              isEmpty={!arts || arts.length === 0}
+              isEmpty={!arts?.length}
             >
               {arts?.map((art) => (
                 <AICCard
@@ -86,10 +90,9 @@ const App = (): JSX.Element => {
                   getImageUrl={AICApiService.getImageUrl}
                 />
               ))}
+              <ErrorTrigger />
             </ResultsContainer>
-
-            <ErrorTrigger />
-          </>
+          </div>
         )}
 
         <Outlet />

@@ -1,12 +1,12 @@
 import type { JSX } from 'react';
 import { Link } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
-import LazyImage from '../components/LasyImage.tsx';
+import LazyImage from '../components/LazyImage.tsx';
 
 const NotFoundPage = (): JSX.Element => {
   return (
-    <section className="mx-auto container w-full results-container">
-      <h1 className="subtitle text-left">Page Not Found</h1>
+    <section className="mx-auto container shell">
+      <h1 className="title text-left">Page Not Found</h1>
 
       <div className=" text-center flex flex-col items-center gap-4 w-full md:max-w-1/2 mx-auto">
         <LazyImage

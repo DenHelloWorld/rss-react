@@ -3,6 +3,7 @@ import { type JSX, useState } from 'react';
 interface LazyImageProps {
   src: string;
   alt: string;
+  className?: string;
 }
 
 const LazyImage = (props: LazyImageProps): JSX.Element => {
@@ -23,7 +24,7 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
           loading="lazy"
           src={props.src}
           alt={props.alt}
-          className={` ${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto`}
+          className={` ${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto ${props.className ?? ''}`}
           onLoad={() => {
             setIsImageLoaded(true);
           }}

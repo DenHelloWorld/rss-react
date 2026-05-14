@@ -1,11 +1,11 @@
 import type { JSX } from 'react';
 import { URLs } from '../consts/urls.const.ts';
-import LazyImage from '../components/LasyImage.tsx';
+import LazyImage from '../components/LazyImage.tsx';
 
 const AboutPage = (): JSX.Element => {
   return (
-    <section className="mx-auto container w-full results-container">
-      <h1 className="subtitle text-left">About the Project</h1>
+    <section className="mx-auto container shell">
+      <h1 className="title text-left">About the Project</h1>
       <div className="text-center flex flex-col gap-4 w-full md:max-w-1/2 mx-auto">
         <p className="text-lg text-gray-700">
           This application was developed as part of the React course. It allows

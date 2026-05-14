@@ -1,3 +1,5 @@
+import { HTTP_STATUS } from '../consts/http-status.const.ts';
+
 export interface AICArtwork {
   id: number;
   title: string;
@@ -8,8 +10,19 @@ export interface AICArtwork {
   };
 }
 
+export interface AICArtworkDetails extends AICArtwork {
+  date_display?: string;
+  medium_display?: string;
+  place_of_origin?: string;
+  dimensions?: string;
+}
+
 export interface AICResponse {
   data: AICArtwork[];
+}
+
+export interface AICSingleResponse {
+  data: AICArtworkDetails;
 }
 
 const API_URL = {
@@ -41,8 +54,29 @@ export const AICApiService = {
       throw new Error('Network response was not ok');
     }
 
-    //TODO: ask about zod?
     return (await response.json()) as AICResponse;
+  },
+
+  async getById(id: string): Promise<AICSingleResponse> {
+    const params = new URLSearchParams({
+      fields:
+        'id,title,artist_display,image_id,thumbnail,date_display,medium_display,place_of_origin,dimensions',
+    });
+
+    const url = new URL(`${API_URL.baseURL}/${id}`);
+    url.search = params.toString();
+
+    const response = await fetch(url);
+
+    if (!response.ok) {
+      if (response.status === HTTP_STATUS.NOT_FOUND) {
+        throw new Error('Artwork not found');
+      }
+
+      throw new Error('Failed to fetch artwork details');
+    }
+
+    return (await response.json()) as AICSingleResponse;
   },
 
   getImageUrl: (imageId: string): string => {

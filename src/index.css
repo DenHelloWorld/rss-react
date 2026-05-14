@@ -6,7 +6,7 @@ body {
 
 @layer components {
   .app-wrapper {
-    @apply min-h-[97vh]  flex flex-col font-sans;
+    @apply grid grid-rows-[auto_minmax(0,1fr)] font-sans h-screen;
   }
 
   .header {
@@ -15,6 +15,10 @@ body {
 
   .header-container {
     @apply container mx-auto px-4 flex justify-between gap-4 flex-col;
+  }
+
+  .main {
+    @apply flex p-4 w-full gap-4 container mx-auto;
   }
 
   .navigation {
@@ -51,10 +55,6 @@ body {
     }
   }
 
-  .main {
-    @apply flex flex-col flex-1 w-full p-4 gap-4 items-end container mx-auto;
-  }
-
   .error-boundary-template {
     @apply container m-auto h-screen flex flex-col items-center justify-center gap-4 p-4;
   }
@@ -71,7 +71,7 @@ body {
   .button {
     @apply cursor-pointer px-6 py-2 bg-blue-600 text-white rounded-lg
     hover:bg-blue-700 active:scale-95 flex items-center justify-center
-    gap-2 transition-all duration-300 outline-none;
+    gap-2 transition-all duration-300 outline-none shrink-0;
 
     &:focus {
       @apply ring-1 ring-gray-500 outline-none;
@@ -99,32 +99,45 @@ body {
     }
 
     &.button--icon {
-      @apply px-3;
+      @apply p-0 w-10 h-10;
     }
   }
 
-  .results-container {
-    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 min-h-125 w-full;
+  .shell {
+    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 w-full overflow-auto;
   }
 
   .cards-grid {
-    @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+    @apply grid gap-6 justify-center;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 340px));
   }
 
-  .subtitle {
-    @apply text-2xl font-bold text-gray-800 mb-6;
+  .title {
+    @apply text-2xl font-bold text-gray-800;
   }
 
   .error-message {
     @apply bg-red-50 text-red-600 p-4 rounded-lg border border-red-100;
   }
 
+  .main-panel {
+    @apply flex flex-col w-full gap-6 overflow-y-auto;
+
+    &.main-panel--aside {
+      @apply w-1/2;
+    }
+  }
+
   .card {
-    @apply bg-white rounded-xl   shadow-md
-    duration-300 flex flex-col relative;
+    @apply bg-white rounded-xl shadow-md
+    duration-300 flex flex-col relative cursor-pointer overflow-hidden;
 
     &:hover {
       @apply shadow-2xl -translate-y-1.5;
+    }
+
+    &.card--selected {
+      @apply shadow-2xl shadow-blue-200 -translate-y-1.5;
     }
 
     .card-image-container {
@@ -155,5 +168,9 @@ body {
 
   .card-placeholder {
     @apply w-full h-full text-gray-300 m-auto;
+  }
+
+  .top-bar {
+    @apply sticky top-0 z-10 bg-white/50 backdrop-blur-md py-1;
   }
 }

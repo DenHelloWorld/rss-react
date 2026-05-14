@@ -1,6 +1,8 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
-import { type JSX } from 'react';
-import LazyImage from './LasyImage.tsx';
+import { type JSX, useEffect, useRef } from 'react';
+import LazyImage from './LazyImage.tsx';
+import { useNavigate, useParams } from 'react-router';
+import { ROUTES } from '../consts/routes.const.ts';
 
 interface AICCardProps {
   art: AICArtwork;
@@ -8,8 +10,28 @@ interface AICCardProps {
 }
 
 const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+  const { id } = useParams();
+  const isActive = Number(id) === art.id;
+  const handleDetails = () =>
+    void navigate(`${ROUTES.DETAILS.path}/${String(art.id)}`);
+
+  useEffect(() => {
+    if (isActive && cardRef.current) {
+      cardRef.current.scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+      });
+    }
+  }, [isActive]);
+
   return (
-    <article className="card">
+    <button
+      ref={cardRef}
+      className={`card ${isActive ? 'card--selected' : ''}`}
+      onClick={handleDetails}
+    >
       <div className="card-image-container">
         <LazyImage
           src={getImageUrl(art.image_id ?? '')}
@@ -23,7 +45,7 @@ const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
             'No description available'}
         </p>
       </div>
-    </article>
+    </button>
   );
 };
 

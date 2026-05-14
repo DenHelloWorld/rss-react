@@ -14,7 +14,7 @@ if (!root) {
 createRoot(root).render(
   <StrictMode>
     <ErrorBoundary>
-      <RouterProvider router={router} />,
+      <RouterProvider router={router} />
     </ErrorBoundary>
   </StrictMode>
 );
