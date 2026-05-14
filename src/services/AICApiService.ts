@@ -19,6 +19,7 @@ export interface AICArtworkDetails extends AICArtwork {
 
 export interface AICResponse {
   data: AICArtwork[];
+  pagination: AICPaginationResponse;
 }
 
 export interface AICSingleResponse {
@@ -30,12 +31,28 @@ const API_URL = {
   searchEndpoint: 'search',
 };
 
+export interface AICPaginationResponse {
+  total: number;
+  limit: number;
+  offset: number;
+  total_pages: number;
+  current_page: number;
+}
+
+export interface AICPagination {
+  page?: string;
+  limit?: string;
+}
+
 export const AICApiService = {
-  async search(query: string | undefined): Promise<AICResponse> {
+  async search(
+    query: string | undefined,
+    { limit = '9', page = '1' }: AICPagination = {}
+  ): Promise<AICResponse> {
     const params = new URLSearchParams({
       fields: 'id,title,artist_display,image_id,thumbnail',
-      limit: '9',
-      page: '1',
+      limit,
+      page,
     });
 
     if (query) {

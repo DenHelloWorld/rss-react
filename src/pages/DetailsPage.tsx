@@ -52,7 +52,7 @@ const DetailsPage = (): JSX.Element => {
 
           {data && (
             <div className="flex flex-col md:flex-row gap-8 mt-6">
-              <div className="flex-1 shadow-xl rounded-2xl overflow-hidden bg-gray-50">
+              <div className="flex-1 overflow-hidden bg-gray-50">
                 <LazyImage
                   src={AICApiService.getImageUrl(String(data.image_id))}
                   alt={data.title}
