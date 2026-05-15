@@ -1,6 +1,5 @@
 import './App.css';
 import { type JSX, useCallback, useEffect, useState } from 'react';
-import SearchBar from './components/SearchBar.tsx';
 import Header from './components/Header.tsx';
 import { STORAGE_KEYS } from './services/local-storage.service.ts';
 import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
@@ -11,11 +10,10 @@ import { Outlet, useMatch, useSearchParams } from 'react-router';
 import { ROUTE_QUERY_PARAMS, ROUTES } from './consts/routes.const.ts';
 import Pagination from './components/Pagination.tsx';
 import { useLocalStorage } from './hooks/useLocalStorage.ts';
+import ArtworkSearch from './components/ArtworkSearch.tsx';
 
 const App = (): JSX.Element => {
-  const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(
-    STORAGE_KEYS.SEARCH_TERM
-  );
+  const [storedSearchTerm] = useLocalStorage(STORAGE_KEYS.SEARCH_TERM);
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '1';
   const searchTerm =
@@ -59,18 +57,10 @@ const App = (): JSX.Element => {
     setSearchParams({ query: searchTerm, page: String(newPage) });
   };
 
-  const handleSearch = (value: string) => {
-    const trimmedValue = value.trim();
-    if (trimmedValue !== searchTerm) {
-      setStoredSearchTerm(trimmedValue);
-      setSearchParams({ query: trimmedValue, page: '1' });
-    }
-  };
-
   return (
     <div className="app-wrapper">
       <Header>
-        <SearchBar initialValue={searchTerm} onSearch={handleSearch} />
+        <ArtworkSearch />
       </Header>
 
       <main className="main">
