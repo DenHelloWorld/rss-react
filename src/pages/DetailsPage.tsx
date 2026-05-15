@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useEffect, useState, type JSX } from 'react';
 import {
   AICApiService,
@@ -10,6 +10,7 @@ import LazyImage from '../components/LazyImage.tsx';
 
 const DetailsPage = (): JSX.Element => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [data, setData] = useState<AICArtworkDetails | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,7 +37,11 @@ const DetailsPage = (): JSX.Element => {
     void load();
   }, [id]);
 
-  const handleClose = () => void navigate(ROUTES.ROOT.path);
+  const handleClose = () =>
+    void navigate({
+      pathname: ROUTES.ROOT.path,
+      search: searchParams.toString(),
+    });
 
   if (error || (!data && !loading)) {
     return (
