@@ -13,16 +13,21 @@ const DetailsPage = (): JSX.Element => {
   const navigate = useNavigate();
   const [data, setData] = useState<AICArtworkDetails | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const load = async () => {
       if (id) {
         setLoading(true);
+        setError(null);
         try {
           const res = await AICApiService.getById(id);
           setData(res.data);
         } catch (error) {
           console.error('Failed to fetch artwork:', error);
+          if (error instanceof Error) {
+            setError(error.message);
+          }
         } finally {
           setLoading(false);
         }
@@ -32,6 +37,24 @@ const DetailsPage = (): JSX.Element => {
   }, [id]);
 
   const handleClose = () => void navigate(ROUTES.ROOT.path);
+
+  if (error || (!data && !loading)) {
+    return (
+      <section className="mx-auto container shell relative">
+        <div className="flex justify-end">
+          <button
+            className="button button--error button--icon"
+            onClick={handleClose}
+          >
+            <svg>
+              <use href="/icons.svg#close" />
+            </svg>
+          </button>
+        </div>
+        <p className="error-message my-4 w-fit mx-auto">{error}</p>
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto container shell relative">
