@@ -5,6 +5,7 @@ import App from './App.tsx';
 import NotFoundPage from './pages/404.tsx';
 import BubbleError from './components/BubbleError.tsx';
 import DetailsPage from './pages/DetailsPage.tsx';
+import ArtworkResultsLayout from './layouts/ArtworkResultsLayout.tsx';
 
 export const router = createBrowserRouter([
   {
@@ -13,8 +14,14 @@ export const router = createBrowserRouter([
     errorElement: <BubbleError />,
     children: [
       {
-        path: `${ROUTES.DETAILS.path}/:id`,
-        element: <DetailsPage />,
+        path: '',
+        element: <ArtworkResultsLayout />,
+        children: [
+          {
+            path: `${ROUTES.DETAILS.path}/:id`,
+            element: <DetailsPage />,
+          },
+        ],
       },
       {
         path: ROUTES.ABOUT.path,
