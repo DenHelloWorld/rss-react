@@ -2,10 +2,7 @@ import './App.css';
 import { type JSX, useCallback, useEffect, useState } from 'react';
 import SearchBar from './components/SearchBar.tsx';
 import Header from './components/Header.tsx';
-import {
-  localStorageService,
-  STORAGE_KEYS,
-} from './services/local-storage.service.ts';
+import { STORAGE_KEYS } from './services/local-storage.service.ts';
 import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
 import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
@@ -13,14 +10,15 @@ import ErrorTrigger from './components/ErrorTrigger.tsx';
 import { Outlet, useMatch, useSearchParams } from 'react-router';
 import { ROUTES } from './consts/routes.const.ts';
 import Pagination from './components/Pagination.tsx';
+import { useLocalStorage } from './hooks/useLocalStorage.ts';
 
 const App = (): JSX.Element => {
+  const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(
+    STORAGE_KEYS.SEARCH_TERM
+  );
   const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = searchParams.get('page') ?? '1';
-  const searchTerm =
-    searchParams.get('query') ??
-    localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ??
-    '';
+  const searchTerm = searchParams.get('query') ?? storedSearchTerm ?? '';
   const [totalArts, setTotalArts] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -63,7 +61,7 @@ const App = (): JSX.Element => {
   const handleSearch = (value: string) => {
     const trimmedValue = value.trim();
     if (trimmedValue !== searchTerm) {
-      localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, trimmedValue);
+      setStoredSearchTerm(trimmedValue);
       setSearchParams({ query: trimmedValue, page: '1' });
     }
   };
