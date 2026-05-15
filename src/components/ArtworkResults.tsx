@@ -25,23 +25,27 @@ const ArtworkResults = (): JSX.Element => {
     setSearchParams({ query: searchTerm, page: String(newPage) });
   };
 
-  const performSearch = useCallback(async (query: string, page: string) => {
-    setIsLoading(true);
-    setErrorMessage(null);
+  const performSearch = useCallback(
+    async (query: string, page: string) => {
+      setIsLoading(true);
+      setErrorMessage(null);
 
-    try {
-      const response = await AICApiService.search(query, { page });
-      setArts(response.data);
-      setTotalPages(response.pagination.total_pages);
-      setTotalArts(response.pagination.total);
-    } catch (e) {
-      setErrorMessage(
-        e instanceof Error ? e.message : 'An unknown error occurred'
-      );
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+      try {
+        const response = await AICApiService.search(query, { page });
+        setArts(response.data);
+        setTotalPages(response.pagination.total_pages);
+        setTotalArts(response.pagination.total);
+        setSearchParams({ query, page });
+      } catch (e) {
+        setErrorMessage(
+          e instanceof Error ? e.message : 'An unknown error occurred'
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [setSearchParams]
+  );
 
   useEffect(() => {
     const onComponentDidMount = () => {
