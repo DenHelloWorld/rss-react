@@ -1,0 +1,51 @@
+import { type JSX } from 'react';
+
+interface PaginationProps {
+  total: number;
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
+}
+
+const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+  total,
+}: PaginationProps): JSX.Element => {
+  return (
+    <div className="pagination">
+      <button
+        className="button button--icon"
+        disabled={currentPage <= 1}
+        onClick={() => {
+          onPageChange(currentPage - 1);
+        }}
+      >
+        <svg>
+          <use href="/icons.svg#arrow-left" />
+        </svg>
+      </button>
+
+      <span>
+        <span>{currentPage}</span> / <span>{totalPages}</span>
+      </span>
+
+      <button
+        className="button button--icon"
+        disabled={currentPage >= totalPages}
+        onClick={() => {
+          onPageChange(currentPage + 1);
+        }}
+      >
+        <svg>
+          <use href="/icons.svg#arrow-right" />
+        </svg>
+      </button>
+
+      <span className="text-sm text-gray-500">Total: {total}</span>
+    </div>
+  );
+};
+
+export default Pagination;

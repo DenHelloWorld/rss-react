@@ -10,28 +10,35 @@ import { AICApiService, type AICArtwork } from './services/AICApiService.ts';
 import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
 import ErrorTrigger from './components/ErrorTrigger.tsx';
-import { Outlet, useMatch, useNavigate } from 'react-router';
+import { Outlet, useMatch, useSearchParams } from 'react-router';
 import { ROUTES } from './consts/routes.const.ts';
+import Pagination from './components/Pagination.tsx';
 
 const App = (): JSX.Element => {
-  const [searchTerm, setSearchTerm] = useState<string>(
-    () => localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ?? ''
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = searchParams.get('page') ?? '1';
+  const searchTerm =
+    searchParams.get('query') ??
+    localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ??
+    '';
+  const [totalArts, setTotalArts] = useState<number>(0);
+  const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [arts, setArts] = useState<AICArtwork[] | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const isRootLocation = !!useMatch(ROUTES.ROOT.path);
   const isDetailsLocation = !!useMatch(`${ROUTES.DETAILS.path}/:id`);
   const isSearchContext = isRootLocation || isDetailsLocation;
-  const navigate = useNavigate();
 
-  const performSearch = useCallback(async (query: string) => {
+  const performSearch = useCallback(async (query: string, page: string) => {
     setIsLoading(true);
     setErrorMessage(null);
 
     try {
-      const response = await AICApiService.search(query);
+      const response = await AICApiService.search(query, { page });
       setArts(response.data);
+      setTotalPages(response.pagination.total_pages);
+      setTotalArts(response.pagination.total);
     } catch (e) {
       setErrorMessage(
         e instanceof Error ? e.message : 'An unknown error occurred'
@@ -42,27 +49,22 @@ const App = (): JSX.Element => {
   }, []);
 
   useEffect(() => {
-    const onComponentDidMount = async () => {
-      await performSearch(
-        localStorageService.getItem(STORAGE_KEYS.SEARCH_TERM) ?? ''
-      );
+    const onComponentDidMount = () => {
+      void performSearch(searchTerm, currentPage);
     };
 
-    void onComponentDidMount();
-  }, [performSearch]);
+    onComponentDidMount();
+  }, [searchTerm, currentPage, performSearch]);
+
+  const handlePageChange = (newPage: number) => {
+    setSearchParams({ query: searchTerm, page: String(newPage) });
+  };
 
   const handleSearch = (value: string) => {
     const trimmedValue = value.trim();
-
-    if (!isRootLocation) {
-      void navigate(ROUTES.ROOT.path);
-    }
-
     if (trimmedValue !== searchTerm) {
       localStorageService.setItem(STORAGE_KEYS.SEARCH_TERM, trimmedValue);
-      setSearchTerm(trimmedValue);
-
-      void performSearch(trimmedValue);
+      setSearchParams({ query: trimmedValue, page: '1' });
     }
   };
 
@@ -92,6 +94,15 @@ const App = (): JSX.Element => {
               ))}
               <ErrorTrigger />
             </ResultsContainer>
+
+            {!isLoading && arts && (
+              <Pagination
+                total={totalArts}
+                currentPage={Number(currentPage)}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+              />
+            )}
           </div>
         )}
 

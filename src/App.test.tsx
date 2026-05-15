@@ -6,7 +6,7 @@ import {
   localStorageService,
   STORAGE_KEYS,
 } from './services/local-storage.service.ts';
-import { MOCK_ART } from './test-utils/mock-data.ts';
+import { MOCK_ART, MOCK_PAGINATION } from './test-utils/mock-data.ts';
 import type { ReactNode } from 'react';
 import { MemoryRouter } from 'react-router';
 
@@ -62,6 +62,7 @@ vi.mock('./components/ResultsContainer.tsx', () => ({
 vi.mock('./components/ErrorTrigger.tsx', () => ({ default: () => <div /> }));
 
 describe(App.name, () => {
+  const pagination = MOCK_PAGINATION;
   const searchSpy = vi.spyOn(AICApiService, 'search');
   const getItemSpy = vi.spyOn(localStorageService, 'getItem');
   const setItemSpy = vi.spyOn(localStorageService, 'setItem');
@@ -72,7 +73,7 @@ describe(App.name, () => {
 
   it('should handle null search term from storage on mount', async () => {
     getItemSpy.mockReturnValue(null);
-    searchSpy.mockResolvedValue({ data: [] });
+    searchSpy.mockResolvedValue({ data: [], pagination });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -81,14 +82,14 @@ describe(App.name, () => {
     );
 
     await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith('');
+      expect(searchSpy).toHaveBeenCalledWith('', { page: '1' });
     });
   });
 
   it('should hide loader after successful search', async () => {
     const mockArt: AICArtwork = MOCK_ART;
 
-    searchSpy.mockResolvedValue({ data: [mockArt] });
+    searchSpy.mockResolvedValue({ data: [mockArt], pagination });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -135,7 +136,7 @@ describe(App.name, () => {
 
   it('should not trigger search if term is identical after trim', () => {
     getItemSpy.mockReturnValue('Monet');
-    searchSpy.mockResolvedValue({ data: [] });
+    searchSpy.mockResolvedValue({ data: [], pagination });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -156,7 +157,8 @@ describe(App.name, () => {
   });
 
   it('should update storage and search when term changes', async () => {
-    searchSpy.mockResolvedValue({ data: [] });
+    getItemSpy.mockReturnValue('Monet');
+    searchSpy.mockResolvedValue({ data: [], pagination });
 
     render(
       <MemoryRouter initialEntries={['/']}>
@@ -164,14 +166,21 @@ describe(App.name, () => {
       </MemoryRouter>
     );
 
-    const input = screen.getByLabelText('search-input');
+    await waitFor(() => {
+      expect(searchSpy).toHaveBeenCalled();
+    });
 
+    searchSpy.mockClear();
+    setItemSpy.mockClear();
+
+    const input = screen.getByLabelText('search-input');
     fireEvent.change(input, { target: { value: 'Dali' } });
     fireEvent.click(screen.getByText('Search'));
 
     expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM, 'Dali');
+
     await waitFor(() => {
-      expect(searchSpy).toHaveBeenCalledWith('Dali');
+      expect(searchSpy).toHaveBeenCalledWith('Dali', { page: '1' });
     });
   });
 });

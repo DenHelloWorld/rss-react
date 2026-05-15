@@ -1,7 +1,7 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
 import { type JSX, useEffect, useRef } from 'react';
 import LazyImage from './LazyImage.tsx';
-import { useNavigate, useParams } from 'react-router';
+import { useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
 
 interface AICCardProps {
@@ -12,15 +12,20 @@ interface AICCardProps {
 const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
   const cardRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
+  const location = useLocation();
   const { id } = useParams();
   const isActive = Number(id) === art.id;
-  const handleDetails = () =>
-    void navigate(`${ROUTES.DETAILS.path}/${String(art.id)}`);
+
+  const handleDetails = () => {
+    void navigate({
+      pathname: `${ROUTES.DETAILS.path}/${String(art.id)}`,
+      search: location.search,
+    });
+  };
 
   useEffect(() => {
     if (isActive && cardRef.current) {
       cardRef.current.scrollIntoView({
-        behavior: 'smooth',
         block: 'center',
       });
     }

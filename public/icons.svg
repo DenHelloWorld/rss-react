@@ -27,4 +27,14 @@
   <symbol id="close" viewBox="0 -960 960 960">
     <path fill="currentColor" d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z"    />
   </symbol>
+
+  <symbol id="arrow-left" viewBox="0 -960 960 960">
+    <path fill="currentColor" d="M400-240 160-480l240-240 56 58-142 142h486v80H314l142 142-56 58Z"/>
+  </symbol>
+
+  <symbol id="arrow-right" viewBox="0 -960 960 960">
+    <path fill="currentColor" d="m560-240-56-58 142-142H160v-80h486L504-662l56-58 240 240-240 240Z"/>
+  </symbol>
+
+
 </svg>

@@ -73,6 +73,10 @@ body {
     hover:bg-blue-700 active:scale-95 flex items-center justify-center
     gap-2 transition-all duration-300 outline-none shrink-0;
 
+    &:disabled {
+      @apply cursor-not-allowed opacity-50;
+    }
+
     &:focus {
       @apply ring-1 ring-gray-500 outline-none;
     }
@@ -172,5 +176,9 @@ body {
 
   .top-bar {
     @apply sticky top-0 z-10 bg-white/50 backdrop-blur-md py-1;
+  }
+
+  .pagination {
+    @apply flex justify-center gap-6 items-center;
   }
 }

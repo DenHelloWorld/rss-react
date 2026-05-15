@@ -16,10 +16,14 @@ export const ResultsContainer = ({
   isEmpty,
   children,
 }: ResultsContainerProps): JSX.Element => {
+  const displayTitle = searchTerm
+    ? `Results for "${searchTerm}"`
+    : 'Art Collection';
+
   return (
-    <section className="shell relative">
-      <h1 className="title top-bar">
-        {searchTerm ? `Results for "${searchTerm}"` : 'Art Collection'}
+    <section className="shell relative h-full">
+      <h1 className="title top-bar truncate w-full" title={displayTitle}>
+        {displayTitle}
       </h1>
 
       {errorMessage && (
