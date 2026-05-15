@@ -4,7 +4,7 @@ import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../services/local-storage.service.ts';
 import { useSearchParams } from 'react-router';
 import { AICApiService, type AICArtwork } from '../services/AICApiService.ts';
-import { ResultsContainer } from './ResultsContainer.tsx';
+import ResultsContainer from './ResultsContainer.tsx';
 import AICCard from './AICCard.tsx';
 import ErrorTrigger from './ErrorTrigger.tsx';
 import Pagination from './Pagination.tsx';

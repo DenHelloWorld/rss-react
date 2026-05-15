@@ -6,10 +6,7 @@ export interface SearchBarProps {
   onSearch: (term: string) => void;
 }
 
-export const SearchBar = ({
-  initialValue,
-  onSearch,
-}: SearchBarProps): JSX.Element => {
+const SearchBar = ({ initialValue, onSearch }: SearchBarProps): JSX.Element => {
   const [query, setQuery] = useState(initialValue);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {

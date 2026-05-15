@@ -9,7 +9,7 @@ interface ResultsContainerProps {
   children: React.ReactNode;
 }
 
-export const ResultsContainer = ({
+const ResultsContainer = ({
   searchTerm,
   isLoading,
   errorMessage,
@@ -50,3 +50,5 @@ export const ResultsContainer = ({
     </section>
   );
 };
+
+export default ResultsContainer;

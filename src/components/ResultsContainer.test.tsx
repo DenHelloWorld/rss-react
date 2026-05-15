@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { ResultsContainer } from './ResultsContainer';
+import ResultsContainer from './ResultsContainer';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 
 describe(ResultsContainer.name, () => {
