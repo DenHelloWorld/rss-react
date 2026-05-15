@@ -21,6 +21,8 @@ const DetailsPage = (): JSX.Element => {
         try {
           const res = await AICApiService.getById(id);
           setData(res.data);
+        } catch (error) {
+          console.error('Failed to fetch artwork:', error);
         } finally {
           setLoading(false);
         }

@@ -4,7 +4,7 @@ import AICCard from './AICCard';
 import type { AICArtwork } from '../services/AICApiService.ts';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 import { MOCK_ART } from '../test-utils/mock-data.ts';
-import { MemoryRouter } from 'react-router';
+import { MemoryRouter, Route, Routes } from 'react-router';
 
 describe(AICCard.name, () => {
   const mockArt: AICArtwork = MOCK_ART;
@@ -94,5 +94,39 @@ describe(AICCard.name, () => {
     );
 
     expect(screen.getByText(noDescContent)).toBeInTheDocument();
+  });
+
+  it('navigates to details page when clicked', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <Routes>
+          <Route
+            path="/"
+            element={<AICCard art={mockArt} getImageUrl={mockGetImageUrl} />}
+          />
+          <Route path="/details/:id" element={<div>Details Page</div>} />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    fireEvent.click(screen.getByRole('button'));
+    expect(screen.getByText('Details Page')).toBeInTheDocument();
+  });
+
+  it('scrolls into view when card is active', () => {
+    const scrollSpy = vi.spyOn(window.HTMLElement.prototype, 'scrollIntoView');
+
+    render(
+      <MemoryRouter initialEntries={[`/details/${String(mockArt.id)}`]}>
+        <Routes>
+          <Route
+            path="/details/:id"
+            element={<AICCard art={mockArt} getImageUrl={vi.fn()} />}
+          />
+        </Routes>
+      </MemoryRouter>
+    );
+
+    expect(scrollSpy).toHaveBeenCalledWith({ block: 'center' });
   });
 });

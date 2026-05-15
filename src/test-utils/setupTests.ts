@@ -54,3 +54,8 @@ Object.defineProperty(global, 'localStorage', {
 
 global.Storage = StorageMock;
 window.Storage = StorageMock;
+
+Object.defineProperty(window.HTMLElement.prototype, 'scrollIntoView', {
+  writable: true,
+  value: vi.fn(),
+});
