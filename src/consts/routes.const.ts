@@ -12,3 +12,8 @@ export const ROUTES = {
     label: 'Details',
   },
 } as const;
+
+export const ROUTE_QUERY_PARAMS = {
+  QUERY: 'query',
+  PAGE: 'page',
+} as const;

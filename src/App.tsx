@@ -8,7 +8,7 @@ import AICCard from './components/AICCard.tsx';
 import { ResultsContainer } from './components/ResultsContainer.tsx';
 import ErrorTrigger from './components/ErrorTrigger.tsx';
 import { Outlet, useMatch, useSearchParams } from 'react-router';
-import { ROUTES } from './consts/routes.const.ts';
+import { ROUTE_QUERY_PARAMS, ROUTES } from './consts/routes.const.ts';
 import Pagination from './components/Pagination.tsx';
 import { useLocalStorage } from './hooks/useLocalStorage.ts';
 
@@ -17,8 +17,9 @@ const App = (): JSX.Element => {
     STORAGE_KEYS.SEARCH_TERM
   );
   const [searchParams, setSearchParams] = useSearchParams();
-  const currentPage = searchParams.get('page') ?? '1';
-  const searchTerm = searchParams.get('query') ?? storedSearchTerm ?? '';
+  const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '1';
+  const searchTerm =
+    searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
   const [totalArts, setTotalArts] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
   const [isLoading, setIsLoading] = useState<boolean>(false);
