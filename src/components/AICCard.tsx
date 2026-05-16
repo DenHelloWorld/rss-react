@@ -1,8 +1,11 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
 import { useEffect, useRef } from 'react';
+import { type ChangeEvent, type JSX, useEffect, useRef } from 'react';
 import LazyImage from './LazyImage.tsx';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
+import { useArtworkSelection } from '../hooks/useArtworkSelection.ts';
+import Checkbox from './Checkbox.tsx';
 
 interface AICCardProps {
   art: AICArtwork;
@@ -11,6 +14,10 @@ interface AICCardProps {
 
 const AICCard = ({ art, getImageUrl }: AICCardProps) => {
   const cardRef = useRef<HTMLButtonElement>(null);
+const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
+  const { isSelected, select, unselect } = useArtworkSelection();
+  const checked = isSelected(art.id);
+  const cardRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -21,6 +28,14 @@ const AICCard = ({ art, getImageUrl }: AICCardProps) => {
       pathname: `${ROUTES.DETAILS.path}/${String(art.id)}`,
       search: location.search,
     });
+  };
+
+  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked) {
+      select(art);
+    } else {
+      unselect(art);
+    }
   };
 
   useEffect(() => {
@@ -49,6 +64,10 @@ const AICCard = ({ art, getImageUrl }: AICCardProps) => {
           {(art.thumbnail?.alt_text ?? art.artist_display) ||
             'No description available'}
         </p>
+
+        <span className="z-2 w-fit self-end">
+          <Checkbox checked={checked} onChange={handleCheckboxChange} />
+        </span>
       </div>
     </button>
   );

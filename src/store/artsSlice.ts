@@ -23,7 +23,7 @@ const artsSlice = createSlice({
       return {
         ...state,
         selectedEntities: state.selectedEntities.filter(
-          (item) => item.id !== action.payload.id
+          (entity) => entity.id !== action.payload.id
         ),
       };
     },

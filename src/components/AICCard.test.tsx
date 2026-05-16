@@ -5,6 +5,8 @@ import type { AICArtwork } from '../services/AICApiService.ts';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 import { MOCK_ART } from '../test-utils/mock-data.ts';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { Provider } from 'react-redux';
+import { store } from '../store/store.ts';
 
 describe(AICCard.name, () => {
   const mockArt: AICArtwork = MOCK_ART;
@@ -13,9 +15,11 @@ describe(AICCard.name, () => {
 
   it('renders art title and description correctly', () => {
     render(
-      <MemoryRouter>
-        <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(mockArt.title)).toBeInTheDocument();
@@ -24,9 +28,11 @@ describe(AICCard.name, () => {
 
   it('shows skeleton while image is loading', () => {
     const { container } = render(
-      <MemoryRouter>
-        <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
+        </MemoryRouter>
+      </Provider>
     );
     const skeleton = container.querySelector('.skeleton');
 
@@ -35,9 +41,11 @@ describe(AICCard.name, () => {
 
   it('hides skeleton and shows image after successful load', () => {
     const { container } = render(
-      <MemoryRouter>
-        <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
+        </MemoryRouter>
+      </Provider>
     );
     const img = screen.getByRole('img');
 
@@ -51,9 +59,11 @@ describe(AICCard.name, () => {
 
   it('shows placeholder when image fails to load', () => {
     const { container } = render(
-      <MemoryRouter>
-        <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
+        </MemoryRouter>
+      </Provider>
     );
     const img = screen.getByRole('img');
 
@@ -72,9 +82,11 @@ describe(AICCard.name, () => {
     };
 
     render(
-      <MemoryRouter>
-        <AICCard art={artWithoutAlt} getImageUrl={mockGetImageUrl} />{' '}
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <AICCard art={artWithoutAlt} getImageUrl={mockGetImageUrl} />{' '}
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(artWithoutAlt.artist_display)).toBeInTheDocument();
@@ -88,9 +100,11 @@ describe(AICCard.name, () => {
     };
 
     render(
-      <MemoryRouter>
-        <AICCard art={emptyArt} getImageUrl={mockGetImageUrl} />
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>
+          <AICCard art={emptyArt} getImageUrl={mockGetImageUrl} />
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(screen.getByText(noDescContent)).toBeInTheDocument();
@@ -98,15 +112,17 @@ describe(AICCard.name, () => {
 
   it('navigates to details page when clicked', () => {
     render(
-      <MemoryRouter initialEntries={['/']}>
-        <Routes>
-          <Route
-            path="/"
-            element={<AICCard art={mockArt} getImageUrl={mockGetImageUrl} />}
-          />
-          <Route path="/details/:id" element={<div>Details Page</div>} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/']}>
+          <Routes>
+            <Route
+              path="/"
+              element={<AICCard art={mockArt} getImageUrl={mockGetImageUrl} />}
+            />
+            <Route path="/details/:id" element={<div>Details Page</div>} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
     fireEvent.click(screen.getByRole('button'));
@@ -117,14 +133,16 @@ describe(AICCard.name, () => {
     const scrollSpy = vi.spyOn(window.HTMLElement.prototype, 'scrollIntoView');
 
     render(
-      <MemoryRouter initialEntries={[`/details/${String(mockArt.id)}`]}>
-        <Routes>
-          <Route
-            path="/details/:id"
-            element={<AICCard art={mockArt} getImageUrl={vi.fn()} />}
-          />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={[`/details/${String(mockArt.id)}`]}>
+          <Routes>
+            <Route
+              path="/details/:id"
+              element={<AICCard art={mockArt} getImageUrl={vi.fn()} />}
+            />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
 
     expect(scrollSpy).toHaveBeenCalledWith({ block: 'center' });

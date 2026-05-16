@@ -105,6 +105,14 @@ body {
     &.button--icon {
       @apply p-0 w-10 h-10;
     }
+
+    &.button--sm {
+      @apply w-8 h-8;
+    }
+
+    &.button--outline {
+      @apply bg-transparent border-blue-600 border;
+    }
   }
 
   .shell {
@@ -180,5 +188,9 @@ body {
 
   .pagination {
     @apply flex justify-center gap-6 items-center;
+  }
+
+  .checkbox {
+    @apply w-6 aspect-square cursor-pointer shrink-0;
   }
 }
