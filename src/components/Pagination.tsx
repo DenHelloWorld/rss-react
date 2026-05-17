@@ -44,7 +44,7 @@ const Pagination = ({
         </svg>
       </button>
 
-      <span className="text-sm text-gray-500">Total: {total}</span>
+      <span className="text-xs text-gray-500">Total: {total}</span>
     </div>
   );
 };

@@ -8,7 +8,7 @@ interface CheckboxProps {
 const Checkbox = ({ checked, onChange }: CheckboxProps): JSX.Element => {
   return (
     <label
-      className={`button button--icon button--sm ${checked ? '' : 'button--outline'}`}
+      className={`button button--icon w-8 h-8 ${checked ? '' : 'button--outline'}`}
     >
       <input
         type="checkbox"
