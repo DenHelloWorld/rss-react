@@ -11,7 +11,7 @@ const LazyImage = ({ src, alt, className }: LazyImageProps) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
-    <div className="relative w-full h-full flex align-middle justify-center">
+    <div className="relative w-full h-full flex align-middle justify-center bg-app-bg">
       {isImageLoadError && (
         <svg className="card-placeholder" role="presentation">
           <use href="/icons.svg#broken-image" />

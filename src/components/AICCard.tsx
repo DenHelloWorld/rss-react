@@ -14,7 +14,7 @@ interface AICCardProps {
 const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
   const { isSelected, select, unselect } = useArtworkSelection();
   const checked = isSelected(art.id);
-  const cardRef = useRef<HTMLDivElement>(null);
+  const cardRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -62,7 +62,7 @@ const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
             'No description available'}
         </p>
 
-        <span className="z-2 w-fit self-end">
+        <span className="card-actions">
           <Checkbox checked={checked} onChange={handleCheckboxChange} />
         </span>
       </div>

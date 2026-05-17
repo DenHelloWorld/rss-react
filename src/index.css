@@ -1,20 +1,62 @@
 @import 'tailwindcss';
 
-body {
-  @apply bg-gray-50;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-app-bg: var(--color-gray-50);
+  --color-app-surface: var(--color-white);
+  --color-app-surface-hover: var(--color-gray-100);
+  --color-app-text: var(--color-gray-900);
+  --color-app-text-muted: var(--color-gray-500);
+  --color-app-border: var(--color-gray-200);
+  --color-app-border-light: var(--color-gray-100);
+}
+
+.dark {
+  --color-app-bg: var(--color-gray-900);
+  --color-app-surface: var(--color-gray-800);
+  --color-app-surface-hover: var(--color-gray-700);
+  --color-app-text: var(--color-gray-100);
+  --color-app-text-muted: var(--color-gray-400);
+  --color-app-border: var(--color-gray-700);
+  --color-app-border-light: var(--color-gray-800);
+}
+
+@layer base {
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-app-border rounded-full transition-colors;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-app-text-muted;
+  }
+
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-app-border) transparent;
+  }
 }
 
 @layer components {
   .app-wrapper {
-    @apply grid grid-rows-[auto_minmax(0,1fr)] font-sans h-screen;
+    @apply grid grid-rows-[auto_minmax(0,1fr)] font-sans h-screen bg-app-bg text-app-text;
   }
 
   .header {
-    @apply w-full py-4 bg-white border-b border-gray-200 shadow-lg sticky top-0 z-10;
+    @apply w-full py-4 bg-app-surface border-b border-app-border shadow-lg dark:shadow-gray-900 dark:border-app-border sticky top-0 z-10
+    dark:shadow-xl;
   }
 
   .header-container {
-    @apply container mx-auto px-4 flex justify-between gap-4 flex-col;
+    @apply container mx-auto px-4 flex justify-between gap-4 flex-col items-end;
   }
 
   .main {
@@ -26,19 +68,19 @@ body {
   }
 
   .link {
-    @apply text-lg transition-colors duration-300 inline-flex align-middle active:scale-95 gap-0.5;
+    @apply text-lg text-app-text-muted transition-colors duration-300 inline-flex align-middle active:scale-95 gap-0.5;
 
     &:hover {
-      @apply text-green-500;
+      @apply text-green-500 dark:text-green-400;
     }
 
     &.link--active {
-      @apply font-medium;
+      @apply font-medium text-app-text;
     }
 
     &.link::after {
       content: '';
-      @apply w-2 h-2  transition-colors duration-300 rounded-full;
+      @apply w-2 h-2 transition-colors duration-300 rounded-full;
     }
 
     &.link--active::after {
@@ -56,29 +98,38 @@ body {
   }
 
   .error-boundary-template {
-    @apply container m-auto h-screen flex flex-col items-center justify-center gap-4 p-4;
+    @apply container m-auto h-screen flex flex-col items-center justify-center gap-4 p-4 bg-app-bg text-app-text;
   }
 
   .input {
-    @apply flex-1 px-4 py-2 border rounded-lg border-gray-100 bg-white shadow-lg
-    transition-all duration-300 outline-none;
+    @apply flex-1 px-4 py-2 border rounded-lg transition-all duration-300 outline-none
+    bg-app-surface border-app-border-light shadow-lg dark:shadow-gray-900 dark:border-app-border;
 
     &:focus {
-      @apply ring-1 ring-gray-500 outline-none;
+      @apply ring-1 ring-app-border outline-none;
+    }
+
+    &::placeholder {
+      @apply text-app-text-muted opacity-60;
+    }
+
+    &:disabled {
+      @apply cursor-not-allowed opacity-50 bg-app-bg;
     }
   }
 
   .button {
     @apply cursor-pointer px-6 py-2 bg-blue-600 text-white rounded-lg
     hover:bg-blue-700 active:scale-95 flex items-center justify-center
-    gap-2 transition-all duration-300 outline-none shrink-0;
+    gap-2 transition-all duration-300 outline-none shrink-0
+    dark:bg-blue-500 dark:hover:bg-blue-600;
 
     &:disabled {
       @apply cursor-not-allowed opacity-50;
     }
 
     &:focus {
-      @apply ring-1 ring-gray-500 outline-none;
+      @apply ring-1 ring-gray-500 outline-none dark:ring-gray-400;
     }
 
     svg {
@@ -91,15 +142,15 @@ body {
     }
 
     &.button--error {
-      @apply bg-red-500;
+      @apply bg-red-500 dark:bg-red-600;
     }
 
     &.button--success {
-      @apply bg-green-500;
+      @apply bg-green-500 dark:bg-green-600;
     }
 
     &.button--warning {
-      @apply bg-yellow-500 text-gray-800;
+      @apply bg-yellow-500 text-gray-800 dark:bg-yellow-600 dark:text-gray-900;
     }
 
     &.button--icon {
@@ -111,12 +162,13 @@ body {
     }
 
     &.button--outline {
-      @apply bg-transparent border-blue-600 border;
+      @apply bg-transparent border-blue-600 border text-blue-600
+      dark:border-blue-400 dark:text-blue-400;
     }
   }
 
   .shell {
-    @apply bg-white rounded-xl shadow-lg border border-gray-100 p-6 w-full overflow-auto;
+    @apply bg-app-surface rounded-xl shadow-lg dark:shadow-gray-900 dark:border-app-border border border-app-border-light p-6 w-full overflow-auto;
   }
 
   .cards-grid {
@@ -125,11 +177,12 @@ body {
   }
 
   .title {
-    @apply text-2xl font-bold text-gray-800;
+    @apply text-2xl font-bold text-app-text;
   }
 
   .error-message {
-    @apply bg-red-50 text-red-600 p-4 rounded-lg border border-red-100;
+    @apply bg-red-50 text-red-600 p-4 rounded-lg border border-red-100
+    dark:bg-red-950/50 dark:text-red-400 dark:border-red-900/50;
   }
 
   .main-panel {
@@ -141,19 +194,29 @@ body {
   }
 
   .card {
-    @apply bg-white rounded-xl shadow-md
-    duration-300 flex flex-col relative cursor-pointer overflow-hidden;
+    @apply bg-app-surface rounded-xl shadow-md text-app-text
+    duration-300 flex flex-col relative cursor-pointer overflow-hidden
+    border border-app-border-light dark:border-app-border dark:shadow-none;
 
     &:hover {
-      @apply shadow-2xl -translate-y-1.5;
+      @apply shadow-2xl -translate-y-1.5 border-app-border dark:border-gray-600;
     }
 
     &.card--selected {
-      @apply shadow-2xl shadow-blue-200 -translate-y-1.5;
+      @apply shadow-2xl shadow-blue-200 -translate-y-1.5
+      dark:shadow-none dark:border-blue-500 dark:ring-1 dark:ring-blue-500;
+    }
+
+    .card-overlay {
+      @apply absolute inset-0 w-full h-full bg-transparent z-1 cursor-pointer;
+    }
+
+    .card-actions {
+      @apply z-2 w-fit self-end mt-auto mr-4 mb-4;
     }
 
     .card-image-container {
-      @apply w-full aspect-4/3 overflow-hidden bg-gray-50
+      @apply w-full aspect-4/3 overflow-hidden bg-app-bg
       flex items-center justify-center;
 
       img {
@@ -166,24 +229,24 @@ body {
     }
 
     .card-title {
-      @apply text-lg font-bold  line-clamp-2 leading-tight;
+      @apply text-lg font-bold line-clamp-2 leading-tight text-app-text;
     }
 
     .card-description {
-      @apply text-sm text-gray-500  italic leading-relaxed;
+      @apply text-sm text-app-text-muted italic leading-relaxed;
     }
   }
 
   .skeleton {
-    @apply animate-pulse bg-gray-300 w-full h-full absolute inset-0;
+    @apply animate-pulse bg-gray-300 w-full h-full absolute inset-0 dark:bg-gray-700;
   }
 
   .card-placeholder {
-    @apply w-full h-full text-gray-300 m-auto;
+    @apply w-full h-full text-app-text-muted m-auto;
   }
 
   .top-bar {
-    @apply sticky top-0 z-10 bg-white/50 backdrop-blur-md py-1;
+    @apply sticky top-0 z-10 backdrop-blur-md py-1;
   }
 
   .pagination {
@@ -191,6 +254,75 @@ body {
   }
 
   .checkbox {
-    @apply w-6 aspect-square cursor-pointer shrink-0;
+    @apply w-6 aspect-square cursor-pointer shrink-0 accent-blue-600 dark:accent-blue-500;
+  }
+
+  .details-grid-border {
+    @apply border-t border-app-border-light;
+  }
+
+  .details-label {
+    @apply text-xs font-bold uppercase tracking-widest text-app-text-muted;
+  }
+
+  .details-artist {
+    @apply text-xl text-app-text leading-tight;
+  }
+
+  .details-value {
+    @apply text-app-text opacity-90;
+  }
+
+  .details-meta-box {
+    @apply p-4 rounded-xl border border-app-border-light bg-app-bg;
+  }
+
+  .details-medium {
+    @apply text-app-text-muted italic leading-relaxed;
+  }
+
+  .about-content {
+    @apply text-center flex flex-col gap-4 w-full md:max-w-1/2 mx-auto;
+  }
+
+  .about-description {
+    @apply text-lg text-app-text opacity-90;
+  }
+
+  .about-author-section {
+    @apply flex flex-col gap-4 items-center;
+  }
+
+  .about-subtitle {
+    @apply text-xl font-bold text-app-text;
+  }
+
+  .about-avatar-wrapper {
+    @apply shadow-md h-70 aspect-square rounded-xl overflow-hidden border border-app-border-light
+    dark:shadow-none dark:border-app-border;
+  }
+
+  .about-author-text {
+    @apply text-app-text-muted;
+  }
+
+  .flyout-panel {
+    @apply flex items-center gap-4 fixed bottom-4 right-4
+    rounded-xl px-4 py-3 z-10 border shadow-xl
+    transition-all duration-300 backdrop-blur-md;
+
+    border-color: var(--color-app-border-light);
+  }
+
+  .flyout-panel--visible {
+    @apply opacity-100 translate-y-0 pointer-events-auto;
+  }
+
+  .flyout-panel--hidden {
+    @apply opacity-0 translate-y-2 pointer-events-none;
+  }
+
+  .flyout-count {
+    @apply text-xs font-medium text-app-text-muted tracking-wide;
   }
 }

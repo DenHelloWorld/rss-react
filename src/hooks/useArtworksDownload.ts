@@ -1,7 +1,9 @@
 import { useCallback } from 'react';
 import type { AICArtwork } from '../services/AICApiService.ts';
 
-export const useArtworksDownload = () => {
+export const useArtworksDownload = (): {
+  downloadAsCsv: (items: AICArtwork[]) => void;
+} => {
   const downloadAsCsv = useCallback((items: AICArtwork[]) => {
     if (!items.length) {
       return;

@@ -2,6 +2,7 @@ import { NavLink } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
 import { useIsHomeActive } from '../hooks/useIsHomeActive.ts';
 import type { ReactNode } from 'react';
+import ThemeButton from './ThemeButton.tsx';
 
 interface HeaderProps {
   children: ReactNode;
@@ -28,6 +29,8 @@ const Header = ({ children }: HeaderProps) => {
           >
             {ROUTES.ABOUT.label}
           </NavLink>
+
+          <ThemeButton />
         </nav>
 
         {children}

@@ -1,9 +1,11 @@
 export const STORAGE_KEYS = {
   SEARCH_TERM: 'search_term',
+  THEME: 'theme',
 } as const;
 
 export interface StorageSchema {
   [STORAGE_KEYS.SEARCH_TERM]: string;
+  [STORAGE_KEYS.THEME]: string;
 }
 
 export type StorageKeyType = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];

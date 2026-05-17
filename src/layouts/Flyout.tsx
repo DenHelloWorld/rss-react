@@ -13,9 +13,9 @@ const Flyout = (): JSX.Element => {
 
   return (
     <div
-      className={`flex items-center gap-4 fixed bottom-2 right-2 bg-white/50 backdrop-blur-md rounded-lg px-4 py-2 z-1 border border-gray-100 transition-opacity ${count ? 'opacity-110' : 'opacity-0 pointer-events-none'}`}
+      className={`flyout-panel ${count ? 'flyout-panel--visible' : 'flyout-panel--hidden'}`}
     >
-      <span className="text-xs text-gray-500">Selected: {count}</span>
+      <span className="flyout-count">Selected: {count}</span>
 
       <button onClick={clearAll} className="button button--sm button--error">
         <svg>
