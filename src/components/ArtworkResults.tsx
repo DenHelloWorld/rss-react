@@ -1,4 +1,10 @@
-import { type JSX, useCallback, useEffect, useState } from 'react';
+import {
+  type ReactNode,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from 'react';
 import { ROUTE_QUERY_PARAMS } from '../consts/routes.const.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../services/local-storage.service.ts';
@@ -9,7 +15,7 @@ import AICCard from './AICCard.tsx';
 import ErrorTrigger from './ErrorTrigger.tsx';
 import Pagination from './Pagination.tsx';
 
-const ArtworkResults = (): JSX.Element => {
+const ArtworkResults = (): ReactNode => {
   const [arts, setArts] = useState<AICArtwork[] | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -25,35 +31,60 @@ const ArtworkResults = (): JSX.Element => {
     setSearchParams({ query: searchTerm, page: String(newPage) });
   };
 
-  const performSearch = useCallback(
-    async (query: string, page: string) => {
+  const performSearchRef = useRef<
+    (
+      query: string,
+      page: string,
+      didCancelRef: { current: boolean }
+    ) => Promise<void>
+  >(async () => {
+    /* empty */
+  });
+
+  useLayoutEffect(() => {
+    performSearchRef.current = async (
+      query: string,
+      page: string,
+      didCancelRef: { current: boolean }
+    ) => {
       setIsLoading(true);
       setErrorMessage(null);
 
       try {
         const response = await AICApiService.search(query, { page });
-        setArts(response.data);
-        setTotalPages(response.pagination.total_pages);
-        setTotalArts(response.pagination.total);
-        setSearchParams({ query, page });
+
+        if (!didCancelRef.current) {
+          setArts(response.data);
+          setTotalPages(response.pagination.total_pages);
+          setTotalArts(response.pagination.total);
+
+          setSearchParams({ query, page });
+        }
       } catch (e) {
-        setErrorMessage(
-          e instanceof Error ? e.message : 'An unknown error occurred'
-        );
+        if (!didCancelRef.current) {
+          setErrorMessage(
+            e instanceof Error ? e.message : 'An unknown error occurred'
+          );
+        }
       } finally {
-        setIsLoading(false);
+        if (!didCancelRef.current) {
+          setIsLoading(false);
+        }
       }
-    },
-    [setSearchParams]
-  );
+    };
+  });
 
   useEffect(() => {
-    const onComponentDidMount = () => {
-      void performSearch(searchTerm, currentPage);
-    };
+    const didCancelRef = { current: false };
 
-    onComponentDidMount();
-  }, [searchTerm, currentPage, performSearch]);
+    if (searchTerm) {
+      void performSearchRef.current(searchTerm, currentPage, didCancelRef);
+    }
+
+    return () => {
+      didCancelRef.current = true;
+    };
+  }, [searchTerm, currentPage]);
 
   return (
     <>
