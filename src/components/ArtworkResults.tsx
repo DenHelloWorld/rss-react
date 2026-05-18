@@ -77,9 +77,7 @@ const ArtworkResults = (): ReactNode => {
   useEffect(() => {
     const didCancelRef = { current: false };
 
-    if (searchTerm) {
-      void performSearchRef.current(searchTerm, currentPage, didCancelRef);
-    }
+    void performSearchRef.current(searchTerm, currentPage, didCancelRef);
 
     return () => {
       didCancelRef.current = true;

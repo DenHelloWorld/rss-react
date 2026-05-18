@@ -54,7 +54,7 @@ describe(DetailsPage.name, () => {
       expect(screen.getByText('Starry Night')).toBeInTheDocument();
     });
 
-    const closeButton = screen.getByRole('button');
+    const closeButton = screen.getByRole('button', { name: /close/i });
     fireEvent.click(closeButton);
 
     expect(screen.getByText('Home Page')).toBeInTheDocument();

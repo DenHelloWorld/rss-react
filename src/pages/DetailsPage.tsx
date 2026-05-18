@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useEffect, useState, type JSX } from 'react';
+import { useEffect, useState, type JSX, useRef } from 'react';
 import {
   AICApiService,
   type AICArtworkDetails,
@@ -7,6 +7,8 @@ import {
 import { ROUTES } from '../consts/routes.const.ts';
 import LoadingIndicator from '../components/LoadIndicator.tsx';
 import LazyImage from '../components/LazyImage.tsx';
+import { useClickableBlock } from '../hooks/useClickableBlock.ts';
+import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
 
 const DetailsPage = (): JSX.Element => {
   const { id } = useParams();
@@ -15,6 +17,7 @@ const DetailsPage = (): JSX.Element => {
   const [data, setData] = useState<AICArtworkDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -37,17 +40,35 @@ const DetailsPage = (): JSX.Element => {
     void load();
   }, [id]);
 
+  useEffect(() => {
+    if (sectionRef.current) {
+      sectionRef.current.focus();
+    }
+  }, [loading]);
+
   const handleClose = () =>
     void navigate({
       pathname: ROUTES.ROOT.path,
       search: searchParams.toString(),
     });
 
+  const clickableBlockProps = useClickableBlock({
+    onClick: () => {
+      handleClose();
+    },
+    allowedKeys: [KEYBOARD_KEYS.ESC, KEYBOARD_KEYS.ESCAPE],
+  });
+
   if (error || (!data && !loading)) {
     return (
-      <section className="mx-auto container shell relative">
+      <section
+        ref={sectionRef}
+        {...clickableBlockProps}
+        className="mx-auto container shell relative"
+      >
         <div className="flex justify-end">
           <button
+            aria-label="Close"
             className="button button--error button--icon"
             onClick={handleClose}
           >
@@ -62,7 +83,11 @@ const DetailsPage = (): JSX.Element => {
   }
 
   return (
-    <section className="mx-auto container shell relative">
+    <section
+      ref={sectionRef}
+      {...clickableBlockProps}
+      className="mx-auto container shell relative"
+    >
       {loading ? (
         <LoadingIndicator />
       ) : (
@@ -71,6 +96,7 @@ const DetailsPage = (): JSX.Element => {
             {data?.title && <h2 className="title">{data.title}</h2>}
 
             <button
+              aria-label="Close"
               className="button button--error button--icon"
               onClick={handleClose}
             >
