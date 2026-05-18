@@ -2,15 +2,15 @@ import './App.css';
 import { type JSX } from 'react';
 import Header from './components/Header.tsx';
 import { Outlet } from 'react-router';
-
 import ArtworkSearch from './components/ArtworkSearch.tsx';
+import { useIsHomeActive } from './hooks/useIsHomeActive.ts';
 
 const App = (): JSX.Element => {
+  const isHomeActive = useIsHomeActive();
+
   return (
     <div className="app-wrapper">
-      <Header>
-        <ArtworkSearch />
-      </Header>
+      <Header>{isHomeActive && <ArtworkSearch />}</Header>
 
       <main className="main">
         <Outlet />

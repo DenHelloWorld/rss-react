@@ -4,13 +4,13 @@ import {
   type StorageSchema,
 } from '../services/local-storage.service.ts';
 
-export function useLocalStorage<K extends keyof StorageSchema>(
+export const useLocalStorage = <K extends keyof StorageSchema>(
   key: K
 ): readonly [
   StorageSchema[K] | null,
   (value: StorageSchema[K]) => void,
   () => void,
-] {
+] => {
   const [storedValue, setStoredValue] = useState<StorageSchema[K] | null>(() =>
     localStorageService.getItem(key)
   );
@@ -29,4 +29,4 @@ export function useLocalStorage<K extends keyof StorageSchema>(
   }, [key]);
 
   return [storedValue, setValue, removeValue] as const;
-}
+};

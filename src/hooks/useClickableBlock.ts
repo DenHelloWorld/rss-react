@@ -15,10 +15,10 @@ interface ClickableConfig {
   allowedKeys?: KeyboardKey[];
 }
 
-export function useClickableBlock({
+export const useClickableBlock = ({
   onClick,
   allowedKeys = [],
-}: ClickableConfig): ClickableReturnProps {
+}: ClickableConfig): ClickableReturnProps => {
   const handleMouseDown = useCallback(
     (e: MouseEvent<HTMLElement>) => {
       if (allowedKeys.length) {
@@ -59,4 +59,4 @@ export function useClickableBlock({
     onMouseDown: handleMouseDown,
     onKeyDown: handleKeyDown,
   };
-}
+};

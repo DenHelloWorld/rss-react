@@ -1,16 +1,14 @@
 import { type JSX, type ReactNode } from 'react';
-import { NavLink, useLocation } from 'react-router';
+import { NavLink } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
+import { useIsHomeActive } from '../hooks/useIsHomeActive.ts';
 
 interface HeaderProps {
   children: ReactNode;
 }
 
 const Header = ({ children }: HeaderProps): JSX.Element => {
-  const location = useLocation();
-  const isHomeActive =
-    location.pathname === ROUTES.ROOT.path ||
-    location.pathname.startsWith(`/${ROUTES.DETAILS.path}`);
+  const isHomeActive = useIsHomeActive();
 
   return (
     <header className="header">
