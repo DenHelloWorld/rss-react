@@ -1,10 +1,8 @@
-import { type JSX } from 'react';
 import { useArtworkSelection } from '../hooks/useArtworkSelection.ts';
 import { useArtworksDownload } from '../hooks/useArtworksDownload.ts';
 
-const Flyout = (): JSX.Element => {
-  const { count, selectedEntities } = useArtworkSelection();
-  const { clearAll } = useArtworkSelection();
+const Flyout = () => {
+  const { count, selectedEntities, clearAll } = useArtworkSelection();
   const { downloadAsCsv } = useArtworksDownload();
 
   const handleDownload = () => {

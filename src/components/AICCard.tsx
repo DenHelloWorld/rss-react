@@ -1,5 +1,5 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
-import { type ChangeEvent, type JSX, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import LazyImage from './LazyImage.tsx';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
@@ -12,8 +12,8 @@ interface AICCardProps {
   getImageUrl: (id: string) => string;
 }
 
-const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
-  const { isSelected, select, unselect } = useArtworkSelection();
+const AICCard = ({ art, getImageUrl }: AICCardProps) => {
+  const { isSelected, toggle } = useArtworkSelection();
   const checked = isSelected(art.id);
   const cardRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
@@ -28,12 +28,8 @@ const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
     });
   };
 
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.checked) {
-      select(art);
-    } else {
-      unselect(art);
-    }
+  const handleCheckboxChange = () => {
+    toggle(art);
   };
 
   useEffect(() => {

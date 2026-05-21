@@ -1,5 +1,4 @@
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../store/store.ts';
+import { useAppDispatch, useAppSelector } from '../store/store.ts';
 import { useCallback } from 'react';
 import { type AICArtwork } from '../services/AICApiService.ts';
 import { selectOne, unselectAll, unselectOne } from '../store/artsSlice.ts';
@@ -9,10 +8,11 @@ export const useArtworkSelection = (): {
   count: number;
   select: (entity: AICArtwork) => void;
   unselect: (entity: AICArtwork) => void;
+  toggle: (entity: AICArtwork) => void;
   clearAll: () => void;
   isSelected: (id: number | string) => boolean;
 } => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const selectedEntities: AICArtwork[] = useAppSelector(
     (store) => store.arts.selectedEntities
@@ -43,11 +43,23 @@ export const useArtworkSelection = (): {
     [selectedEntities]
   );
 
+  const toggle = useCallback(
+    (entity: AICArtwork) => {
+      if (isSelected(entity.id)) {
+        unselect(entity);
+      } else {
+        select(entity);
+      }
+    },
+    [unselect, isSelected, select]
+  );
+
   return {
     selectedEntities,
     count: selectedEntities.length,
     select,
     unselect,
+    toggle,
     clearAll,
     isSelected,
   };
