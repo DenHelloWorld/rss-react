@@ -10,7 +10,7 @@ export interface StorageSchema {
 
 export type StorageKeyType = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
 
-class LocalStorageService {
+export const localStorageService = {
   setItem<K extends keyof StorageSchema>(
     key: K,
     value: StorageSchema[K]
@@ -20,7 +20,7 @@ class LocalStorageService {
     } catch (error) {
       console.warn('Error saving to localStorage', error);
     }
-  }
+  },
 
   getItem<T extends keyof StorageSchema>(key: T): StorageSchema[T] | null {
     try {
@@ -31,7 +31,7 @@ class LocalStorageService {
       console.warn('Error reading from localStorage', error);
       return null;
     }
-  }
+  },
 
   removeItem(key: StorageKeyType): void {
     try {
@@ -39,7 +39,7 @@ class LocalStorageService {
     } catch (error) {
       console.warn('Error removing from localStorage', error);
     }
-  }
+  },
 
   clear(): void {
     try {
@@ -47,7 +47,5 @@ class LocalStorageService {
     } catch (error) {
       console.warn('Error clearing localStorage', error);
     }
-  }
-}
-
-export const localStorageService = new LocalStorageService();
+  },
+};
