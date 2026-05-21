@@ -1,12 +1,13 @@
 import { createContext } from 'react';
+import { THEME, type Theme } from '../consts/theme.const.ts';
 
 export interface ThemeContextType {
-  theme: 'light' | 'dark';
-  setTheme: (theme: 'light' | 'dark') => void;
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
 }
 
 export const ThemeContext = createContext<ThemeContextType>({
-  theme: 'light',
+  theme: THEME.LIGHT,
   setTheme: () => {
     /* empty */
   },

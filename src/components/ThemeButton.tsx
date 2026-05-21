@@ -1,11 +1,12 @@
-import { useContext, type JSX } from 'react';
+import { useContext } from 'react';
 import { ThemeContext } from '../context/ThemeContext.ts';
+import { THEME } from '../consts/theme.const.ts';
 
-const ThemeButton = (): JSX.Element => {
+const ThemeButton = () => {
   const { theme, setTheme } = useContext(ThemeContext);
 
   const toggleTheme = () => {
-    setTheme(theme === 'light' ? 'dark' : 'light');
+    setTheme(theme === THEME.LIGHT ? THEME.DARK : THEME.LIGHT);
   };
 
   return (
@@ -13,7 +14,7 @@ const ThemeButton = (): JSX.Element => {
       onClick={toggleTheme}
       className="button button--icon button--outline text-blue-500"
     >
-      {theme === 'light' ? (
+      {theme === THEME.LIGHT ? (
         <svg>
           <use href="/icons.svg#sunny" />
         </svg>

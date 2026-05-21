@@ -1,25 +1,22 @@
-import { type JSX, type ReactNode, useEffect } from 'react';
+import { type ReactNode, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../services/local-storage.service.ts'; // Укажите ваш правильный путь
 import { ThemeContext } from '../context/ThemeContext.ts';
+import { type Theme, THEME } from '../consts/theme.const.ts';
 
-const ThemeProvider = ({ children }: { children: ReactNode }): JSX.Element => {
+const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [storedTheme, setStoredTheme] = useLocalStorage(STORAGE_KEYS.THEME);
 
-  const theme = storedTheme === 'dark' ? 'dark' : 'light';
+  const theme = storedTheme === THEME.DARK ? THEME.DARK : THEME.LIGHT;
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-      root.classList.remove('light');
-    } else {
-      root.classList.add('light');
-      root.classList.remove('dark');
-    }
+    const isDark = theme === THEME.DARK;
+
+    document.documentElement.classList.toggle(THEME.DARK, isDark);
+    document.documentElement.classList.toggle(THEME.LIGHT, !isDark);
   }, [theme]);
 
-  const setTheme = (newTheme: 'light' | 'dark') => {
+  const setTheme = (newTheme: Theme) => {
     setStoredTheme(newTheme);
   };
 
