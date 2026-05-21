@@ -1,5 +1,3 @@
-import { type JSX } from 'react';
-
 interface PaginationProps {
   total: number;
   currentPage: number;
@@ -12,15 +10,20 @@ const Pagination = ({
   totalPages,
   onPageChange,
   total,
-}: PaginationProps): JSX.Element => {
+}: PaginationProps) => {
+  const handlePrev = () => {
+    onPageChange(currentPage - 1);
+  };
+  const handleNext = () => {
+    onPageChange(currentPage + 1);
+  };
+
   return (
     <div className="pagination">
       <button
         className="button button--icon"
         disabled={currentPage <= 1}
-        onClick={() => {
-          onPageChange(currentPage - 1);
-        }}
+        onClick={handlePrev}
       >
         <svg>
           <use href="/icons.svg#arrow-left" />
@@ -34,9 +37,7 @@ const Pagination = ({
       <button
         className="button button--icon"
         disabled={currentPage >= totalPages}
-        onClick={() => {
-          onPageChange(currentPage + 1);
-        }}
+        onClick={handleNext}
       >
         <svg>
           <use href="/icons.svg#arrow-right" />

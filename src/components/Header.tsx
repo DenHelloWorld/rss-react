@@ -1,13 +1,13 @@
-import { type JSX, type ReactNode } from 'react';
 import { NavLink } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
 import { useIsHomeActive } from '../hooks/useIsHomeActive.ts';
+import type { ReactNode } from 'react';
 
 interface HeaderProps {
   children: ReactNode;
 }
 
-const Header = ({ children }: HeaderProps): JSX.Element => {
+const Header = ({ children }: HeaderProps) => {
   const isHomeActive = useIsHomeActive();
 
   return (

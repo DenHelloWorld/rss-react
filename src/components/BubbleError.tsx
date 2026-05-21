@@ -1,7 +1,6 @@
 import { useRouteError } from 'react-router';
-import { type JSX } from 'react';
 
-const BubbleError = (): JSX.Element => {
+const BubbleError = () => {
   throw useRouteError();
 };
 

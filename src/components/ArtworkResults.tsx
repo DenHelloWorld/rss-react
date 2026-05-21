@@ -1,10 +1,4 @@
-import {
-  type ReactNode,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from 'react';
+import { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ROUTE_QUERY_PARAMS } from '../consts/routes.const.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../services/local-storage.service.ts';
@@ -15,7 +9,7 @@ import AICCard from './AICCard.tsx';
 import ErrorTrigger from './ErrorTrigger.tsx';
 import Pagination from './Pagination.tsx';
 
-const ArtworkResults = (): ReactNode => {
+const ArtworkResults = () => {
   const [arts, setArts] = useState<AICArtwork[] | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);

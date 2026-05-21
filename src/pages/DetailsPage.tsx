@@ -1,5 +1,5 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useEffect, useState, type JSX, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import {
   AICApiService,
   type AICArtworkDetails,
@@ -10,7 +10,7 @@ import LazyImage from '../components/LazyImage.tsx';
 import { useClickableBlock } from '../hooks/useClickableBlock.ts';
 import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
 
-const DetailsPage = (): JSX.Element => {
+const DetailsPage = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -53,9 +53,7 @@ const DetailsPage = (): JSX.Element => {
     });
 
   const clickableBlockProps = useClickableBlock({
-    onClick: () => {
-      handleClose();
-    },
+    onClick: handleClose,
     allowedKeys: [KEYBOARD_KEYS.ESC, KEYBOARD_KEYS.ESCAPE],
   });
 

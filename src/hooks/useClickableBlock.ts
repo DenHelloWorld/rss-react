@@ -6,7 +6,7 @@ type KeyboardKey = (typeof KEYBOARD_KEYS)[keyof typeof KEYBOARD_KEYS];
 interface ClickableReturnProps {
   role: 'button';
   tabIndex: number;
-  onMouseDown: (e: MouseEvent<HTMLElement>) => void;
+  onClick: (e: MouseEvent<HTMLElement>) => void;
   onKeyDown: (e: KeyboardEvent<HTMLElement>) => void;
 }
 
@@ -19,7 +19,7 @@ export const useClickableBlock = ({
   onClick,
   allowedKeys = [],
 }: ClickableConfig): ClickableReturnProps => {
-  const handleMouseDown = useCallback(
+  const handleClick = useCallback(
     (e: MouseEvent<HTMLElement>) => {
       if (allowedKeys.length) {
         return;
@@ -56,7 +56,7 @@ export const useClickableBlock = ({
   return {
     role: 'button',
     tabIndex: 0,
-    onMouseDown: handleMouseDown,
+    onClick: handleClick,
     onKeyDown: handleKeyDown,
   };
 };

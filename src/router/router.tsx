@@ -1,11 +1,11 @@
 import { createBrowserRouter } from 'react-router';
-import { ROUTES } from './consts/routes.const.ts';
-import AboutPage from './pages/AboutPage.tsx';
-import App from './App.tsx';
-import NotFoundPage from './pages/404.tsx';
-import BubbleError from './components/BubbleError.tsx';
-import DetailsPage from './pages/DetailsPage.tsx';
-import ArtworkResultsLayout from './layouts/ArtworkResultsLayout.tsx';
+import { ROUTES } from '../consts/routes.const.ts';
+import AboutPage from '../pages/AboutPage.tsx';
+import App from '../App.tsx';
+import NotFoundPage from '../pages/NotFoundPage.tsx';
+import BubbleError from '../components/BubbleError.tsx';
+import DetailsPage from '../pages/DetailsPage.tsx';
+import ArtworkResultsLayout from '../layouts/ArtworkResultsLayout.tsx';
 
 export const router = createBrowserRouter([
   {

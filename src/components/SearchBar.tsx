@@ -1,4 +1,4 @@
-import { type ChangeEvent, type JSX, useState } from 'react';
+import { type ChangeEvent, useState, type KeyboardEvent } from 'react';
 import { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
 
 export interface SearchBarProps {
@@ -6,7 +6,7 @@ export interface SearchBarProps {
   onSearch: (term: string) => void;
 }
 
-const SearchBar = ({ initialValue, onSearch }: SearchBarProps): JSX.Element => {
+const SearchBar = ({ initialValue, onSearch }: SearchBarProps) => {
   const [query, setQuery] = useState(initialValue);
 
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,9 +22,10 @@ const SearchBar = ({ initialValue, onSearch }: SearchBarProps): JSX.Element => {
 
   const onClear = () => {
     setQuery('');
+    onSearch('');
   };
 
-  const onKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === KEYBOARD_KEYS.ENTER) {
       onHandleSearch();
     }

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter } from 'react-router';
-import NotFoundPage from './404';
+import NotFoundPage from './NotFoundPage.tsx';
 
 vi.mock('../components/LazyImage.tsx', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => (

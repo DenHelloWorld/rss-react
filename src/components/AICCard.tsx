@@ -1,5 +1,5 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
-import { type JSX, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import LazyImage from './LazyImage.tsx';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
@@ -9,7 +9,7 @@ interface AICCardProps {
   getImageUrl: (id: string) => string;
 }
 
-const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
+const AICCard = ({ art, getImageUrl }: AICCardProps) => {
   const cardRef = useRef<HTMLButtonElement>(null);
   const navigate = useNavigate();
   const location = useLocation();

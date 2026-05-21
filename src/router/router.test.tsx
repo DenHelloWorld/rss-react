@@ -1,6 +1,6 @@
 import { render, waitFor } from '@testing-library/react';
 import { RouterProvider } from 'react-router';
-import { router } from './router';
+import { router } from './router.tsx';
 import { describe, it, expect } from 'vitest';
 
 describe('Router Configuration', () => {

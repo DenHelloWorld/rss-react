@@ -1,4 +1,4 @@
-import { type JSX, useState } from 'react';
+import { useState } from 'react';
 
 interface LazyImageProps {
   src: string;
@@ -6,7 +6,7 @@ interface LazyImageProps {
   className?: string;
 }
 
-const LazyImage = (props: LazyImageProps): JSX.Element => {
+const LazyImage = ({ src, alt, className }: LazyImageProps) => {
   const [isImageLoadError, setIsImageLoadError] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
@@ -22,9 +22,9 @@ const LazyImage = (props: LazyImageProps): JSX.Element => {
       {!isImageLoadError && (
         <img
           loading="lazy"
-          src={props.src}
-          alt={props.alt}
-          className={` ${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto ${props.className ?? ''}`}
+          src={src}
+          alt={alt}
+          className={` ${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto ${className ?? ''}`}
           onLoad={() => {
             setIsImageLoaded(true);
           }}

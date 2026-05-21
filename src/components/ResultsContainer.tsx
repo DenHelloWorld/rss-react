@@ -1,12 +1,12 @@
-import React, { type JSX } from 'react';
 import LoadingIndicator from './LoadIndicator.tsx';
+import type { ReactNode } from 'react';
 
 interface ResultsContainerProps {
   searchTerm: string;
   isLoading: boolean;
   errorMessage: string | null;
   isEmpty: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }
 
 const ResultsContainer = ({
@@ -15,7 +15,7 @@ const ResultsContainer = ({
   errorMessage,
   isEmpty,
   children,
-}: ResultsContainerProps): JSX.Element => {
+}: ResultsContainerProps) => {
   const displayTitle = searchTerm
     ? `Results for "${searchTerm}"`
     : 'Art Collection';
