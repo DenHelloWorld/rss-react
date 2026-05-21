@@ -5,6 +5,7 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
 import { useArtworkSelection } from '../hooks/useArtworkSelection.ts';
 import Checkbox from './Checkbox.tsx';
+import { useClickableBlock } from '../hooks/useClickableBlock.ts';
 
 interface AICCardProps {
   art: AICArtwork;
@@ -14,7 +15,7 @@ interface AICCardProps {
 const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
   const { isSelected, select, unselect } = useArtworkSelection();
   const checked = isSelected(art.id);
-  const cardRef = useRef<HTMLButtonElement>(null);
+  const cardRef = useRef<HTMLElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
@@ -44,10 +45,12 @@ const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
   }, [isActive]);
 
   return (
-    <button
+    <article
       ref={cardRef}
       className={`card ${isActive ? 'card--selected' : ''}`}
-      onClick={handleDetails}
+      {...useClickableBlock({
+        onClick: handleDetails,
+      })}
     >
       <div className="card-image-container">
         <LazyImage
@@ -56,17 +59,17 @@ const AICCard = ({ art, getImageUrl }: AICCardProps): JSX.Element => {
         />
       </div>
       <div className="card-content">
-        <h3 className="card-title">{art.title}</h3>
+        <h2 className="card-title">{art.title}</h2>
         <p className="card-description">
           {(art.thumbnail?.alt_text ?? art.artist_display) ||
             'No description available'}
         </p>
-
-        <span className="card-actions">
-          <Checkbox checked={checked} onChange={handleCheckboxChange} />
-        </span>
       </div>
-    </button>
+
+      <div className="card-actions">
+        <Checkbox checked={checked} onChange={handleCheckboxChange} />
+      </div>
+    </article>
   );
 };
 

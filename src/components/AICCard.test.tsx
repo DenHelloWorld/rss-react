@@ -125,7 +125,7 @@ describe(AICCard.name, () => {
       </Provider>
     );
 
-    fireEvent.click(screen.getByRole('button'));
+    fireEvent.click(screen.getByText(mockArt.title));
     expect(screen.getByText('Details Page')).toBeInTheDocument();
   });
 

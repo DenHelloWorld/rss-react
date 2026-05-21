@@ -34,6 +34,8 @@ export const useClickableBlock = ({
       if (e.button === 0) {
         onClick(e);
       }
+
+      e.stopPropagation();
     },
     [onClick, allowedKeys]
   );

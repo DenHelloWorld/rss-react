@@ -212,7 +212,7 @@
     }
 
     .card-actions {
-      @apply z-2 w-fit self-end mt-auto mr-4 mb-4;
+      @apply z-2 w-fit self-end mt-auto mr-4 mb-4 flex gap-4 items-center;
     }
 
     .card-image-container {

@@ -3,7 +3,7 @@ import { RouterProvider } from 'react-router';
 import { router } from './router.tsx';
 import { describe, it, expect } from 'vitest';
 import { Provider } from 'react-redux';
-import { store } from './store/store.ts';
+import { store } from '../store/store.ts';
 
 describe('Router Configuration', () => {
   it('should initialize without crashing', async () => {

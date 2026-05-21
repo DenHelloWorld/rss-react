@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 import './index.css';
 import ErrorBoundary from './components/ErrorBoundary.tsx';
 import { RouterProvider } from 'react-router/dom';
-import { router } from './router.tsx';
+import { router } from './router/router.tsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
 import ThemeProvider from './providers/ThemeProvider.tsx';
