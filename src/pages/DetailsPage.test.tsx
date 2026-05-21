@@ -5,7 +5,7 @@ import DetailsPage from './DetailsPage';
 import {
   AICApiService,
   type AICArtworkDetails,
-} from '../services/AICApiService';
+} from '../services/aic-api-service.ts';
 
 vi.mock('../components/LoadIndicator.tsx', () => ({
   default: () => <div>Loading...</div>,
@@ -99,7 +99,6 @@ describe(DetailsPage.name, () => {
     renderWithRouter();
 
     await waitFor(() => {
-      // Используем не-null утверждение (!), так как в MOCK_DETAILS эти поля есть
       expect(
         screen.getByText(MOCK_DETAILS.artist_display satisfies string)
       ).toBeInTheDocument();

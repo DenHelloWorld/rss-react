@@ -3,7 +3,7 @@ import { ROUTE_QUERY_PARAMS } from '../consts/routes.const.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../services/local-storage.service.ts';
 import { useSearchParams } from 'react-router';
-import { AICApiService, type AICArtwork } from '../services/AICApiService.ts';
+import { AICApiService, type AICArtwork } from '../services/aic-api-service.ts';
 import ResultsContainer from './ResultsContainer.tsx';
 import AICCard from './AICCard.tsx';
 import ErrorTrigger from './ErrorTrigger.tsx';

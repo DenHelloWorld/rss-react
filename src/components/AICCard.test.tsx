@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
 import AICCard from './AICCard';
-import type { AICArtwork } from '../services/AICApiService.ts';
+import type { AICArtwork } from '../services/aic-api-service.ts';
 import { UI_TEST_TEXT } from '../test-utils/ui-test-text.const.ts';
 import { MOCK_ART } from '../test-utils/mock-data.ts';
 import { MemoryRouter, Route, Routes } from 'react-router';

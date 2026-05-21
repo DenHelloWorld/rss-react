@@ -1,6 +1,6 @@
 import { type ReactNode, useEffect } from 'react';
 import { useLocalStorage } from '../hooks/useLocalStorage.ts';
-import { STORAGE_KEYS } from '../services/local-storage.service.ts'; // Укажите ваш правильный путь
+import { STORAGE_KEYS } from '../services/local-storage.service.ts';
 import { ThemeContext } from '../context/ThemeContext.ts';
 import { type Theme, THEME } from '../consts/theme.const.ts';
 

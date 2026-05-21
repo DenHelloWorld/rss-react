@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { http, HttpResponse, type HttpHandler } from 'msw';
-import { AICApiService } from './AICApiService';
+import { AICApiService } from './aic-api-service.ts';
 import { AICServerMock } from '../test-utils/server.ts';
 import { MOCK_ART } from '../test-utils/mock-data.ts';
 

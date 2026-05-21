@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { AICArtwork } from '../services/AICApiService.ts';
+import type { AICArtwork } from '../services/aic-api-service.ts';
 
 interface ArtsState {
   selectedEntities: AICArtwork[];

@@ -3,7 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import {
   AICApiService,
   type AICArtworkDetails,
-} from '../services/AICApiService.ts';
+} from '../services/aic-api-service.ts';
 import { ROUTES } from '../consts/routes.const.ts';
 import LoadingIndicator from '../components/LoadIndicator.tsx';
 import LazyImage from '../components/LazyImage.tsx';

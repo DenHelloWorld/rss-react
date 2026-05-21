@@ -1,4 +1,4 @@
-import type { AICArtwork } from '../services/AICApiService.ts';
+import type { AICArtwork } from '../services/aic-api-service.ts';
 import { useEffect, useRef } from 'react';
 import LazyImage from './LazyImage.tsx';
 import { useLocation, useNavigate, useParams } from 'react-router';

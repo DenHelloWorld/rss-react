@@ -2,7 +2,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MemoryRouter } from 'react-router';
 import ArtworkResults from './ArtworkResults';
-import { AICApiService } from '../services/AICApiService';
+import { AICApiService } from '../services/aic-api-service.ts';
 import { useLocalStorage } from '../hooks/useLocalStorage';
 import { MOCK_ART, MOCK_PAGINATION } from '../test-utils/mock-data';
 import type { Mock } from 'vitest';
