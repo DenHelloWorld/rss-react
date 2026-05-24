@@ -71,4 +71,22 @@ describe(Pagination.name, () => {
     expect(buttons[0]).toBeDisabled();
     expect(buttons[1]).toBeDisabled();
   });
+
+  it('should disable both buttons when isFetching is true', () => {
+    render(<Pagination {...defaultProps} currentPage={5} isFetching={true} />);
+
+    const buttons = screen.getAllByRole('button');
+
+    expect(buttons[0]).toBeDisabled();
+    expect(buttons[1]).toBeDisabled();
+  });
+
+  it('should not disable buttons on middle page when isFetching is false', () => {
+    render(<Pagination {...defaultProps} currentPage={5} isFetching={false} />);
+
+    const buttons = screen.getAllByRole('button');
+
+    expect(buttons[0]).not.toBeDisabled();
+    expect(buttons[1]).not.toBeDisabled();
+  });
 });

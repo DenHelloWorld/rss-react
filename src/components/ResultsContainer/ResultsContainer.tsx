@@ -3,7 +3,7 @@ import type { ReactNode } from 'react';
 
 interface ResultsContainerProps {
   searchTerm: string;
-  isLoading: boolean;
+  isFetching: boolean;
   errorMessage: string | null;
   isEmpty: boolean;
   children: ReactNode;
@@ -11,7 +11,7 @@ interface ResultsContainerProps {
 
 const ResultsContainer = ({
   searchTerm,
-  isLoading,
+  isFetching,
   errorMessage,
   isEmpty,
   children,
@@ -32,12 +32,12 @@ const ResultsContainer = ({
         </div>
       )}
 
-      {isLoading ? (
+      {isFetching ? (
         <LoadingIndicator />
       ) : (
         <>
           {!errorMessage && !isEmpty && (
-            <div className="cards-grid">{children}</div>
+            <ul className="cards-grid">{children}</ul>
           )}
 
           {!errorMessage && isEmpty && (

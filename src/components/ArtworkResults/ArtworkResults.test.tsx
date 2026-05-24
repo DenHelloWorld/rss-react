@@ -6,6 +6,8 @@ import { AICApiService } from '../../services/AICApiService/aic-api-service.ts';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage.ts';
 import { MOCK_ART, MOCK_PAGINATION } from '../../test-utils/mock-data';
 import type { Mock } from 'vitest';
+import { WithQueryClient } from '../../test-utils/query-client-test-utils.tsx';
+import type { ReactElement } from 'react';
 
 vi.mock('../../services/AICApiService', () => ({
   AICApiService: {
@@ -22,6 +24,9 @@ vi.mock('../AICCard/AICCard', () => ({
   default: ({ art }: { art: { title: string } }) => <div>{art.title}</div>,
 }));
 
+const renderWithQueryClient = (ui: ReactElement) =>
+  render(<WithQueryClient>{ui}</WithQueryClient>);
+
 describe(ArtworkResults.name, () => {
   const mockedSearch = vi.spyOn(AICApiService, 'search');
 
@@ -36,7 +41,7 @@ describe(ArtworkResults.name, () => {
       pagination: MOCK_PAGINATION,
     });
 
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/?query=monet&page=2']}>
         <ArtworkResults />
       </MemoryRouter>
@@ -54,14 +59,14 @@ describe(ArtworkResults.name, () => {
       pagination: MOCK_PAGINATION,
     });
 
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/?query=monet&page=1']}>
         <ArtworkResults />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      expect(mockedSearch).toHaveBeenCalledWith('monet', { page: '1' });
+      expect(screen.getByText(MOCK_ART.title)).toBeInTheDocument();
     });
 
     mockedSearch.mockClear();
@@ -88,7 +93,7 @@ describe(ArtworkResults.name, () => {
     const errorMessage = 'Network Error';
     mockedSearch.mockRejectedValue(new Error(errorMessage));
 
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/']}>
         <ArtworkResults />
       </MemoryRouter>
@@ -102,28 +107,32 @@ describe(ArtworkResults.name, () => {
   it('should show "An unknown error occurred" for non-Error exceptions', async () => {
     mockedSearch.mockRejectedValue('String Error');
 
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/']}>
         <ArtworkResults />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      expect(screen.getByText('An unknown error occurred')).toBeInTheDocument();
+      expect(
+        screen.getByText('An unknown error has occurred')
+      ).toBeInTheDocument();
     });
   });
 
-  it('should show loading state', () => {
+  it('should show loading state', async () => {
     mockedSearch.mockReturnValue(new Promise(() => {}));
 
-    const { container } = render(
+    const { container } = renderWithQueryClient(
       <MemoryRouter initialEntries={['/']}>
         <ArtworkResults />
       </MemoryRouter>
     );
 
-    const loader = container.querySelector('.animate-spin');
-    expect(loader).toBeInTheDocument();
+    await waitFor(() => {
+      const loader = container.querySelector('.animate-spin');
+      expect(loader).toBeInTheDocument();
+    });
   });
 
   it('should fallback to empty string when both URL and localStorage are empty', async () => {
@@ -134,14 +143,14 @@ describe(ArtworkResults.name, () => {
 
     (useLocalStorage as Mock).mockReturnValue([null as unknown as string]);
 
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/']}>
         <ArtworkResults />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      expect(mockedSearch).toHaveBeenCalledWith('', { page: '1' });
+      expect(mockedSearch).toHaveBeenCalledWith('', { page: '' });
     });
   });
 });

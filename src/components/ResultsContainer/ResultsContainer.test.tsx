@@ -8,7 +8,7 @@ describe(ResultsContainer.name, () => {
   const noItemsFoundContent: RegExp = UI_TEST_TEXT.noItemsFound;
   const defaultProps = {
     searchTerm: '',
-    isLoading: false,
+    isFetching: false,
     errorMessage: null,
     isEmpty: false,
   };
@@ -40,7 +40,7 @@ describe(ResultsContainer.name, () => {
 
   it('shows loading indicator when isLoading is true', () => {
     const { container } = render(
-      <ResultsContainer {...defaultProps} isLoading={true}>
+      <ResultsContainer {...defaultProps} isFetching={true}>
         <div />
       </ResultsContainer>
     );

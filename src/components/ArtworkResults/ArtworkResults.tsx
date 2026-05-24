@@ -1,110 +1,57 @@
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
-import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
+import {
+  ROUTE_QUERY_KEYS,
+  ROUTE_QUERY_PARAMS,
+} from '../../consts/routes.const.ts';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../../services/localStorageService/local-storage.service.ts';
 import { useSearchParams } from 'react-router';
-import {
-  AICApiService,
-  type AICArtwork,
-} from '../../services/AICApiService/aic-api-service.ts';
+import { AICApiService } from '../../services/AICApiService/aic-api-service.ts';
 import ResultsContainer from '../ResultsContainer/ResultsContainer.tsx';
 import AICCard from '../AICCard/AICCard.tsx';
 import ErrorTrigger from '../ErrorTrigger/ErrorTrigger.tsx';
 import Pagination from '../Pagination/Pagination.tsx';
+import { useQuery } from '@tanstack/react-query';
+import { useErrorMessage } from '../../hooks/useErrorMessage.ts';
 
 const ArtworkResults = () => {
-  // TODO: check https://tanstack.com/query/latest (and disable buttons on loading)
-  const [arts, setArts] = useState<AICArtwork[] | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [storedSearchTerm] = useLocalStorage(STORAGE_KEYS.SEARCH_TERM);
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm =
     searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
-  const [totalArts, setTotalArts] = useState<number>(0);
-  const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '1';
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '';
+  const { data, isFetching, error } = useQuery({
+    queryKey: [ROUTE_QUERY_KEYS.ARTWORKS, searchTerm, currentPage],
+    queryFn: () => AICApiService.search(searchTerm, { page: currentPage }),
+    placeholderData: (previousData) => previousData,
+  });
+  const errorMessage = useErrorMessage(error);
 
   const handlePageChange = (newPage: number) => {
     setSearchParams({ query: searchTerm, page: String(newPage) });
   };
 
-  const performSearchRef = useRef<
-    (
-      query: string,
-      page: string,
-      didCancelRef: { current: boolean }
-    ) => Promise<void>
-  >(async () => {
-    /* empty */
-  });
-
-  useLayoutEffect(() => {
-    performSearchRef.current = async (
-      query: string,
-      page: string,
-      didCancelRef: { current: boolean }
-    ) => {
-      setIsLoading(true);
-      setErrorMessage(null);
-
-      try {
-        const response = await AICApiService.search(query, { page });
-
-        if (!didCancelRef.current) {
-          setArts(response.data);
-          setTotalPages(response.pagination.total_pages);
-          setTotalArts(response.pagination.total);
-
-          setSearchParams({ query, page });
-        }
-      } catch (e) {
-        if (!didCancelRef.current) {
-          setErrorMessage(
-            e instanceof Error ? e.message : 'An unknown error occurred'
-          );
-        }
-      } finally {
-        if (!didCancelRef.current) {
-          setIsLoading(false);
-        }
-      }
-    };
-  });
-
-  useEffect(() => {
-    const didCancelRef = { current: false };
-
-    void performSearchRef.current(searchTerm, currentPage, didCancelRef);
-
-    return () => {
-      didCancelRef.current = true;
-    };
-  }, [searchTerm, currentPage]);
-
   return (
     <>
       <ResultsContainer
         searchTerm={searchTerm}
-        isLoading={isLoading}
+        isFetching={isFetching}
         errorMessage={errorMessage}
-        isEmpty={!arts?.length}
+        isEmpty={!data?.data.length}
       >
-        {arts?.map((art) => (
-          <AICCard
-            key={art.id}
-            art={art}
-            getImageUrl={AICApiService.getImageUrl}
-          />
+        {data?.data.map((art) => (
+          <li key={art.id}>
+            <AICCard art={art} getImageUrl={AICApiService.getImageUrl} />
+          </li>
         ))}
         <ErrorTrigger />
       </ResultsContainer>
 
-      {!isLoading && arts && (
+      {data && (
         <Pagination
-          total={totalArts}
+          isFetching={isFetching}
+          total={data.pagination.total}
           currentPage={Number(currentPage)}
-          totalPages={totalPages}
+          totalPages={data.pagination.total_pages}
           onPageChange={handlePageChange}
         />
       )}

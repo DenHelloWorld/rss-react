@@ -4,11 +4,15 @@ import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 export interface SearchBarProps {
   initialValue: string;
   onSearch: (term: string) => void;
+  isDisabled?: boolean;
 }
 
-const SearchBar = ({ initialValue, onSearch }: SearchBarProps) => {
+const SearchBar = ({
+  initialValue,
+  onSearch,
+  isDisabled = false,
+}: SearchBarProps) => {
   const [query, setQuery] = useState(initialValue);
-
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
@@ -42,13 +46,18 @@ const SearchBar = ({ initialValue, onSearch }: SearchBarProps) => {
         className="input"
       />
       {query && (
-        <button onClick={onClear} className="button button--error button--icon">
+        <button
+          disabled={isDisabled}
+          onClick={onClear}
+          className="button button--error button--icon"
+        >
           <svg>
             <use href="/icons.svg#search-off" />
           </svg>
         </button>
       )}
       <button
+        disabled={isDisabled}
         onClick={onHandleSearch}
         className="button button--success button--icon"
       >

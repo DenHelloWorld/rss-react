@@ -74,4 +74,28 @@ describe(SearchBar.name, () => {
 
     expect(mockOnSearch).not.toHaveBeenCalledWith('Test');
   });
+
+  it('disables buttons when isDisabled is true', () => {
+    const { container } = render(
+      <SearchBar initialValue="Art" onSearch={mockOnSearch} isDisabled={true} />
+    );
+
+    const buttons = container.querySelectorAll('button');
+
+    buttons.forEach((button) => {
+      expect(button).toBeDisabled();
+    });
+  });
+
+  it('does not disable buttons when isDisabled is false (default)', () => {
+    const { container } = render(
+      <SearchBar initialValue="Art" onSearch={mockOnSearch} />
+    );
+
+    const buttons = container.querySelectorAll('button');
+
+    buttons.forEach((button) => {
+      expect(button).not.toBeDisabled();
+    });
+  });
 });

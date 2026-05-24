@@ -3,6 +3,7 @@ interface PaginationProps {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
+  isFetching?: boolean;
 }
 
 const Pagination = ({
@@ -10,6 +11,7 @@ const Pagination = ({
   totalPages,
   onPageChange,
   total,
+  isFetching,
 }: PaginationProps) => {
   const handlePrev = () => {
     onPageChange(currentPage - 1);
@@ -22,7 +24,7 @@ const Pagination = ({
     <div className="pagination">
       <button
         className="button button--icon"
-        disabled={currentPage <= 1}
+        disabled={currentPage <= 1 || isFetching}
         onClick={handlePrev}
       >
         <svg>
@@ -36,7 +38,7 @@ const Pagination = ({
 
       <button
         className="button button--icon"
-        disabled={currentPage >= totalPages}
+        disabled={currentPage >= totalPages || isFetching}
         onClick={handleNext}
       >
         <svg>

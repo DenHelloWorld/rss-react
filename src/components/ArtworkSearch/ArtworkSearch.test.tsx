@@ -4,6 +4,7 @@ import { MemoryRouter } from 'react-router';
 import ArtworkSearch from './ArtworkSearch';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage.ts';
 import type { Mock } from 'vitest';
+import { WithQueryClient } from '../../test-utils/query-client-test-utils.tsx';
 
 vi.mock('../../hooks/useLocalStorage/useLocalStorage', () => ({
   useLocalStorage: vi.fn(),
@@ -48,6 +49,9 @@ vi.mock('../SearchBar/SearchBar', () => ({
   ),
 }));
 
+const renderWithQueryClient = (ui: React.ReactElement) =>
+  render(<WithQueryClient>{ui}</WithQueryClient>);
+
 describe(ArtworkSearch.name, () => {
   const setStoredSearchTermMock = vi.fn();
 
@@ -60,7 +64,7 @@ describe(ArtworkSearch.name, () => {
   });
 
   it('should update storage and URL when a new search is performed (Branch: Changed)', () => {
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/']}>
         <ArtworkSearch />
       </MemoryRouter>
@@ -72,7 +76,7 @@ describe(ArtworkSearch.name, () => {
   });
 
   it('should NOT update if the search term is identical (Branch: Unchanged)', () => {
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/?query=initial-val']}>
         <ArtworkSearch />
       </MemoryRouter>
@@ -84,7 +88,7 @@ describe(ArtworkSearch.name, () => {
   });
 
   it('should NOT update if the search term is identical after trim (Branch: Trimmed)', () => {
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/?query=initial-val']}>
         <ArtworkSearch />
       </MemoryRouter>
@@ -98,7 +102,7 @@ describe(ArtworkSearch.name, () => {
   it('should use empty string if both URL and storage are empty (Branch: Fallback)', () => {
     (useLocalStorage as Mock).mockReturnValue([null, setStoredSearchTermMock]);
 
-    render(
+    renderWithQueryClient(
       <MemoryRouter initialEntries={['/']}>
         <ArtworkSearch />
       </MemoryRouter>
