@@ -1,12 +1,12 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import './index.css';
-import ErrorBoundary from './components/ErrorBoundary.tsx';
+import ErrorBoundary from './components/ErrorBoundary/ErrorBoundary.tsx';
 import { RouterProvider } from 'react-router/dom';
 import { router } from './router/router.tsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
-import ThemeProvider from './providers/ThemeProvider.tsx';
+import ThemeProvider from './providers/ThemeProvider/ThemeProvider.tsx';
 
 const root = document.getElementById('root');
 

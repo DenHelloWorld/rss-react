@@ -1,5 +1,5 @@
 import { configureStore } from '@reduxjs/toolkit';
-import artsSlice from './artsSlice.ts';
+import artsSlice from './arts/arts-slice.ts';
 import {
   type TypedUseSelectorHook,
   useDispatch,

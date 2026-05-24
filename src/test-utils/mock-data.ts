@@ -1,7 +1,7 @@
 import type {
   AICArtwork,
   AICPaginationResponse,
-} from '../services/aic-api-service.ts';
+} from '../services/AICApiService/aic-api-service.ts';
 
 export const MOCK_ART: AICArtwork = {
   id: 123,
