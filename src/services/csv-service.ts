@@ -1,4 +1,7 @@
-import type { AICArtwork } from './AICApiService/aic-api-service.ts';
+import {
+  AICApiService,
+  type AICArtwork,
+} from './AICApiService/aic-api-service.ts';
 
 export interface CSVColumn<T> {
   header: string;
@@ -9,7 +12,17 @@ export const ARTWORK_COLUMNS: CSVColumn<AICArtwork>[] = [
   { header: 'ID', getValue: (item) => item.id },
   { header: 'Title', getValue: (item) => item.title },
   { header: 'Artist Display', getValue: (item) => item.artist_display },
-  { header: 'Alternative Text', getValue: (item) => item.thumbnail?.alt_text },
+  {
+    header: 'Description',
+    getValue: (item) => item.thumbnail?.alt_text ?? item.artist_display,
+  },
+  {
+    header: 'Art Photo',
+    getValue: (item) =>
+      item.image_id
+        ? AICApiService.getImageUrl(item.image_id)
+        : 'No Image Available',
+  },
 ];
 
 export const CSVService = {
