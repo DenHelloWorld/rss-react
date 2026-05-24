@@ -1,38 +1,24 @@
-import React, { type JSX } from 'react';
+import { useState } from 'react';
 
-export interface ErrorTriggerState {
-  isError: boolean;
-}
+const ErrorTrigger = () => {
+  const [isError, setIsError] = useState(false);
 
-class ErrorTrigger extends React.Component<object, ErrorTriggerState> {
-  constructor(props: object) {
-    super(props);
-
-    this.state = {
-      isError: false,
-    };
+  if (isError) {
+    throw new Error('Test crash triggered by ErrorTrigger component!');
   }
 
-  private onTriggerError = () => {
-    this.setState({
-      isError: true,
-    });
+  const handleTrigger = () => {
+    setIsError(true);
   };
 
-  render(): JSX.Element {
-    if (this.state.isError) {
-      throw new Error('Test crash triggered by ErrorTrigger component!');
-    }
-
-    return (
-      <button onClick={this.onTriggerError} className="button button--warning">
-        <svg>
-          <use href="/icons.svg#bomb" />
-        </svg>
-        triggers an error
-      </button>
-    );
-  }
-}
+  return (
+    <button onClick={handleTrigger} className="button button--warning">
+      <svg>
+        <use href="/icons.svg#bomb" />
+      </svg>
+      triggers an error
+    </button>
+  );
+};
 
 export default ErrorTrigger;

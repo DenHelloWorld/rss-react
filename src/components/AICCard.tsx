@@ -1,67 +1,57 @@
 import type { AICArtwork } from '../services/AICApiService.ts';
-import React, { type JSX } from 'react';
+import { useEffect, useRef } from 'react';
+import LazyImage from './LazyImage.tsx';
+import { useLocation, useNavigate, useParams } from 'react-router';
+import { ROUTES } from '../consts/routes.const.ts';
 
 interface AICCardProps {
   art: AICArtwork;
   getImageUrl: (id: string) => string;
 }
 
-interface AICCardState {
-  isImageLoadError: boolean;
-  isImageLoaded: boolean;
-}
+const AICCard = ({ art, getImageUrl }: AICCardProps) => {
+  const cardRef = useRef<HTMLButtonElement>(null);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { id } = useParams();
+  const isActive = Number(id) === art.id;
 
-class AICCard extends React.Component<AICCardProps, AICCardState> {
-  constructor(props: AICCardProps) {
-    super(props);
-    this.state = { isImageLoadError: false, isImageLoaded: false };
-  }
+  const handleDetails = () => {
+    void navigate({
+      pathname: `${ROUTES.DETAILS.path}/${String(art.id)}`,
+      search: location.search,
+    });
+  };
 
-  render(): JSX.Element {
-    const { art, getImageUrl } = this.props;
-    const { isImageLoadError, isImageLoaded } = this.state;
+  useEffect(() => {
+    if (isActive && cardRef.current) {
+      cardRef.current.scrollIntoView({
+        block: 'center',
+      });
+    }
+  }, [isActive]);
 
-    const hasNoImage = !art.image_id || isImageLoadError;
-
-    return (
-      <article className="card">
-        <div className="card-image-container">
-          {hasNoImage && (
-            <div className="card-placeholder-wrapper">
-              <svg className="card-placeholder" role="presentation">
-                <use href="/icons.svg#broken-image" />
-              </svg>
-            </div>
-          )}
-
-          {!isImageLoaded && !hasNoImage && <div className="skeleton" />}
-
-          {art.image_id && !isImageLoadError && (
-            <img
-              src={getImageUrl(art.image_id)}
-              alt={art.thumbnail?.alt_text ?? art.artist_display}
-              className={`card-image ${
-                isImageLoaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              onLoad={() => {
-                this.setState({ isImageLoaded: true });
-              }}
-              onError={() => {
-                this.setState({ isImageLoadError: true });
-              }}
-            />
-          )}
-        </div>
-        <div className="card-content">
-          <h3 className="card-title">{art.title}</h3>
-          <p className="card-description">
-            {(art.thumbnail?.alt_text ?? art.artist_display) ||
-              'No description available'}
-          </p>
-        </div>
-      </article>
-    );
-  }
-}
+  return (
+    <button
+      ref={cardRef}
+      className={`card ${isActive ? 'card--selected' : ''}`}
+      onClick={handleDetails}
+    >
+      <div className="card-image-container">
+        <LazyImage
+          src={getImageUrl(art.image_id ?? '')}
+          alt={art.thumbnail?.alt_text ?? art.artist_display}
+        />
+      </div>
+      <div className="card-content">
+        <h3 className="card-title">{art.title}</h3>
+        <p className="card-description">
+          {(art.thumbnail?.alt_text ?? art.artist_display) ||
+            'No description available'}
+        </p>
+      </div>
+    </button>
+  );
+};
 
 export default AICCard;

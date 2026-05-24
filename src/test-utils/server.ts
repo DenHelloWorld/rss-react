@@ -1,12 +1,15 @@
 import { http, HttpResponse } from 'msw';
 import type { HttpHandler } from 'msw';
-import { MOCK_ART } from './mock-data.ts';
+import { MOCK_ART, MOCK_PAGINATION } from './mock-data.ts';
 import { type SetupServer, setupServer } from 'msw/node';
 import type { AICResponse } from '../services/AICApiService.ts';
 
 const AICHandlers: HttpHandler[] = [
   http.get('https://api.artic.edu/api/v1/artworks/*', () => {
-    const mockData: AICResponse = { data: [MOCK_ART] };
+    const mockData: AICResponse = {
+      data: [MOCK_ART],
+      pagination: MOCK_PAGINATION,
+    };
 
     return HttpResponse.json(mockData);
   }),

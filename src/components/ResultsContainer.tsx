@@ -1,47 +1,54 @@
-import React, { type JSX } from 'react';
+import LoadingIndicator from './LoadIndicator.tsx';
+import type { ReactNode } from 'react';
 
 interface ResultsContainerProps {
   searchTerm: string;
   isLoading: boolean;
   errorMessage: string | null;
   isEmpty: boolean;
-  children: React.ReactNode;
+  children: ReactNode;
 }
-export class ResultsContainer extends React.Component<ResultsContainerProps> {
-  render(): JSX.Element {
-    const { searchTerm, isLoading, errorMessage, isEmpty, children } =
-      this.props;
 
-    return (
-      <section className="results-container">
-        <h2 className="text-2xl font-bold mb-6 wrap-break-word">
-          {searchTerm ? `Results for "${searchTerm}"` : 'Art Collection'}
-        </h2>
+const ResultsContainer = ({
+  searchTerm,
+  isLoading,
+  errorMessage,
+  isEmpty,
+  children,
+}: ResultsContainerProps) => {
+  const displayTitle = searchTerm
+    ? `Results for "${searchTerm}"`
+    : 'Art Collection';
 
-        {errorMessage && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4 border border-red-100">
-            {errorMessage}
-          </div>
-        )}
+  return (
+    <section className="shell relative h-full">
+      <h1 className="title top-bar truncate w-full" title={displayTitle}>
+        {displayTitle}
+      </h1>
 
-        {isLoading ? (
-          <div className="flex justify-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600" />
-          </div>
-        ) : (
-          <>
-            {!errorMessage && !isEmpty && (
-              <div className="cards-grid">{children}</div>
-            )}
+      {errorMessage && (
+        <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4 border border-red-100">
+          {errorMessage}
+        </div>
+      )}
 
-            {!errorMessage && isEmpty && (
-              <p className="text-gray-400 italic text-center py-10">
-                No items found. Try another request!
-              </p>
-            )}
-          </>
-        )}
-      </section>
-    );
-  }
-}
+      {isLoading ? (
+        <LoadingIndicator />
+      ) : (
+        <>
+          {!errorMessage && !isEmpty && (
+            <div className="cards-grid">{children}</div>
+          )}
+
+          {!errorMessage && isEmpty && (
+            <p className="text-gray-400 italic text-center py-10">
+              No items found. Try another request!
+            </p>
+          )}
+        </>
+      )}
+    </section>
+  );
+};
+
+export default ResultsContainer;

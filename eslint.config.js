@@ -130,6 +130,14 @@ export default tseslint.config(
     },
   },
 
+  // ─── A separate exception for React components ────────────────────────────────────────────
+  {
+    files: ['**/*.tsx'],
+    rules: {
+      '@typescript-eslint/explicit-module-boundary-types': 'off',
+    },
+  },
+
   // ─── Relaxed rules for test files ────────────────────────────────────────────
   {
     files: ['**/*.{test,spec}.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],

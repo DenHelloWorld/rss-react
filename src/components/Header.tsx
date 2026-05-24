@@ -1,9 +1,39 @@
-import React, { type JSX } from 'react';
+import { NavLink } from 'react-router';
+import { ROUTES } from '../consts/routes.const.ts';
+import { useIsHomeActive } from '../hooks/useIsHomeActive.ts';
+import type { ReactNode } from 'react';
 
-class Header extends React.Component<{ children: React.ReactNode }> {
-  render(): JSX.Element {
-    return <header className="header">{this.props.children}</header>;
-  }
+interface HeaderProps {
+  children: ReactNode;
 }
+
+const Header = ({ children }: HeaderProps) => {
+  const isHomeActive = useIsHomeActive();
+
+  return (
+    <header className="header">
+      <div className="header-container">
+        <nav className="navigation">
+          <NavLink
+            to={ROUTES.ROOT.path}
+            className={`link ${isHomeActive ? 'link--active' : ''}`}
+          >
+            {ROUTES.ROOT.label}
+          </NavLink>
+          <NavLink
+            to={ROUTES.ABOUT.path}
+            className={({ isActive }) =>
+              `link ${isActive ? 'link--active' : ''}`
+            }
+          >
+            {ROUTES.ABOUT.label}
+          </NavLink>
+        </nav>
+
+        {children}
+      </div>
+    </header>
+  );
+};
 
 export default Header;

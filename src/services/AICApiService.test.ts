@@ -46,4 +46,51 @@ describe('AICApiService', () => {
       expect(result).toBe(expectedUrl);
     });
   });
+
+  describe('getById method', () => {
+    it('should return artwork details when successful', async () => {
+      const mockId = '123';
+      const mockData = {
+        data: {
+          id: 123,
+          title: 'Test Artwork',
+          artist_display: 'Test Artist',
+        },
+      };
+
+      AICServerMock.use(
+        http.get('https://api.artic.edu/api/v1/artworks/123', () => {
+          return HttpResponse.json(mockData);
+        })
+      );
+
+      const result = await AICApiService.getById(mockId);
+      expect(result.data.title).toBe('Test Artwork');
+      expect(result.data.id).toBe(123);
+    });
+
+    it('should throw "Artwork not found" when status is 404', async () => {
+      AICServerMock.use(
+        http.get('https://api.artic.edu/api/v1/artworks/999', () => {
+          return new HttpResponse(null, { status: 404 });
+        })
+      );
+
+      await expect(AICApiService.getById('999')).rejects.toThrow(
+        'Artwork not found'
+      );
+    });
+
+    it('should throw "Failed to fetch artwork details" for other error statuses', async () => {
+      AICServerMock.use(
+        http.get('https://api.artic.edu/api/v1/artworks/500', () => {
+          return new HttpResponse(null, { status: 500 });
+        })
+      );
+
+      await expect(AICApiService.getById('500')).rejects.toThrow(
+        'Failed to fetch artwork details'
+      );
+    });
+  });
 });
