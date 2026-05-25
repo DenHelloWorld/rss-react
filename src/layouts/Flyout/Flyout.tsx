@@ -10,9 +10,7 @@ const Flyout = () => {
   };
 
   return (
-    <div
-      className={`flyout-panel ${count ? 'flyout-panel--visible' : 'flyout-panel--hidden'}`}
-    >
+    <div className="flyout-panel">
       <span className="flyout-count">Selected: {count}</span>
 
       <button onClick={clearAll} className="button button--sm button--error">
