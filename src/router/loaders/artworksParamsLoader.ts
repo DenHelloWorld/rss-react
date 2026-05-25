@@ -1,9 +1,9 @@
 import { type LoaderFunctionArgs, redirect } from 'react-router';
-import { ROUTE_QUERY_PARAMS } from '../consts/routes.const.ts';
+import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
 import {
   localStorageService,
   STORAGE_KEYS,
-} from '../services/localStorageService/local-storage.service.ts';
+} from '../../services/localStorageService/local-storage.service.ts';
 
 export const artworksParamsLoader = ({
   request,
