@@ -10,6 +10,7 @@ export const store = configureStore({
   reducer: {
     arts: artsSlice,
   },
+  devTools: import.meta.env.DEV,
 });
 
 export type RootState = ReturnType<typeof store.getState>;

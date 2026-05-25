@@ -2,6 +2,7 @@ import { Outlet, useMatch, useNavigate, useSearchParams } from 'react-router';
 import ArtworkResults from '../../components/ArtworkResults/ArtworkResults.tsx';
 import { ROUTES } from '../../consts/routes.const.ts';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
+import Flyout from '../Flyout/Flyout.tsx';
 
 const ArtworkResultsLayout = () => {
   const isDetailsLocation = !!useMatch(`${ROUTES.DETAILS.path}/:id`);
@@ -20,11 +21,13 @@ const ArtworkResultsLayout = () => {
         {...useClickableBlock({
           onClick: handleClose,
         })}
-        className={`main-panel ${isDetailsLocation ? 'main-panel--aside' : ''}`}
+        className={`relative main-panel ${isDetailsLocation ? 'main-panel--aside' : ''}`}
       >
         <ArtworkResults />
       </div>
       <Outlet />
+
+      <Flyout />
     </>
   );
 };

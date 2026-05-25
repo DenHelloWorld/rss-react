@@ -2,7 +2,6 @@ import Header from './components/Header/Header.tsx';
 import { Outlet } from 'react-router';
 import ArtworkSearch from './components/ArtworkSearch/ArtworkSearch.tsx';
 import { useIsHomeActive } from './hooks/useIsHomeActive.ts';
-import Flyout from './layouts/Flyout/Flyout.tsx';
 
 const App = () => {
   const isHomeActive = useIsHomeActive();
@@ -11,8 +10,7 @@ const App = () => {
     <div className="app-wrapper">
       <Header>{isHomeActive && <ArtworkSearch />}</Header>
 
-      <main className="main relative">
-        <Flyout />
+      <main className="main">
         <Outlet />
       </main>
     </div>

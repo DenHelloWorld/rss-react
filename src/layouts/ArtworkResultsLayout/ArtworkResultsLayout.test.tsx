@@ -2,6 +2,8 @@ import type * as ReactRouter from 'react-router';
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { Provider } from 'react-redux';
+import { store } from '../../store/store.ts';
 import ArtworkResultsLayout from './ArtworkResultsLayout.tsx';
 
 vi.mock('../../components/ArtworkResults/ArtworkResults.tsx', () => ({
@@ -18,13 +20,15 @@ vi.mock('react-router', async (importOriginal) => {
 
 const renderWithRouter = (initialEntry: string) =>
   render(
-    <MemoryRouter initialEntries={[initialEntry]}>
-      <Routes>
-        <Route path="/" element={<ArtworkResultsLayout />}>
-          <Route path="details/:id" element={<div>Details Page</div>} />
-        </Route>
-      </Routes>
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[initialEntry]}>
+        <Routes>
+          <Route path="/" element={<ArtworkResultsLayout />}>
+            <Route path="details/:id" element={<div>Details Page</div>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </Provider>
   );
 
 describe(ArtworkResultsLayout.name, () => {
