@@ -174,6 +174,10 @@
   .cards-grid {
     @apply grid gap-6 justify-center;
     grid-template-columns: repeat(auto-fill, minmax(200px, 340px));
+
+    li {
+      display: flex;
+    }
   }
 
   .title {
@@ -205,10 +209,6 @@
     &.card--selected {
       @apply shadow-2xl shadow-blue-200 -translate-y-1.5
       dark:shadow-none dark:border-blue-500 dark:ring-1 dark:ring-blue-500;
-    }
-
-    .card-overlay {
-      @apply absolute inset-0 w-full h-full bg-transparent z-1 cursor-pointer;
     }
 
     .card-actions {

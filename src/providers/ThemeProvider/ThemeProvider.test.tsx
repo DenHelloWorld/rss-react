@@ -37,7 +37,6 @@ describe(ThemeProvider.name, () => {
   });
 
   it('should apply theme stored in localStorage', () => {
-    // Manually setting the serialized value that your hook expects
     localStorageMock.setItem(STORAGE_KEYS.THEME, JSON.stringify(THEME.DARK));
 
     act(() => {

@@ -26,10 +26,6 @@ export const ARTWORK_COLUMNS: CSVColumn<AICArtwork>[] = [
 ];
 
 export const CSVService = {
-  /**
-   * Sanitizes and formats a single cell value to comply with the CSV standard,
-   * preventing the output from breaking when opened in Excel.
-   */
   escapeValue(value: string | number | boolean | null | undefined): string {
     if (value === null || value === undefined) return '""';
 
@@ -46,9 +42,6 @@ export const CSVService = {
     return `"${cleanString}"`;
   },
 
-  /**
-   * Converts an array of generic items into a single, structured CSV string based on provided columns.
-   */
   generateCSV<T>(items: T[], columns: CSVColumn<T>[]): string {
     if (!items.length) return '';
 
@@ -63,9 +56,6 @@ export const CSVService = {
     return [headers, ...rows].join('\n');
   },
 
-  /**
-   * Creates a virtual file in the browser's memory and programmatically triggers a user download.
-   */
   downloadBlob(blob: Blob, filename: string): void {
     if (typeof window === 'undefined') return;
 

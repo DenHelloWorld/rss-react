@@ -9,7 +9,6 @@ import ArtworkResultsLayout from '../layouts/ArtworkResultsLayout/ArtworkResults
 import { artworksParamsLoader } from './artworksParamsLoader.ts';
 
 export const router = createBrowserRouter([
-  // TODO: MainPage ?
   {
     path: ROUTES.ROOT.path,
     element: <App />,
