@@ -1,4 +1,4 @@
-import { ThemeContext } from '../../context/ThemeContext';
+import { ThemeContext } from '../../context/ThemeContext/ThemeContext.ts';
 import { THEME } from '../../consts/theme.const.ts';
 import ThemeProvider from './ThemeProvider.tsx';
 import { localStorageMock } from '../../test-utils/storage-mock.ts';

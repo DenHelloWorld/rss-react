@@ -1,5 +1,5 @@
-import { useArtworkSelection } from '../../hooks/useArtworkSelection.ts';
-import { useArtworksDownload } from '../../hooks/useArtworksDownload.ts';
+import { useArtworkSelection } from '../../hooks/useArtworkSelection/useArtworkSelection.ts';
+import { useArtworksDownload } from '../../hooks/useArtworksDownload/useArtworksDownload.ts';
 
 const Flyout = () => {
   const { count, selectedEntities, clearAll } = useArtworkSelection();

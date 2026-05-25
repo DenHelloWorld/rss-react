@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { ThemeContext } from './ThemeContext.ts';
-import { THEME } from '../consts/theme.const.ts';
+import { THEME } from '../../consts/theme.const.ts';
 import { useContext } from 'react';
 
 describe('ThemeContext', () => {

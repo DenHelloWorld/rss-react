@@ -3,9 +3,9 @@ import { useEffect, useRef } from 'react';
 import LazyImage from '../LazyImage/LazyImage.tsx';
 import { useLocation, useNavigate, useParams } from 'react-router';
 import { ROUTES } from '../../consts/routes.const.ts';
-import { useArtworkSelection } from '../../hooks/useArtworkSelection.ts';
+import { useArtworkSelection } from '../../hooks/useArtworkSelection/useArtworkSelection.ts';
 import Checkbox from '../Checkbox/Checkbox.tsx';
-import { useClickableBlock } from '../../hooks/useClickableBlock.ts';
+import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 
 interface AICCardProps {
   art: AICArtwork;

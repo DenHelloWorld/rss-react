@@ -3,8 +3,8 @@ import { CSVService, ARTWORK_COLUMNS } from './csv-service.ts';
 import {
   AICApiService,
   type AICArtwork,
-} from './AICApiService/aic-api-service.ts';
-import { MOCK_ART } from '../test-utils/mock-data.ts';
+} from '../AICApiService/aic-api-service.ts';
+import { MOCK_ART } from '../../test-utils/mock-data.ts';
 
 describe('CSVService', () => {
   describe('escapeValue', () => {

@@ -1,11 +1,11 @@
-import { useAppDispatch, useAppSelector } from '../store/store.ts';
+import { useAppDispatch, useAppSelector } from '../../store/store.ts';
 import { useCallback } from 'react';
-import { type AICArtwork } from '../services/AICApiService/aic-api-service.ts';
+import { type AICArtwork } from '../../services/AICApiService/aic-api-service.ts';
 import {
   selectOne,
   unselectAll,
   unselectOne,
-} from '../store/arts/arts-slice.ts';
+} from '../../store/arts/arts-slice.ts';
 
 export const useArtworkSelection = (): {
   selectedEntities: AICArtwork[];

@@ -1,4 +1,4 @@
-import type { KEYBOARD_KEYS } from '../consts/keyboard-keys.const.ts';
+import type { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 import { type KeyboardEvent, type MouseEvent, useCallback } from 'react';
 
 type KeyboardKey = (typeof KEYBOARD_KEYS)[keyof typeof KEYBOARD_KEYS];

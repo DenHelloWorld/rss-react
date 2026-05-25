@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import { ThemeContext } from '../../context/ThemeContext.ts';
+import { ThemeContext } from '../../context/ThemeContext/ThemeContext.ts';
 import { THEME } from '../../consts/theme.const.ts';
 
 const ThemeButton = () => {

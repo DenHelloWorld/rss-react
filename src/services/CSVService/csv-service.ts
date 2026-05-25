@@ -1,7 +1,7 @@
 import {
   AICApiService,
   type AICArtwork,
-} from './AICApiService/aic-api-service.ts';
+} from '../AICApiService/aic-api-service.ts';
 
 export interface CSVColumn<T> {
   header: string;

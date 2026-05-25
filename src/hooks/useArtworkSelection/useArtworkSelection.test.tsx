@@ -3,10 +3,10 @@ import { describe, it, expect, beforeEach } from 'vitest';
 import { useArtworkSelection } from './useArtworkSelection.ts';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import artsReducer from '../store/arts/arts-slice.ts';
+import artsReducer from '../../store/arts/arts-slice.ts';
 import type { ReactNode } from 'react';
-import type { AICArtwork } from '../services/AICApiService/aic-api-service.ts';
-import { MOCK_ART } from '../test-utils/mock-data.ts';
+import type { AICArtwork } from '../../services/AICApiService/aic-api-service.ts';
+import { MOCK_ART } from '../../test-utils/mock-data.ts';
 
 const createTestStore = () =>
   configureStore({

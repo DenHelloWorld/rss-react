@@ -1,7 +1,7 @@
 import { Outlet, useMatch, useNavigate, useSearchParams } from 'react-router';
 import ArtworkResults from '../../components/ArtworkResults/ArtworkResults.tsx';
 import { ROUTES } from '../../consts/routes.const.ts';
-import { useClickableBlock } from '../../hooks/useClickableBlock.ts';
+import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 
 const ArtworkResultsLayout = () => {
   const isDetailsLocation = !!useMatch(`${ROUTES.DETAILS.path}/:id`);

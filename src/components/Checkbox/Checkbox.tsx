@@ -4,7 +4,7 @@ import {
   type MouseEvent,
   useCallback,
 } from 'react';
-import { useClickableBlock } from '../../hooks/useClickableBlock.ts';
+import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 
 interface CheckboxProps {
   checked: boolean;

@@ -1,9 +1,9 @@
 import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useArtworksDownload } from './useArtworksDownload.ts';
-import { CSVService } from '../services/csv-service.ts';
-import { MOCK_ART } from '../test-utils/mock-data.ts';
-import { CONSOLE_ERROR_SPY } from '../test-utils/console-spies.const.ts';
+import { CSVService } from '../../services/CSVService/csv-service.ts';
+import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { CONSOLE_ERROR_SPY } from '../../test-utils/console-spies.const.ts';
 
 describe('useArtworksDownload', () => {
   const mockArtworks = [MOCK_ART];

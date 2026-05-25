@@ -7,7 +7,7 @@ import {
 import { ROUTES } from '../../consts/routes.const.ts';
 import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator.tsx';
 import LazyImage from '../../components/LazyImage/LazyImage.tsx';
-import { useClickableBlock } from '../../hooks/useClickableBlock.ts';
+import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 
 const DetailsPage = () => {

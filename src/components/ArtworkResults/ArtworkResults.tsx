@@ -11,7 +11,7 @@ import AICCard from '../AICCard/AICCard.tsx';
 import ErrorTrigger from '../ErrorTrigger/ErrorTrigger.tsx';
 import Pagination from '../Pagination/Pagination.tsx';
 import { useQuery } from '@tanstack/react-query';
-import { useErrorMessage } from '../../hooks/useErrorMessage.ts';
+import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage.ts';
 
 const ArtworkResults = () => {
   const [storedSearchTerm] = useLocalStorage(STORAGE_KEYS.SEARCH_TERM);
