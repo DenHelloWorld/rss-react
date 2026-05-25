@@ -23,6 +23,7 @@ const ArtworkResults = () => {
     queryKey: [ROUTE_QUERY_KEYS.ARTWORKS, searchTerm, currentPage],
     queryFn: () => AICApiService.search(searchTerm, { page: currentPage }),
     placeholderData: (previousData) => previousData,
+    refetchOnWindowFocus: false,
   });
   const errorMessage = useErrorMessage(error);
 
