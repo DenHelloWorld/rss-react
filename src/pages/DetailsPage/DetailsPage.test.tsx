@@ -76,10 +76,22 @@ describe(DetailsPage.name, () => {
     renderWithRouter('123');
 
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+      expect(screen.getByText('Fetch failed')).toBeInTheDocument();
     });
 
     expect(screen.queryByText('Starry Night')).not.toBeInTheDocument();
+  });
+
+  it('should render error section for non-Error rejection', async () => {
+    getByIdSpy.mockRejectedValue('string error');
+
+    renderWithRouter('123');
+
+    await waitFor(() => {
+      expect(screen.queryByText('Starry Night')).not.toBeInTheDocument();
+    });
+
+    expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
   });
 
   it('should not call API if id is missing', () => {
