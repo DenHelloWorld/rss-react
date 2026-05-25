@@ -16,10 +16,13 @@
     "test:coverage:ui": "vitest --coverage --ui"
   },
   "dependencies": {
+    "@reduxjs/toolkit": "^2.12.0",
     "@tailwindcss/vite": "^4.2.2",
+    "@tanstack/react-query": "^5.100.14",
     "eslint-plugin-jsx-a11y": "^6.10.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
+    "react-redux": "^9.3.0",
     "react-router": "^7.15.0",
     "tailwindcss": "^4.2.2"
   },

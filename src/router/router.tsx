@@ -1,11 +1,12 @@
 import { createBrowserRouter } from 'react-router';
 import { ROUTES } from '../consts/routes.const.ts';
-import AboutPage from '../pages/AboutPage.tsx';
+import AboutPage from '../pages/AboutPage/AboutPage.tsx';
 import App from '../App.tsx';
-import NotFoundPage from '../pages/NotFoundPage.tsx';
-import BubbleError from '../components/BubbleError.tsx';
-import DetailsPage from '../pages/DetailsPage.tsx';
-import ArtworkResultsLayout from '../layouts/ArtworkResultsLayout.tsx';
+import NotFoundPage from '../pages/NotFoundPage/NotFoundPage.tsx';
+import BubbleError from '../components/BubbleError/BubbleError.tsx';
+import DetailsPage from '../pages/DetailsPage/DetailsPage.tsx';
+import ArtworkResultsLayout from '../layouts/ArtworkResultsLayout/ArtworkResultsLayout.tsx';
+import { artworksParamsLoader } from './artworksParamsLoader.ts';
 
 export const router = createBrowserRouter([
   {
@@ -15,6 +16,7 @@ export const router = createBrowserRouter([
     children: [
       {
         path: '',
+        loader: artworksParamsLoader,
         element: <ArtworkResultsLayout />,
         children: [
           {

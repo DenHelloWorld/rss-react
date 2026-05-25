@@ -1,6 +1,6 @@
-import Header from './components/Header.tsx';
+import Header from './components/Header/Header.tsx';
 import { Outlet } from 'react-router';
-import ArtworkSearch from './components/ArtworkSearch.tsx';
+import ArtworkSearch from './components/ArtworkSearch/ArtworkSearch.tsx';
 import { useIsHomeActive } from './hooks/useIsHomeActive.ts';
 
 const App = () => {

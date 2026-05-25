@@ -17,3 +17,7 @@ export const ROUTE_QUERY_PARAMS = {
   QUERY: 'query',
   PAGE: 'page',
 } as const;
+
+export const ROUTE_QUERY_KEYS = {
+  ARTWORKS: 'artworks',
+} as const;
