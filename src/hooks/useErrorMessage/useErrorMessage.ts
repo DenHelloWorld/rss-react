@@ -5,9 +5,5 @@ export const useErrorMessage = (error: unknown): string | null => {
     return error.message;
   }
 
-  if (typeof error === 'object' && 'message' in error) {
-    return String((error as { message: unknown }).message);
-  }
-
   return 'An unknown error has occurred';
 };

@@ -111,7 +111,13 @@ export default tseslint.config(
       // debugger statements must never be committed
       'no-debugger': 'error',
       // Prevents accidental reassignment of function parameters
-      'no-param-reassign': ['error', { props: true }],
+      'no-param-reassign': [
+        'error',
+        {
+          props: true,
+          ignorePropertyModificationsFor: ['state'],
+        },
+      ],
       // Disallows alert/confirm/prompt – use a proper UI component
       'no-alert': 'error',
       // Prefer const wherever possible;

@@ -41,29 +41,29 @@ describe('useArtworkSelection', () => {
     expect(result.current.count).toBe(0);
   });
 
-  it('should select an artwork', () => {
+  it('should select an artwork via toggle', () => {
     const { result } = renderHook(() => useArtworkSelection(), {
       wrapper: wrapper(testStore),
     });
 
     act(() => {
-      result.current.select(MOCK_ART);
+      result.current.toggle(MOCK_ART);
     });
 
     expect(result.current.selectedEntities).toEqual([MOCK_ART]);
     expect(result.current.count).toBe(1);
   });
 
-  it('should unselect an artwork', () => {
+  it('should unselect an artwork via toggle', () => {
     const { result } = renderHook(() => useArtworkSelection(), {
       wrapper: wrapper(testStore),
     });
 
     act(() => {
-      result.current.select(MOCK_ART);
+      result.current.toggle(MOCK_ART);
     });
     act(() => {
-      result.current.unselect(MOCK_ART);
+      result.current.toggle(MOCK_ART);
     });
 
     expect(result.current.selectedEntities).toEqual([]);
@@ -76,8 +76,8 @@ describe('useArtworkSelection', () => {
     });
 
     act(() => {
-      result.current.select(MOCK_ART);
-      result.current.select(mockArt2);
+      result.current.toggle(MOCK_ART);
+      result.current.toggle(mockArt2);
     });
     expect(result.current.count).toBe(2);
 
@@ -97,7 +97,7 @@ describe('useArtworkSelection', () => {
     expect(result.current.isSelected(MOCK_ART.id)).toBe(false);
 
     act(() => {
-      result.current.select(MOCK_ART);
+      result.current.toggle(MOCK_ART);
     });
 
     expect(result.current.isSelected(MOCK_ART.id)).toBe(true);

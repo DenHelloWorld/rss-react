@@ -10,31 +10,25 @@ const initialState: ArtsState = {
 };
 
 const artsSlice = createSlice({
-  name: 'Arts',
+  name: 'arts',
   initialState,
   reducers: {
-    selectOne: (state, action: PayloadAction<AICArtwork>) => {
-      return {
-        ...state,
-        selectedEntities: [...state.selectedEntities, action.payload],
-      };
-    },
-    unselectOne: (state, action: PayloadAction<AICArtwork>) => {
-      return {
-        ...state,
-        selectedEntities: state.selectedEntities.filter(
-          (entity) => entity.id !== action.payload.id
-        ),
-      };
+    toggleSelect: (state, action: PayloadAction<AICArtwork>) => {
+      const index = state.selectedEntities.findIndex(
+        (entity) => entity.id === action.payload.id
+      );
+
+      if (index === -1) {
+        state.selectedEntities.push(action.payload);
+      } else {
+        state.selectedEntities.splice(index, 1);
+      }
     },
     unselectAll: (state) => {
-      return {
-        ...state,
-        selectedEntities: [],
-      };
+      state.selectedEntities = [];
     },
   },
 });
 
-export const { selectOne, unselectOne, unselectAll } = artsSlice.actions;
+export const { toggleSelect, unselectAll } = artsSlice.actions;
 export default artsSlice.reducer;
