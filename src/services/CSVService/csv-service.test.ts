@@ -1,9 +1,9 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { CSVService, ARTWORK_COLUMNS } from './csv-service.ts';
 import {
-  AICApiService,
+  getArtworkImageUrl,
   type AICArtwork,
-} from '../AICApiService/aic-api-service.ts';
+} from '../../store/arts/arts-api.ts';
 import { MOCK_ART } from '../../test-utils/mock-data.ts';
 
 describe('CSVService', () => {
@@ -124,7 +124,7 @@ describe('ARTWORK_COLUMNS', () => {
 
   it('should generate image URL for Art Photo when image_id exists', () => {
     const url = ARTWORK_COLUMNS[4].getValue(MOCK_ART) as string;
-    expect(url).toBe(AICApiService.getImageUrl(MOCK_ART.image_id!));
+    expect(url).toBe(getArtworkImageUrl(MOCK_ART.image_id!));
   });
 
   it('should return fallback text for Art Photo when image_id is missing', () => {

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { AICArtwork } from '../../services/AICApiService/aic-api-service.ts';
+import type { AICArtwork } from '../../store/arts/arts-api.ts';
 import {
   ARTWORK_COLUMNS,
   CSVService,

@@ -5,11 +5,15 @@ import {
   useDispatch,
   useSelector,
 } from 'react-redux';
+import { artsApi } from './arts/arts-api.ts';
 
 export const store = configureStore({
   reducer: {
     arts: artsSlice,
+    [artsApi.reducerPath]: artsApi.reducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(artsApi.middleware),
   devTools: import.meta.env.DEV,
 });
 

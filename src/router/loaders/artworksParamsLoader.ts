@@ -1,5 +1,8 @@
 import { type LoaderFunctionArgs, redirect } from 'react-router';
-import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
+import {
+  ROUTE_QUERY_PARAMS,
+  isPositiveIntegerString,
+} from '../../consts/routes.const.ts';
 import {
   localStorageService,
   STORAGE_KEYS,
@@ -21,7 +24,7 @@ export const artworksParamsLoader = ({
     return redirect(url.pathname + url.search);
   }
 
-  if (!page) {
+  if (!page || (page && !isPositiveIntegerString(page))) {
     url.searchParams.set(ROUTE_QUERY_PARAMS.PAGE, '1');
     return redirect(url.pathname + url.search);
   }

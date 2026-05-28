@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { AICArtwork } from '../../services/AICApiService/aic-api-service.ts';
+import type { AICArtwork } from './arts-api.ts';
 
 interface ArtsState {
   selectedEntities: AICArtwork[];
@@ -10,7 +10,7 @@ const initialState: ArtsState = {
 };
 
 const artsSlice = createSlice({
-  name: 'arts',
+  name: 'artsSlice',
   initialState,
   reducers: {
     toggleSelect: (state, action: PayloadAction<AICArtwork>) => {

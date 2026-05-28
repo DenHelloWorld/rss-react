@@ -1,7 +1,5 @@
-import {
-  AICApiService,
-  type AICArtwork,
-} from '../AICApiService/aic-api-service.ts';
+import type { AICArtwork } from '../../store/arts/arts-api.ts';
+import { getArtworkImageUrl } from '../../store/arts/arts-api.ts';
 
 export interface CSVColumn<T> {
   header: string;
@@ -19,9 +17,7 @@ export const ARTWORK_COLUMNS: CSVColumn<AICArtwork>[] = [
   {
     header: 'Art Photo',
     getValue: (item) =>
-      item.image_id
-        ? AICApiService.getImageUrl(item.image_id)
-        : 'No Image Available',
+      item.image_id ? getArtworkImageUrl(item.image_id) : 'No Image Available',
   },
 ];
 

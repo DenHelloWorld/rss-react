@@ -1,12 +1,9 @@
 import { useSearchParams } from 'react-router';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage.ts';
 import { STORAGE_KEYS } from '../../services/localStorageService/local-storage.service.ts';
-import {
-  ROUTE_QUERY_KEYS,
-  ROUTE_QUERY_PARAMS,
-} from '../../consts/routes.const.ts';
+import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
 import SearchBar from '../SearchBar/SearchBar.tsx';
-import { useIsFetching } from '@tanstack/react-query';
+import { useSearchArtsQuery } from '../../store/arts/arts-api.ts';
 
 const ArtworkSearch = () => {
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(
@@ -15,7 +12,12 @@ const ArtworkSearch = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const searchTerm =
     searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
-  const isFetching = !!useIsFetching({ queryKey: [ROUTE_QUERY_KEYS.ARTWORKS] });
+  const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '1';
+  const { isFetching } = useSearchArtsQuery({
+    query: searchTerm,
+    page: Number(currentPage),
+    limit: 9,
+  });
 
   const handleSearch = (value: string) => {
     const trimmedValue = value.trim();

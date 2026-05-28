@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '../../store/store.ts';
 import { useCallback } from 'react';
-import { type AICArtwork } from '../../services/AICApiService/aic-api-service.ts';
+import { type AICArtwork } from '../../store/arts/arts-api.ts';
 import { toggleSelect, unselectAll } from '../../store/arts/arts-slice.ts';
 
 export const useArtworkSelection = (): {
