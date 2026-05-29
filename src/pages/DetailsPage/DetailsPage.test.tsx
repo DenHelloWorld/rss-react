@@ -5,6 +5,8 @@ import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 import { artsApi, API_URL } from '../../store/arts/arts-api.ts';
 import type { AICArtworkDetails } from '../../store/arts/arts-api.ts';
+import { API_TAGS } from '../../consts/api-tags.const.ts';
+import { HTTP_STATUS } from '../../consts/http-status.const.ts';
 import { AICServerMock } from '../../test-utils/server';
 import { http, HttpResponse } from 'msw';
 import DetailsPage from './DetailsPage.tsx';
@@ -53,12 +55,6 @@ describe(DetailsPage.name, () => {
   });
 
   it('should navigate to root when close button is clicked', async () => {
-    AICServerMock.use(
-      http.get(`${API_URL.baseURL}/:id`, () => {
-        return HttpResponse.json({ data: MOCK_DETAILS });
-      })
-    );
-
     renderWithRouter();
 
     await waitFor(() => {
@@ -72,12 +68,6 @@ describe(DetailsPage.name, () => {
   });
 
   it('should call getById with the id from route params', async () => {
-    AICServerMock.use(
-      http.get(`${API_URL.baseURL}/456`, () => {
-        return HttpResponse.json({ data: MOCK_DETAILS });
-      })
-    );
-
     renderWithRouter('456');
 
     await waitFor(() => {
@@ -88,7 +78,9 @@ describe(DetailsPage.name, () => {
   it('should handle API error gracefully', async () => {
     AICServerMock.use(
       http.get(`${API_URL.baseURL}/:id`, () => {
-        return new HttpResponse(null, { status: 500 });
+        return new HttpResponse(null, {
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        });
       })
     );
 
@@ -132,12 +124,6 @@ describe(DetailsPage.name, () => {
   });
 
   it('should render all details correctly when data is fully provided', async () => {
-    AICServerMock.use(
-      http.get(`${API_URL.baseURL}/:id`, () => {
-        return HttpResponse.json({ data: MOCK_DETAILS });
-      })
-    );
-
     renderWithRouter();
 
     await waitFor(() => {
@@ -156,6 +142,42 @@ describe(DetailsPage.name, () => {
       expect(
         screen.getByText(MOCK_DETAILS.medium_display!)
       ).toBeInTheDocument();
+    });
+  });
+
+  it('should serve cached data when re-visiting the same detail', async () => {
+    await store.dispatch(
+      artsApi.util.upsertQueryData('getArtById', '123', {
+        data: MOCK_DETAILS,
+      })
+    );
+
+    renderWithRouter('123');
+
+    expect(screen.getByText('Starry Night')).toBeInTheDocument();
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
+
+  it('should refetch detail data after cache invalidation', async () => {
+    renderWithRouter('123');
+
+    await waitFor(() => {
+      expect(screen.getByText('Starry Night')).toBeInTheDocument();
+    });
+
+    const queryKey = `getArtById("123")`;
+
+    const requestIdBefore =
+      store.getState().artsApi.queries[queryKey]?.requestId;
+
+    store.dispatch(
+      artsApi.util.invalidateTags([{ type: API_TAGS.ARTS, id: 123 }])
+    );
+
+    await waitFor(() => {
+      const requestIdAfter =
+        store.getState().artsApi.queries[queryKey]?.requestId;
+      expect(requestIdAfter).not.toBe(requestIdBefore);
     });
   });
 
