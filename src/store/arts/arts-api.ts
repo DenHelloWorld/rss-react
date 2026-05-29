@@ -33,12 +33,18 @@ export interface AICArtworkDetails extends AICArtwork {
   place_of_origin?: string;
   dimensions?: string;
 }
+const LIST_FIELDS = 'id,title,artist_display,image_id,thumbnail';
+const DETAILS_FIELDS =
+  'id,title,artist_display,image_id,thumbnail,date_display,medium_display,place_of_origin,dimensions';
+const CACHE_TTL = Number(import.meta.env.CACHE_TTL) || 60;
 
 export const artsApi = createApi({
   reducerPath: 'artsApi',
   baseQuery: fetchBaseQuery({
     baseUrl: API_URL.baseURL,
   }),
+  keepUnusedDataFor: CACHE_TTL,
+  tagTypes: ['Arts'],
   endpoints: (builder) => ({
     searchArts: builder.query<
       AICResponse,
@@ -47,7 +53,7 @@ export const artsApi = createApi({
       query: ({ query, page, limit = 9 }) => {
         const safePage = Number.isInteger(page) && page > 0 ? page : 1;
         const params: Record<string, string> = {
-          fields: 'id,title,artist_display,image_id,thumbnail',
+          fields: LIST_FIELDS,
           limit: String(limit),
           page: String(safePage),
         };
@@ -61,21 +67,38 @@ export const artsApi = createApi({
           params,
         };
       },
+      providesTags: () => [{ type: 'Arts', id: 'LIST' }],
     }),
 
     getArtById: builder.query<AICSingleResponse, string>({
       query: (id) => ({
         url: id,
         params: {
-          fields:
-            'id,title,artist_display,image_id,thumbnail,date_display,medium_display,place_of_origin,dimensions',
+          fields: DETAILS_FIELDS,
         },
       }),
+      providesTags: (result) =>
+        result
+          ? [{ type: 'Arts', id: result.data.id }]
+          : [{ type: 'Arts', id: 'DETAIL' }],
+    }),
+
+    // TODO: remove it ?
+    toggleLikeArtwork: builder.mutation<unknown, number>({
+      query: (id) => ({
+        url: String(id),
+        method: 'POST',
+      }),
+      invalidatesTags: (_result, _error, id) => [{ type: 'Arts', id }],
     }),
   }),
 });
 
-export const { useSearchArtsQuery, useGetArtByIdQuery } = artsApi;
+export const {
+  useSearchArtsQuery,
+  useGetArtByIdQuery,
+  useToggleLikeArtworkMutation,
+} = artsApi;
 
 export const getArtworkImageUrl = (imageId: string): string =>
   `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
