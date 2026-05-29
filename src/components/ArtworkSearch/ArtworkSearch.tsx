@@ -4,8 +4,10 @@ import { STORAGE_KEYS } from '../../services/localStorageService/local-storage.s
 import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
 import SearchBar from '../SearchBar/SearchBar.tsx';
 import { useSearchArtsQuery } from '../../store/arts/arts-api.ts';
+import { useInvalidateArtsList } from '../../hooks/useArtsInvalidation/useArtsInvalidation.ts';
 
 const ArtworkSearch = () => {
+  const invalidateArtsList = useInvalidateArtsList();
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(
     STORAGE_KEYS.SEARCH_TERM
   );
@@ -27,11 +29,16 @@ const ArtworkSearch = () => {
     }
   };
 
+  const handleRefetch = () => {
+    invalidateArtsList();
+  };
+
   return (
     <SearchBar
       isDisabled={isFetching}
       initialValue={searchTerm}
       onSearch={handleSearch}
+      onRefetch={handleRefetch}
     />
   );
 };

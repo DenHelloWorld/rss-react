@@ -4,12 +4,14 @@ import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 export interface SearchBarProps {
   initialValue: string;
   onSearch: (term: string) => void;
+  onRefetch: () => void;
   isDisabled?: boolean;
 }
 
 const SearchBar = ({
   initialValue,
   onSearch,
+  onRefetch,
   isDisabled = false,
 }: SearchBarProps) => {
   const [query, setQuery] = useState(initialValue);
@@ -22,6 +24,10 @@ const SearchBar = ({
 
     setQuery(trimmedQuery);
     onSearch(trimmedQuery);
+  };
+
+  const onHandleRefetch = () => {
+    onRefetch();
   };
 
   const onClear = () => {
@@ -56,6 +62,17 @@ const SearchBar = ({
           </svg>
         </button>
       )}
+
+      <button
+        disabled={isDisabled}
+        onClick={onHandleRefetch}
+        className="button button--warning button--icon"
+      >
+        <svg>
+          <use href="/icons.svg#refresh" />
+        </svg>
+      </button>
+
       <button
         disabled={isDisabled}
         onClick={onHandleSearch}

@@ -1,7 +1,4 @@
-import {
-  type AICArtwork,
-  useToggleLikeArtworkMutation,
-} from '../../store/arts/arts-api.ts';
+import { type AICArtwork } from '../../store/arts/arts-api.ts';
 import { useEffect, useRef } from 'react';
 import LazyImage from '../LazyImage/LazyImage.tsx';
 import { useLocation, useNavigate, useParams } from 'react-router';
@@ -24,8 +21,6 @@ const AICCard = ({ art, getImageUrl }: AICCardProps) => {
   const { id } = useParams();
   const isActive = Number(id) === art.id;
 
-  const [toggleLikeApi] = useToggleLikeArtworkMutation();
-
   const handleDetails = () => {
     void navigate({
       pathname: `${ROUTES.DETAILS.path}/${String(art.id)}`,
@@ -34,7 +29,6 @@ const AICCard = ({ art, getImageUrl }: AICCardProps) => {
   };
 
   const handleCheckboxChange = () => {
-    void toggleLikeApi(art.id);
     toggle(art);
   };
 

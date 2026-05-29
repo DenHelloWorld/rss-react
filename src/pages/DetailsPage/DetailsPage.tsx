@@ -2,6 +2,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useRef } from 'react';
 import { useGetArtByIdQuery } from '../../store/arts/arts-api.ts';
 import { ROUTES } from '../../consts/routes.const.ts';
+import { useInvalidateArtById } from '../../hooks/useArtsInvalidation/useArtsInvalidation.ts';
 import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator.tsx';
 import LazyImage from '../../components/LazyImage/LazyImage.tsx';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
@@ -16,8 +17,9 @@ const DetailsPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const sectionRef = useRef<HTMLElement>(null);
+  const invalidateArtById = useInvalidateArtById();
 
-  const { data, isLoading, error } = useGetArtByIdQuery(id ?? '', {
+  const { data, isFetching, error } = useGetArtByIdQuery(id ?? '', {
     skip: !id,
   });
 
@@ -35,7 +37,11 @@ const DetailsPage = () => {
     allowedKeys: [KEYBOARD_KEYS.ESC, KEYBOARD_KEYS.ESCAPE],
   });
 
-  if (errorMessage || (!artwork && !isLoading)) {
+  const handleRefetch = () => {
+    invalidateArtById(Number(id));
+  };
+
+  if (errorMessage || (!artwork && !isFetching)) {
     return (
       <section
         ref={sectionRef}
@@ -64,22 +70,35 @@ const DetailsPage = () => {
       {...clickableBlockProps}
       className="mx-auto container shell relative"
     >
-      {isLoading ? (
+      {isFetching ? (
         <LoadingIndicator />
       ) : (
         <>
           <div className="flex w-full justify-between gap-6 top-bar items-center">
             {artwork?.title && <h2 className="title">{artwork.title}</h2>}
 
-            <button
-              aria-label="Close"
-              className="button button--error button--icon"
-              onClick={handleClose}
-            >
-              <svg>
-                <use href="/icons.svg#close" />
-              </svg>
-            </button>
+            <div className="flex gap-4">
+              <button
+                aria-label="refresh button"
+                className="button button--warning"
+                onClick={handleRefetch}
+              >
+                <svg>
+                  <use href="/icons.svg#refresh" />
+                </svg>
+                Refresh
+              </button>
+
+              <button
+                aria-label="Close"
+                className="button button--error button--icon"
+                onClick={handleClose}
+              >
+                <svg>
+                  <use href="/icons.svg#close" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {artwork && (

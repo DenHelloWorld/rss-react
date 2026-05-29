@@ -1,4 +1,5 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { API_TAGS } from '../../consts/api-tags.const.ts';
 
 export interface AICArtwork {
   id: number;
@@ -44,7 +45,7 @@ export const artsApi = createApi({
     baseUrl: API_URL.baseURL,
   }),
   keepUnusedDataFor: CACHE_TTL,
-  tagTypes: ['Arts'],
+  tagTypes: [API_TAGS.ARTS],
   endpoints: (builder) => ({
     searchArts: builder.query<
       AICResponse,
@@ -67,7 +68,7 @@ export const artsApi = createApi({
           params,
         };
       },
-      providesTags: () => [{ type: 'Arts', id: 'LIST' }],
+      providesTags: () => [{ type: API_TAGS.ARTS, id: API_TAGS.LIST }],
     }),
 
     getArtById: builder.query<AICSingleResponse, string>({
@@ -79,26 +80,13 @@ export const artsApi = createApi({
       }),
       providesTags: (result) =>
         result
-          ? [{ type: 'Arts', id: result.data.id }]
-          : [{ type: 'Arts', id: 'DETAIL' }],
-    }),
-
-    // TODO: remove it ?
-    toggleLikeArtwork: builder.mutation<unknown, number>({
-      query: (id) => ({
-        url: String(id),
-        method: 'POST',
-      }),
-      invalidatesTags: (_result, _error, id) => [{ type: 'Arts', id }],
+          ? [{ type: API_TAGS.ARTS, id: result.data.id }]
+          : [{ type: API_TAGS.ARTS, id: API_TAGS.DETAIL }],
     }),
   }),
 });
 
-export const {
-  useSearchArtsQuery,
-  useGetArtByIdQuery,
-  useToggleLikeArtworkMutation,
-} = artsApi;
+export const { useSearchArtsQuery, useGetArtByIdQuery } = artsApi;
 
 export const getArtworkImageUrl = (imageId: string): string =>
   `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
