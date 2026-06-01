@@ -37,14 +37,14 @@ npm run dev
 
 ## Scripts
 
-| Command | Description |
-|---|---|
-| `npm run dev` | Start dev server |
-| `npm run build` | TypeScript check + production build |
-| `npm run test` | Run tests |
-| `npm run test:coverage` | Run tests with coverage report |
-| `npm run lint` | ESLint check |
-| `npm run format:fix` | Prettier formatting |
+| Command                 | Description                         |
+| ----------------------- | ----------------------------------- |
+| `npm run dev`           | Start dev server                    |
+| `npm run build`         | TypeScript check + production build |
+| `npm run test`          | Run tests                           |
+| `npm run test:coverage` | Run tests with coverage report      |
+| `npm run lint`          | ESLint check                        |
+| `npm run format:fix`    | Prettier formatting                 |
 
 ## Environment Variables
 
