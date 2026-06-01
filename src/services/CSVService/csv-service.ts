@@ -27,11 +27,7 @@ export const CSVService = {
 
     const cleanString = String(value).replace(/[\r\n]+/g, ' ');
 
-    if (
-      cleanString.includes('"') ||
-      cleanString.includes(',') ||
-      cleanString.includes(';')
-    ) {
+    if (cleanString.includes('"') || cleanString.includes(';')) {
       return `"${cleanString.replace(/"/g, '""')}"`;
     }
 
@@ -43,10 +39,10 @@ export const CSVService = {
 
     const headers = columns
       .map((col) => this.escapeValue(col.header))
-      .join(',');
+      .join(';');
 
     const rows = items.map((item) =>
-      columns.map((col) => this.escapeValue(col.getValue(item))).join(',')
+      columns.map((col) => this.escapeValue(col.getValue(item))).join(';')
     );
 
     return [headers, ...rows].join('\n');
