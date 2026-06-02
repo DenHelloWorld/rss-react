@@ -1,7 +1,7 @@
 import Header from './components/Header/Header.tsx';
 import { Outlet } from 'react-router';
 import ArtworkSearch from './components/ArtworkSearch/ArtworkSearch.tsx';
-import { useIsHomeActive } from './hooks/useIsHomeActive.ts';
+import { useIsHomeActive } from './hooks/useIsHomeActive/useIsHomeActive.ts';
 
 const App = () => {
   const isHomeActive = useIsHomeActive();

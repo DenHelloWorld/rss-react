@@ -1,5 +1,5 @@
 import { useLocation } from 'react-router';
-import { ROUTES } from '../consts/routes.const.ts';
+import { ROUTES } from '../../consts/routes.const.ts';
 
 export const useIsHomeActive = (): boolean => {
   const location = useLocation();

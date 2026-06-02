@@ -7,6 +7,7 @@ import { router } from './router/router.tsx';
 import { Provider } from 'react-redux';
 import { store } from './store/store.ts';
 import ThemeProvider from './providers/ThemeProvider/ThemeProvider.tsx';
+import ModalPortalProvider from './providers/ModalPortalProvider/ModalPortalProvider.tsx';
 
 const root = document.getElementById('root');
 
@@ -19,7 +20,9 @@ createRoot(root).render(
     <ErrorBoundary>
       <ThemeProvider>
         <Provider store={store}>
-          <RouterProvider router={router} />
+          <ModalPortalProvider>
+            <RouterProvider router={router} />
+          </ModalPortalProvider>
         </Provider>
       </ThemeProvider>
     </ErrorBoundary>

@@ -1,9 +1,4 @@
-import {
-  type ChangeEvent,
-  type KeyboardEvent,
-  type MouseEvent,
-  useCallback,
-} from 'react';
+import { type ChangeEvent } from 'react';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 
 interface CheckboxProps {
@@ -12,18 +7,13 @@ interface CheckboxProps {
 }
 
 const Checkbox = ({ checked, onChange }: CheckboxProps) => {
-  const handleClick = useCallback(
-    (e: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => {
-      e.stopPropagation();
-    },
-    []
-  );
+  const labelProps = useClickableBlock({
+    stopPropagation: true,
+  });
 
   return (
     <label
-      {...useClickableBlock({
-        onClick: handleClick,
-      })}
+      {...labelProps}
       className={`button button--icon w-8 h-8 ${checked ? '' : 'button--outline'}`}
     >
       <input
