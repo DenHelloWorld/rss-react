@@ -3,7 +3,7 @@ import { THEME } from '../../consts/theme.const.ts';
 import ThemeProvider from './ThemeProvider.tsx';
 import { localStorageMock } from '../../test-utils/storage-mock.ts';
 import { act, render, screen } from '@testing-library/react';
-import { STORAGE_KEYS } from '../../services/localStorageService/local-storage.service.ts';
+import { STORAGE_KEYS } from '../../utils/local-storage/local-storage.ts';
 import { describe, it, expect } from 'vitest';
 
 const TestComponent = () => (

@@ -1,6 +1,9 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router';
 import { useRef } from 'react';
-import { useGetArtByIdQuery } from '../../store/arts/arts-api.ts';
+import {
+  useGetArtByIdQuery,
+  getArtworkImageUrl,
+} from '../../store/arts/arts-api.ts';
 import { ROUTES } from '../../consts/routes.const.ts';
 import { useInvalidateArtById } from '../../hooks/useArtsInvalidation/useArtsInvalidation.ts';
 import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator.tsx';
@@ -8,9 +11,6 @@ import LazyImage from '../../components/LazyImage/LazyImage.tsx';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage.ts';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
-
-const getImageUrl = (imageId: string): string =>
-  `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
 
 const DetailsPage = () => {
   const { id } = useParams();
@@ -105,7 +105,7 @@ const DetailsPage = () => {
             <div className="flex flex-col md:flex-row gap-8 mt-6">
               <div className="flex-1 overflow-hidden">
                 <LazyImage
-                  src={getImageUrl(String(artwork.image_id))}
+                  src={getArtworkImageUrl(String(artwork.image_id))}
                   alt={artwork.title}
                   className="w-full h-full object-contain"
                 />

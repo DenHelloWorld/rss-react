@@ -1,10 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import artsSlice from './arts/arts-slice.ts';
-import {
-  type TypedUseSelectorHook,
-  useDispatch,
-  useSelector,
-} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { artsApi } from './arts/arts-api.ts';
 
 export const store = configureStore({
@@ -20,5 +16,5 @@ export const store = configureStore({
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export const useAppDispatch: () => AppDispatch = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch = useDispatch.withTypes<AppDispatch>();
+export const useAppSelector = useSelector.withTypes<RootState>();

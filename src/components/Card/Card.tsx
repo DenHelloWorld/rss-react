@@ -23,13 +23,13 @@ const Card = ({
   cardRef,
   children,
 }: CardProps) => {
+  const clickableProps = useClickableBlock({ onClick: onCardClick });
+
   return (
     <article
       ref={cardRef}
       className={`card ${isActive ? 'card--selected' : ''}`}
-      {...useClickableBlock({
-        onClick: onCardClick,
-      })}
+      {...clickableProps}
     >
       <div className="card-image-container">
         <LazyImage src={imageUrl} alt={description} />
@@ -40,7 +40,7 @@ const Card = ({
         <p className="card-description">{description}</p>
       </div>
 
-      {children && <div className="card-actions">{children}</div>}
+      <div className="card-actions">{children}</div>
     </article>
   );
 };

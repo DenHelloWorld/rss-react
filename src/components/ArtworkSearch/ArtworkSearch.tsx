@@ -1,6 +1,6 @@
 import { useSearchParams } from 'react-router';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage.ts';
-import { STORAGE_KEYS } from '../../services/localStorageService/local-storage.service.ts';
+import { STORAGE_KEYS } from '../../utils/local-storage/local-storage.ts';
 import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
 import SearchBar from '../SearchBar/SearchBar.tsx';
 import { useSearchArtsQuery } from '../../store/arts/arts-api.ts';
