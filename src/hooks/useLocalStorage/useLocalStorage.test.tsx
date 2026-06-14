@@ -2,32 +2,41 @@ import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { useLocalStorage } from './useLocalStorage.ts';
 import {
-  localStorageService,
+  getItem,
+  setItem,
+  removeItem,
   STORAGE_KEYS,
-} from '../../services/localStorageService/local-storage.service.ts';
+} from '../../utils/local-storage/local-storage.ts';
+
+vi.mock('../../utils/local-storage/local-storage.ts', () => ({
+  getItem: vi.fn(),
+  setItem: vi.fn(),
+  removeItem: vi.fn(),
+  STORAGE_KEYS: { SEARCH_TERM: 'search_term', THEME: 'theme' },
+}));
+
+const getItemMock = vi.mocked(getItem);
+const setItemMock = vi.mocked(setItem);
+const removeItemMock = vi.mocked(removeItem);
 
 describe('useLocalStorage', () => {
-  const getItemSpy = vi.spyOn(localStorageService, 'getItem');
-  const setItemSpy = vi.spyOn(localStorageService, 'setItem');
-  const removeItemSpy = vi.spyOn(localStorageService, 'removeItem');
-
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
   it('should initialize with value from localStorageService', () => {
     const mockValue = 'Monet';
-    getItemSpy.mockReturnValue(mockValue);
+    getItemMock.mockReturnValue(mockValue);
 
     const { result } = renderHook(() =>
       useLocalStorage(STORAGE_KEYS.SEARCH_TERM)
     );
 
     expect(result.current[0]).toBe(mockValue);
-    expect(getItemSpy).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM);
+    expect(getItemMock).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM);
   });
 
-  it('should update value and call localStorageService.setItem', () => {
+  it('should update value and call setItem', () => {
     const { result } = renderHook(() =>
       useLocalStorage(STORAGE_KEYS.SEARCH_TERM)
     );
@@ -38,10 +47,13 @@ describe('useLocalStorage', () => {
     });
 
     expect(result.current[0]).toBe(newValue);
-    expect(setItemSpy).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM, newValue);
+    expect(setItemMock).toHaveBeenCalledWith(
+      STORAGE_KEYS.SEARCH_TERM,
+      newValue
+    );
   });
 
-  it('should remove value and call localStorageService.removeItem', () => {
+  it('should remove value and call removeItem', () => {
     const { result } = renderHook(() =>
       useLocalStorage(STORAGE_KEYS.SEARCH_TERM)
     );
@@ -51,6 +63,6 @@ describe('useLocalStorage', () => {
     });
 
     expect(result.current[0]).toBeNull();
-    expect(removeItemSpy).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM);
+    expect(removeItemMock).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM);
   });
 });

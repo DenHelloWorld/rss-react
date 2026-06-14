@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# RSS React — Art Institute of Chicago
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web application for browsing the [Art Institute of Chicago](https://www.artic.edu/) collection. Search, pagination, detailed artwork view, CSV export, and theme switching.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- **React 19** + TypeScript 6
+- **React Router v7** — nested routes, URL as source of truth for search
+- **Redux Toolkit + RTK Query** — state management and API caching
+- **Tailwind CSS 4** — styling
+- **Vite 8** — build tool
+- **Vitest + Testing Library + MSW** — testing
 
-## React Compiler
+## Project Structure
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```
+src/
+├── components/      # UI components (cards, search, pagination, spinner...)
+├── consts/          # Constants (routes, cache tags, URLs, HTTP statuses, theme)
+├── context/         # React Context (theme)
+├── hooks/           # Custom hooks (cache invalidation, error handling, localStorage...)
+├── layouts/         # Layouts (list + flyout + details outlet)
+├── pages/           # Pages (About, Details, NotFound)
+├── providers/       # Providers (ThemeProvider)
+├── router/          # Router config + loader
+├── services/        # Services (CSV, localStorage)
+├── store/           # Redux store + RTK Query API + slice
+└── test-utils/      # Test utilities (MSW server, mocks, mock-data)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+npm install
+npm run dev
 ```
+
+## Scripts
+
+| Command                 | Description                         |
+| ----------------------- | ----------------------------------- |
+| `npm run dev`           | Start dev server                    |
+| `npm run build`         | TypeScript check + production build |
+| `npm run test`          | Run tests                           |
+| `npm run test:coverage` | Run tests with coverage report      |
+| `npm run lint`          | ESLint check                        |
+| `npm run format:fix`    | Prettier formatting                 |
+
+## Environment Variables
+
+Create a `.env` file based on `.env.example`:
+
+```
+CACHE_TTL=300   # RTK Query cache time-to-live in seconds
+```
+
+## API
+
+This app uses the [Art Institute of Chicago API](https://api.artic.edu/docs/). All requests go through RTK Query:
+
+- **`searchArts`** — search/list with pagination (`/artworks/search` or `/artworks`)
+- **`getArtById`** — artwork details (`/artworks/:id`)
+
+Cache is managed via tags: `Arts/LIST` for the list and `Arts/:id` for details. The Refresh button invalidates the corresponding tag and triggers a refetch.

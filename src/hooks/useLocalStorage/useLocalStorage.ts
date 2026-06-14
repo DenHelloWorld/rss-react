@@ -1,8 +1,10 @@
 import { useState, useCallback } from 'react';
 import {
-  localStorageService,
+  getItem,
+  setItem,
+  removeItem,
   type StorageSchema,
-} from '../../services/localStorageService/local-storage.service.ts';
+} from '../../utils/local-storage/local-storage.ts';
 
 export const useLocalStorage = <K extends keyof StorageSchema>(
   key: K
@@ -12,19 +14,19 @@ export const useLocalStorage = <K extends keyof StorageSchema>(
   () => void,
 ] => {
   const [storedValue, setStoredValue] = useState<StorageSchema[K] | null>(() =>
-    localStorageService.getItem(key)
+    getItem(key)
   );
 
   const setValue = useCallback(
     (value: StorageSchema[K]) => {
-      localStorageService.setItem(key, value);
+      setItem(key, value);
       setStoredValue(value);
     },
     [key]
   );
 
   const removeValue = useCallback(() => {
-    localStorageService.removeItem(key);
+    removeItem(key);
     setStoredValue(null);
   }, [key]);
 

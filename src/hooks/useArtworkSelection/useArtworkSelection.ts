@@ -1,17 +1,11 @@
 import { useAppDispatch, useAppSelector } from '../../store/store.ts';
 import { useCallback } from 'react';
-import { type AICArtwork } from '../../services/AICApiService/aic-api-service.ts';
-import {
-  selectOne,
-  unselectAll,
-  unselectOne,
-} from '../../store/arts/arts-slice.ts';
+import { type AICArtwork } from '../../store/arts/arts-api.ts';
+import { toggleSelect, unselectAll } from '../../store/arts/arts-slice.ts';
 
 export const useArtworkSelection = (): {
   selectedEntities: AICArtwork[];
   count: number;
-  select: (entity: AICArtwork) => void;
-  unselect: (entity: AICArtwork) => void;
   toggle: (entity: AICArtwork) => void;
   clearAll: () => void;
   isSelected: (id: number | string) => boolean;
@@ -20,20 +14,6 @@ export const useArtworkSelection = (): {
 
   const selectedEntities: AICArtwork[] = useAppSelector(
     (store) => store.arts.selectedEntities
-  );
-
-  const select = useCallback(
-    (entity: AICArtwork) => {
-      dispatch(selectOne(entity));
-    },
-    [dispatch]
-  );
-
-  const unselect = useCallback(
-    (entity: AICArtwork) => {
-      dispatch(unselectOne(entity));
-    },
-    [dispatch]
   );
 
   const clearAll = useCallback(() => {
@@ -49,20 +29,14 @@ export const useArtworkSelection = (): {
 
   const toggle = useCallback(
     (entity: AICArtwork) => {
-      if (isSelected(entity.id)) {
-        unselect(entity);
-      } else {
-        select(entity);
-      }
+      dispatch(toggleSelect(entity));
     },
-    [unselect, isSelected, select]
+    [dispatch]
   );
 
   return {
     selectedEntities,
     count: selectedEntities.length,
-    select,
-    unselect,
     toggle,
     clearAll,
     isSelected,

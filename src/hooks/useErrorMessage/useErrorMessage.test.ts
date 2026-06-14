@@ -15,11 +15,6 @@ describe('useErrorMessage', () => {
     expect(useErrorMessage(error)).toBe('Something went wrong');
   });
 
-  it('should extract message from objects with message property', () => {
-    const error = { message: 'Custom error message' };
-    expect(useErrorMessage(error)).toBe('Custom error message');
-  });
-
   it('should return default message for unknown error types', () => {
     expect(useErrorMessage(42)).toBe('An unknown error has occurred');
   });

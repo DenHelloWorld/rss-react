@@ -1,57 +1,62 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { CSVService, ARTWORK_COLUMNS } from './csv-service.ts';
 import {
-  AICApiService,
+  escapeValue,
+  generateCSV,
+  downloadBlob,
+  ARTWORK_COLUMNS,
+} from './csv.ts';
+import {
+  getArtworkImageUrl,
   type AICArtwork,
-} from '../AICApiService/aic-api-service.ts';
+} from '../../store/arts/arts-api.ts';
 import { MOCK_ART } from '../../test-utils/mock-data.ts';
 
-describe('CSVService', () => {
+describe('csv-service', () => {
   describe('escapeValue', () => {
     it('should return empty quoted string for null', () => {
-      expect(CSVService.escapeValue(null)).toBe('""');
+      expect(escapeValue(null)).toBe('""');
     });
 
     it('should return empty quoted string for undefined', () => {
-      expect(CSVService.escapeValue(undefined)).toBe('""');
+      expect(escapeValue(undefined)).toBe('""');
     });
 
     it('should wrap string in quotes', () => {
-      expect(CSVService.escapeValue('hello')).toBe('"hello"');
+      expect(escapeValue('hello')).toBe('"hello"');
     });
 
     it('should escape double quotes', () => {
-      expect(CSVService.escapeValue('he"llo')).toBe('"he""llo"');
+      expect(escapeValue('he"llo')).toBe('"he""llo"');
     });
 
     it('should wrap value containing comma in quotes', () => {
-      expect(CSVService.escapeValue('hello, world')).toBe('"hello, world"');
+      expect(escapeValue('hello, world')).toBe('"hello, world"');
     });
 
     it('should wrap value containing semicolon in quotes', () => {
-      expect(CSVService.escapeValue('hello; world')).toBe('"hello; world"');
+      expect(escapeValue('hello; world')).toBe('"hello; world"');
     });
 
     it('should replace newlines with spaces', () => {
-      expect(CSVService.escapeValue('hello\nworld')).toBe('"hello world"');
+      expect(escapeValue('hello\nworld')).toBe('"hello world"');
     });
 
     it('should handle numbers', () => {
-      expect(CSVService.escapeValue(42)).toBe('"42"');
+      expect(escapeValue(42)).toBe('"42"');
     });
 
     it('should handle booleans', () => {
-      expect(CSVService.escapeValue(true)).toBe('"true"');
+      expect(escapeValue(true)).toBe('"true"');
     });
   });
 
   describe('generateCSV', () => {
     it('should return empty string for empty items', () => {
-      expect(CSVService.generateCSV([], ARTWORK_COLUMNS)).toBe('');
+      expect(generateCSV([], ARTWORK_COLUMNS)).toBe('');
     });
 
     it('should generate CSV with headers and rows', () => {
-      const result = CSVService.generateCSV([MOCK_ART], ARTWORK_COLUMNS);
+      const result = generateCSV([MOCK_ART], ARTWORK_COLUMNS);
 
       expect(result).toContain('"ID"');
       expect(result).toContain('"Title"');
@@ -76,7 +81,7 @@ describe('CSVService', () => {
       const revokeObjectURL = vi.spyOn(URL, 'revokeObjectURL');
 
       const blob = new Blob(['test'], { type: 'text/csv' });
-      CSVService.downloadBlob(blob, 'test.csv');
+      downloadBlob(blob, 'test.csv');
 
       expect(createObjectURL).toHaveBeenCalledWith(blob);
       const link = document.querySelector('a');
@@ -124,7 +129,7 @@ describe('ARTWORK_COLUMNS', () => {
 
   it('should generate image URL for Art Photo when image_id exists', () => {
     const url = ARTWORK_COLUMNS[4].getValue(MOCK_ART) as string;
-    expect(url).toBe(AICApiService.getImageUrl(MOCK_ART.image_id!));
+    expect(url).toBe(getArtworkImageUrl(MOCK_ART.image_id!));
   });
 
   it('should return fallback text for Art Photo when image_id is missing', () => {

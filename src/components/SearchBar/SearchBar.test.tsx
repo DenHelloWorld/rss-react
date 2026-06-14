@@ -5,9 +5,16 @@ import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 
 describe(SearchBar.name, () => {
   const mockOnSearch = vi.fn();
+  const mockOnRefetch = vi.fn();
 
   it('renders with initial value', () => {
-    render(<SearchBar initialValue="Art" onSearch={mockOnSearch} />);
+    render(
+      <SearchBar
+        initialValue="Art"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
+    );
 
     const input = screen.getByRole('textbox');
 
@@ -15,7 +22,13 @@ describe(SearchBar.name, () => {
   });
 
   it('updates input value on change', () => {
-    render(<SearchBar initialValue="" onSearch={mockOnSearch} />);
+    render(
+      <SearchBar
+        initialValue=""
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
+    );
 
     const input = screen.getByRole('textbox');
 
@@ -26,7 +39,11 @@ describe(SearchBar.name, () => {
 
   it('calls onSearch with trimmed value when button is clicked', () => {
     const { container } = render(
-      <SearchBar initialValue="  Monet  " onSearch={mockOnSearch} />
+      <SearchBar
+        initialValue="  Monet  "
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
     );
 
     const searchButton = container.querySelector('.button--success');
@@ -37,7 +54,13 @@ describe(SearchBar.name, () => {
   });
 
   it('triggers search on Enter key press', () => {
-    render(<SearchBar initialValue="Gogh" onSearch={mockOnSearch} />);
+    render(
+      <SearchBar
+        initialValue="Gogh"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
+    );
     const input = screen.getByRole('textbox');
 
     fireEvent.keyDown(input, {
@@ -50,7 +73,11 @@ describe(SearchBar.name, () => {
 
   it('clears input when clear button is clicked', () => {
     const { container } = render(
-      <SearchBar initialValue="To be cleared" onSearch={mockOnSearch} />
+      <SearchBar
+        initialValue="To be cleared"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
     );
 
     const clearButton = container.querySelector('.button--error');
@@ -63,7 +90,13 @@ describe(SearchBar.name, () => {
   });
 
   it('does not trigger search on non-Enter key press', () => {
-    render(<SearchBar initialValue="Test" onSearch={mockOnSearch} />);
+    render(
+      <SearchBar
+        initialValue="Test"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
+    );
 
     const input = screen.getByRole('textbox');
 
@@ -77,7 +110,12 @@ describe(SearchBar.name, () => {
 
   it('disables buttons when isDisabled is true', () => {
     const { container } = render(
-      <SearchBar initialValue="Art" onSearch={mockOnSearch} isDisabled={true} />
+      <SearchBar
+        initialValue="Art"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+        isDisabled={true}
+      />
     );
 
     const buttons = container.querySelectorAll('button');
@@ -87,9 +125,28 @@ describe(SearchBar.name, () => {
     });
   });
 
+  it('calls onRefetch when refresh button is clicked', () => {
+    const { container } = render(
+      <SearchBar
+        initialValue="Art"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
+    );
+
+    const refreshButton = container.querySelector('.button--warning');
+    fireEvent.click(refreshButton!);
+
+    expect(mockOnRefetch).toHaveBeenCalledTimes(1);
+  });
+
   it('does not disable buttons when isDisabled is false (default)', () => {
     const { container } = render(
-      <SearchBar initialValue="Art" onSearch={mockOnSearch} />
+      <SearchBar
+        initialValue="Art"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+      />
     );
 
     const buttons = container.querySelectorAll('button');

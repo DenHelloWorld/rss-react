@@ -1,10 +1,11 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
-import artsReducer from '../../store/arts/arts-slice.ts';
+import artsReducer, { toggleSelect } from '../../store/arts/arts-slice.ts';
 import Flyout from './Flyout';
 import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import * as useArtworksDownloadModule from '../../hooks/useArtworksDownload/useArtworksDownload.ts';
 
 const createTestStore = () =>
   configureStore({
@@ -31,14 +32,14 @@ describe(Flyout.name, () => {
   });
 
   it('should display the count of selected items', () => {
-    testStore.dispatch({ type: 'Arts/selectOne', payload: MOCK_ART });
+    testStore.dispatch(toggleSelect(MOCK_ART));
     renderFlyout();
 
     expect(screen.getByText('Selected: 1')).toBeInTheDocument();
   });
 
   it('should clear all selections when "Unselect all" is clicked', () => {
-    testStore.dispatch({ type: 'Arts/selectOne', payload: MOCK_ART });
+    testStore.dispatch(toggleSelect(MOCK_ART));
     renderFlyout();
 
     fireEvent.click(screen.getByText('Unselect all'));
@@ -51,10 +52,15 @@ describe(Flyout.name, () => {
   });
 
   it('should call downloadAsCsv when download button is clicked', () => {
-    testStore.dispatch({ type: 'Arts/selectOne', payload: MOCK_ART });
+    const downloadSpy = vi.fn();
+    vi.spyOn(useArtworksDownloadModule, 'useArtworksDownload').mockReturnValue({
+      downloadAsCsv: downloadSpy,
+    });
+
+    testStore.dispatch(toggleSelect(MOCK_ART));
     renderFlyout();
 
     fireEvent.click(screen.getByText('Download'));
-    expect(screen.getByText('Selected: 1')).toBeInTheDocument();
+    expect(downloadSpy).toHaveBeenCalledWith([MOCK_ART]);
   });
 });

@@ -1,50 +1,30 @@
 import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useEffect, useState, useRef } from 'react';
+import { useRef } from 'react';
 import {
-  AICApiService,
-  type AICArtworkDetails,
-} from '../../services/AICApiService/aic-api-service.ts';
+  useGetArtByIdQuery,
+  getArtworkImageUrl,
+} from '../../store/arts/arts-api.ts';
 import { ROUTES } from '../../consts/routes.const.ts';
+import { useInvalidateArtById } from '../../hooks/useArtsInvalidation/useArtsInvalidation.ts';
 import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator.tsx';
 import LazyImage from '../../components/LazyImage/LazyImage.tsx';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
+import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage.ts';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 
 const DetailsPage = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [data, setData] = useState<AICArtworkDetails | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
+  const invalidateArtById = useInvalidateArtById();
 
-  useEffect(() => {
-    const load = async () => {
-      if (id) {
-        setLoading(true);
-        setError(null);
-        try {
-          const res = await AICApiService.getById(id);
-          setData(res.data);
-        } catch (error) {
-          console.error('Failed to fetch artwork:', error);
-          if (error instanceof Error) {
-            setError(error.message);
-          }
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-    void load();
-  }, [id]);
+  const { data, isFetching, error } = useGetArtByIdQuery(id ?? '', {
+    skip: !id,
+  });
 
-  useEffect(() => {
-    if (sectionRef.current) {
-      sectionRef.current.focus();
-    }
-  }, [loading]);
+  const artwork = data?.data;
+  const errorMessage = useErrorMessage(error);
 
   const handleClose = () =>
     void navigate({
@@ -57,7 +37,11 @@ const DetailsPage = () => {
     allowedKeys: [KEYBOARD_KEYS.ESC, KEYBOARD_KEYS.ESCAPE],
   });
 
-  if (error || (!data && !loading)) {
+  const handleRefetch = () => {
+    invalidateArtById(Number(id));
+  };
+
+  if (errorMessage || (!artwork && !isFetching)) {
     return (
       <section
         ref={sectionRef}
@@ -75,7 +59,7 @@ const DetailsPage = () => {
             </svg>
           </button>
         </div>
-        <p className="error-message my-4 w-fit mx-auto">{error}</p>
+        <p className="error-message my-4 w-fit mx-auto">{errorMessage}</p>
       </section>
     );
   }
@@ -86,30 +70,43 @@ const DetailsPage = () => {
       {...clickableBlockProps}
       className="mx-auto container shell relative"
     >
-      {loading ? (
+      {isFetching ? (
         <LoadingIndicator />
       ) : (
         <>
           <div className="flex w-full justify-between gap-6 top-bar items-center">
-            {data?.title && <h2 className="title">{data.title}</h2>}
+            {artwork?.title && <h2 className="title">{artwork.title}</h2>}
 
-            <button
-              aria-label="Close"
-              className="button button--error button--icon"
-              onClick={handleClose}
-            >
-              <svg>
-                <use href="/icons.svg#close" />
-              </svg>
-            </button>
+            <div className="flex gap-4">
+              <button
+                aria-label="refresh button"
+                className="button button--warning"
+                onClick={handleRefetch}
+              >
+                <svg>
+                  <use href="/icons.svg#refresh" />
+                </svg>
+                Refresh
+              </button>
+
+              <button
+                aria-label="Close"
+                className="button button--error button--icon"
+                onClick={handleClose}
+              >
+                <svg>
+                  <use href="/icons.svg#close" />
+                </svg>
+              </button>
+            </div>
           </div>
 
-          {data && (
+          {artwork && (
             <div className="flex flex-col md:flex-row gap-8 mt-6">
               <div className="flex-1 overflow-hidden">
                 <LazyImage
-                  src={AICApiService.getImageUrl(String(data.image_id))}
-                  alt={data.title}
+                  src={getArtworkImageUrl(String(artwork.image_id))}
+                  alt={artwork.title}
                   className="w-full h-full object-contain"
                 />
               </div>
@@ -118,29 +115,29 @@ const DetailsPage = () => {
                 <div className="grid grid-cols-2 gap-y-6 gap-x-4 details-grid-border pt-6">
                   <section>
                     <h3 className="details-label mb-2">Artist</h3>
-                    <p className="details-artist">{data.artist_display}</p>
+                    <p className="details-artist">{artwork.artist_display}</p>
                   </section>
                   <div>
                     <h4 className="details-label mb-1">Origin</h4>
                     <p className="details-value">
-                      {data.place_of_origin ?? 'Unknown'}
+                      {artwork.place_of_origin ?? 'Unknown'}
                     </p>
                   </div>
                   <div>
                     <h4 className="details-label mb-1">Date</h4>
-                    <p className="details-value">{data.date_display}</p>
+                    <p className="details-value">{artwork.date_display}</p>
                   </div>
                   <div className="col-span-2">
                     <h4 className="details-label mb-1">Dimensions</h4>
                     <p className="details-value">
-                      {data.dimensions ?? 'Dimensions not available'}
+                      {artwork.dimensions ?? 'Dimensions not available'}
                     </p>
                   </div>
                 </div>
 
                 <section className="details-meta-box">
                   <h4 className="details-label mb-2">Medium</h4>
-                  <p className="details-medium">{data.medium_display}</p>
+                  <p className="details-medium">{artwork.medium_display}</p>
                 </section>
               </div>
             </div>

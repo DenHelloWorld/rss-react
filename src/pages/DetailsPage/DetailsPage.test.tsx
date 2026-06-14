@@ -1,11 +1,15 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { MemoryRouter, Route, Routes } from 'react-router';
+import { Provider } from 'react-redux';
+import { store } from '../../store/store.ts';
+import { artsApi, API_URL } from '../../store/arts/arts-api.ts';
+import type { AICArtworkDetails } from '../../store/arts/arts-api.ts';
+import { API_TAGS } from '../../consts/api-tags.const.ts';
+import { HTTP_STATUS } from '../../consts/http-status.const.ts';
+import { AICServerMock } from '../../test-utils/server';
+import { http, HttpResponse } from 'msw';
 import DetailsPage from './DetailsPage.tsx';
-import {
-  AICApiService,
-  type AICArtworkDetails,
-} from '../../services/AICApiService/aic-api-service.ts';
 
 vi.mock('../components/LoadIndicator/LoadIndicator.tsx', () => ({
   default: () => <div>Loading...</div>,
@@ -28,26 +32,29 @@ const MOCK_DETAILS: AICArtworkDetails = {
   dimensions: '73.7 cm × 92.1 cm',
 };
 
-const getByIdSpy = vi.spyOn(AICApiService, 'getById');
-
 const renderWithRouter = (id = '123') =>
   render(
-    <MemoryRouter initialEntries={[`/details/${id}`]}>
-      <Routes>
-        <Route path="/details/:id" element={<DetailsPage />} />
-        <Route path="/" element={<div>Home Page</div>} />
-      </Routes>
-    </MemoryRouter>
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[`/details/${id}`]}>
+        <Routes>
+          <Route path="/details/:id" element={<DetailsPage />} />
+          <Route path="/" element={<div>Home Page</div>} />
+        </Routes>
+      </MemoryRouter>
+    </Provider>
   );
 
 describe(DetailsPage.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    AICServerMock.resetHandlers();
+  });
+
+  afterEach(() => {
+    store.dispatch(artsApi.util.resetApiState());
   });
 
   it('should navigate to root when close button is clicked', async () => {
-    getByIdSpy.mockResolvedValue({ data: MOCK_DETAILS });
-
     renderWithRouter();
 
     await waitFor(() => {
@@ -61,29 +68,39 @@ describe(DetailsPage.name, () => {
   });
 
   it('should call getById with the id from route params', async () => {
-    getByIdSpy.mockResolvedValue({ data: MOCK_DETAILS });
-
     renderWithRouter('456');
 
     await waitFor(() => {
-      expect(getByIdSpy).toHaveBeenCalledWith('456');
+      expect(screen.getByText('Starry Night')).toBeInTheDocument();
     });
   });
 
   it('should handle API error gracefully', async () => {
-    getByIdSpy.mockRejectedValue(new Error('Fetch failed'));
+    AICServerMock.use(
+      http.get(`${API_URL.baseURL}/:id`, () => {
+        return new HttpResponse(null, {
+          status: HTTP_STATUS.INTERNAL_SERVER_ERROR,
+        });
+      })
+    );
 
     renderWithRouter('123');
 
     await waitFor(() => {
-      expect(screen.getByText('Fetch failed')).toBeInTheDocument();
+      expect(
+        screen.getByText('An unknown error has occurred')
+      ).toBeInTheDocument();
     });
 
     expect(screen.queryByText('Starry Night')).not.toBeInTheDocument();
   });
 
   it('should render error section for non-Error rejection', async () => {
-    getByIdSpy.mockRejectedValue('string error');
+    AICServerMock.use(
+      http.get(`${API_URL.baseURL}/:id`, () => {
+        return HttpResponse.error();
+      })
+    );
 
     renderWithRouter('123');
 
@@ -96,18 +113,17 @@ describe(DetailsPage.name, () => {
 
   it('should not call API if id is missing', () => {
     render(
-      <MemoryRouter initialEntries={['/details/']}>
-        <Routes>
-          <Route path="/details/:id?" element={<DetailsPage />} />
-        </Routes>
-      </MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter initialEntries={['/details/']}>
+          <Routes>
+            <Route path="/details/:id?" element={<DetailsPage />} />
+          </Routes>
+        </MemoryRouter>
+      </Provider>
     );
-
-    expect(getByIdSpy).not.toHaveBeenCalled();
   });
-  it('should render all details correctly when data is fully provided', async () => {
-    getByIdSpy.mockResolvedValue({ data: MOCK_DETAILS });
 
+  it('should render all details correctly when data is fully provided', async () => {
     renderWithRouter();
 
     await waitFor(() => {
@@ -129,14 +145,52 @@ describe(DetailsPage.name, () => {
     });
   });
 
-  it('should show fallback values for origin and dimensions', async () => {
-    getByIdSpy.mockResolvedValue({
-      data: {
-        ...MOCK_DETAILS,
-        place_of_origin: null,
-        dimensions: null,
-      } as unknown as AICArtworkDetails,
+  it('should serve cached data when re-visiting the same detail', async () => {
+    await store.dispatch(
+      artsApi.util.upsertQueryData('getArtById', '123', {
+        data: MOCK_DETAILS,
+      })
+    );
+
+    renderWithRouter('123');
+
+    expect(screen.getByText('Starry Night')).toBeInTheDocument();
+    expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
+  });
+
+  it('should refetch detail data after cache invalidation', async () => {
+    renderWithRouter('123');
+
+    await waitFor(() => {
+      expect(screen.getByText('Starry Night')).toBeInTheDocument();
     });
+
+    const queryKey = `getArtById("123")`;
+
+    const requestIdBefore =
+      store.getState().artsApi.queries[queryKey]?.requestId;
+
+    store.dispatch(
+      artsApi.util.invalidateTags([{ type: API_TAGS.ARTS, id: 123 }])
+    );
+
+    await waitFor(() => {
+      const requestIdAfter =
+        store.getState().artsApi.queries[queryKey]?.requestId;
+      expect(requestIdAfter).not.toBe(requestIdBefore);
+    });
+  });
+
+  it('should show fallback values for origin and dimensions', async () => {
+    await store.dispatch(
+      artsApi.util.upsertQueryData('getArtById', '123', {
+        data: {
+          ...MOCK_DETAILS,
+          place_of_origin: undefined,
+          dimensions: undefined,
+        },
+      })
+    );
 
     renderWithRouter();
 

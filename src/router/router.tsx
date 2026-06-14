@@ -6,7 +6,7 @@ import NotFoundPage from '../pages/NotFoundPage/NotFoundPage.tsx';
 import BubbleError from '../components/BubbleError/BubbleError.tsx';
 import DetailsPage from '../pages/DetailsPage/DetailsPage.tsx';
 import ArtworkResultsLayout from '../layouts/ArtworkResultsLayout/ArtworkResultsLayout.tsx';
-import { artworksParamsLoader } from './artworksParamsLoader.ts';
+import { artworksParamsLoader } from './loaders/artworksParamsLoader.ts';
 
 export const router = createBrowserRouter([
   {
