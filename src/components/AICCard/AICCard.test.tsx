@@ -1,10 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+import { useRouter, useParams } from 'next/navigation';
 import AICCard from './AICCard';
 import type { AICArtwork } from '../../store/arts/arts-api.ts';
 import { UI_TEST_TEXT } from '../../test-utils/ui-test-text.const.ts';
 import { MOCK_ART } from '../../test-utils/mock-data.ts';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 
@@ -12,139 +12,75 @@ describe(AICCard.name, () => {
   const mockArt: AICArtwork = MOCK_ART;
   const noDescContent: string = UI_TEST_TEXT.noDescription;
   const mockGetImageUrl = (id: string) => `https://example.com/${id}.jpg`;
+  const mockPush = vi.fn();
 
-  it('renders art title and description correctly', () => {
+  beforeEach(() => {
+    vi.mocked(useRouter).mockReturnValue({
+      push: mockPush,
+      back: vi.fn(),
+      replace: vi.fn(),
+    } as ReturnType<typeof useRouter>);
+    vi.mocked(useParams).mockReturnValue({});
+  });
+
+  const renderCard = (art = mockArt) =>
     render(
       <Provider store={store}>
-        <MemoryRouter>
-          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-        </MemoryRouter>
+        <AICCard art={art} getImageUrl={mockGetImageUrl} />
       </Provider>
     );
 
+  it('renders art title and description correctly', () => {
+    renderCard();
     expect(screen.getByText(mockArt.title)).toBeInTheDocument();
     expect(screen.getByText(mockArt.thumbnail!.alt_text)).toBeInTheDocument();
   });
 
   it('shows skeleton while image is loading', () => {
-    const { container } = render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-        </MemoryRouter>
-      </Provider>
-    );
-    const skeleton = container.querySelector('.skeleton');
-
-    expect(skeleton).toBeInTheDocument();
+    const { container } = renderCard();
+    expect(container.querySelector('.skeleton')).toBeInTheDocument();
   });
 
   it('hides skeleton and shows image after successful load', () => {
-    const { container } = render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-        </MemoryRouter>
-      </Provider>
-    );
-    const img = screen.getByRole('img');
-
-    fireEvent.load(img);
-
-    const skeleton = container.querySelector('.skeleton');
-
-    expect(skeleton).not.toBeInTheDocument();
-    expect(img).toHaveClass('opacity-100');
+    const { container } = renderCard();
+    fireEvent.load(screen.getByRole('img'));
+    expect(container.querySelector('.skeleton')).not.toBeInTheDocument();
+    expect(screen.getByRole('img')).toHaveClass('opacity-100');
   });
 
   it('shows placeholder when image fails to load', () => {
-    const { container } = render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <AICCard art={mockArt} getImageUrl={mockGetImageUrl} />
-        </MemoryRouter>
-      </Provider>
-    );
-    const img = screen.getByRole('img');
-
-    fireEvent.error(img);
-
-    const placeholder = container.querySelector('.card-placeholder');
-
-    expect(placeholder).toBeInTheDocument();
+    const { container } = renderCard();
+    fireEvent.error(screen.getByRole('img'));
+    expect(container.querySelector('.card-placeholder')).toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
   });
 
   it('renders artist display if thumbnail alt_text is missing', () => {
-    const artWithoutAlt = {
-      ...mockArt,
-      thumbnail: undefined,
-    };
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <AICCard art={artWithoutAlt} getImageUrl={mockGetImageUrl} />{' '}
-        </MemoryRouter>
-      </Provider>
-    );
-
-    expect(screen.getByText(artWithoutAlt.artist_display)).toBeInTheDocument();
+    renderCard({ ...mockArt, thumbnail: undefined });
+    expect(screen.getByText(mockArt.artist_display)).toBeInTheDocument();
   });
 
   it('displays fallback text when both alt_text and artist_display are missing', () => {
-    const emptyArt = {
-      ...mockArt,
-      thumbnail: undefined,
-      artist_display: '',
-    };
-
-    render(
-      <Provider store={store}>
-        <MemoryRouter>
-          <AICCard art={emptyArt} getImageUrl={mockGetImageUrl} />
-        </MemoryRouter>
-      </Provider>
-    );
-
+    renderCard({ ...mockArt, thumbnail: undefined, artist_display: '' });
     expect(screen.getByText(noDescContent)).toBeInTheDocument();
   });
 
   it('navigates to details page when clicked', () => {
-    render(
-      <Provider store={store}>
-        <MemoryRouter initialEntries={['/']}>
-          <Routes>
-            <Route
-              path="/"
-              element={<AICCard art={mockArt} getImageUrl={mockGetImageUrl} />}
-            />
-            <Route path="/details/:id" element={<div>Details Page</div>} />
-          </Routes>
-        </MemoryRouter>
-      </Provider>
-    );
-
+    renderCard();
     fireEvent.click(screen.getByText(mockArt.title));
-    expect(screen.getByText('Details Page')).toBeInTheDocument();
+    expect(mockPush).toHaveBeenCalledWith(
+      expect.stringContaining(`/details/${String(mockArt.id)}`)
+    );
   });
 
   it('scrolls into view when card is active', () => {
+    vi.mocked(useParams).mockReturnValue({ id: String(mockArt.id) });
     const scrollSpy = vi.spyOn(window.HTMLElement.prototype, 'scrollIntoView');
-
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={[`/details/${String(mockArt.id)}`]}>
-          <Routes>
-            <Route
-              path="/details/:id"
-              element={<AICCard art={mockArt} getImageUrl={vi.fn()} />}
-            />
-          </Routes>
-        </MemoryRouter>
+        <AICCard art={mockArt} getImageUrl={vi.fn()} />
       </Provider>
     );
-
     expect(scrollSpy).toHaveBeenCalledWith({ block: 'center' });
   });
 });

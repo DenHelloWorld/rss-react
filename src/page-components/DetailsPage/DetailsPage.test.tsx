@@ -1,6 +1,5 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { MemoryRouter, Route, Routes } from 'react-router';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 import { artsApi, API_URL } from '../../store/arts/arts-api.ts';
@@ -11,14 +10,24 @@ import { AICServerMock } from '../../test-utils/server';
 import { http, HttpResponse } from 'msw';
 import DetailsPage from './DetailsPage.tsx';
 
-vi.mock('../components/LoadIndicator/LoadIndicator.tsx', () => ({
+vi.mock('../../components/LoadIndicator/LoadIndicator.tsx', () => ({
   default: () => <div>Loading...</div>,
 }));
 
-vi.mock('../components/LazyImage/LazyImage.tsx', () => ({
+vi.mock('../../components/LazyImage/LazyImage.tsx', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => (
     <img src={src} alt={alt} />
   ),
+}));
+
+const mockPush = vi.fn();
+const mockUseParams = vi.fn();
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mockPush }),
+  useParams: () => mockUseParams() as Record<string, string>,
+  useSearchParams: () => new URLSearchParams(),
+  usePathname: vi.fn(() => '/'),
 }));
 
 const MOCK_DETAILS: AICArtworkDetails = {
@@ -32,17 +41,14 @@ const MOCK_DETAILS: AICArtworkDetails = {
   dimensions: '73.7 cm × 92.1 cm',
 };
 
-const renderWithRouter = (id = '123') =>
-  render(
+const renderWithId = (id = '123') => {
+  mockUseParams.mockReturnValue({ id });
+  return render(
     <Provider store={store}>
-      <MemoryRouter initialEntries={[`/details/${id}`]}>
-        <Routes>
-          <Route path="/details/:id" element={<DetailsPage />} />
-          <Route path="/" element={<div>Home Page</div>} />
-        </Routes>
-      </MemoryRouter>
+      <DetailsPage />
     </Provider>
   );
+};
 
 describe(DetailsPage.name, () => {
   beforeEach(() => {
@@ -55,20 +61,18 @@ describe(DetailsPage.name, () => {
   });
 
   it('should navigate to root when close button is clicked', async () => {
-    renderWithRouter();
+    renderWithId();
 
     await waitFor(() => {
       expect(screen.getByText('Starry Night')).toBeInTheDocument();
     });
 
-    const closeButton = screen.getByRole('button', { name: /close/i });
-    fireEvent.click(closeButton);
-
-    expect(screen.getByText('Home Page')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /close/i }));
+    expect(mockPush).toHaveBeenCalledWith(expect.stringContaining('/'));
   });
 
   it('should call getById with the id from route params', async () => {
-    renderWithRouter('456');
+    renderWithId('456');
 
     await waitFor(() => {
       expect(screen.getByText('Starry Night')).toBeInTheDocument();
@@ -84,7 +88,7 @@ describe(DetailsPage.name, () => {
       })
     );
 
-    renderWithRouter('123');
+    renderWithId('123');
 
     await waitFor(() => {
       expect(
@@ -97,12 +101,10 @@ describe(DetailsPage.name, () => {
 
   it('should render error section for non-Error rejection', async () => {
     AICServerMock.use(
-      http.get(`${API_URL.baseURL}/:id`, () => {
-        return HttpResponse.error();
-      })
+      http.get(`${API_URL.baseURL}/:id`, () => HttpResponse.error())
     );
 
-    renderWithRouter('123');
+    renderWithId('123');
 
     await waitFor(() => {
       expect(screen.queryByText('Starry Night')).not.toBeInTheDocument();
@@ -112,19 +114,16 @@ describe(DetailsPage.name, () => {
   });
 
   it('should not call API if id is missing', () => {
+    mockUseParams.mockReturnValue({});
     render(
       <Provider store={store}>
-        <MemoryRouter initialEntries={['/details/']}>
-          <Routes>
-            <Route path="/details/:id?" element={<DetailsPage />} />
-          </Routes>
-        </MemoryRouter>
+        <DetailsPage />
       </Provider>
     );
   });
 
   it('should render all details correctly when data is fully provided', async () => {
-    renderWithRouter();
+    renderWithId();
 
     await waitFor(() => {
       expect(
@@ -147,26 +146,23 @@ describe(DetailsPage.name, () => {
 
   it('should serve cached data when re-visiting the same detail', async () => {
     await store.dispatch(
-      artsApi.util.upsertQueryData('getArtById', '123', {
-        data: MOCK_DETAILS,
-      })
+      artsApi.util.upsertQueryData('getArtById', '123', { data: MOCK_DETAILS })
     );
 
-    renderWithRouter('123');
+    renderWithId('123');
 
     expect(screen.getByText('Starry Night')).toBeInTheDocument();
     expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
   });
 
   it('should refetch detail data after cache invalidation', async () => {
-    renderWithRouter('123');
+    renderWithId('123');
 
     await waitFor(() => {
       expect(screen.getByText('Starry Night')).toBeInTheDocument();
     });
 
     const queryKey = `getArtById("123")`;
-
     const requestIdBefore =
       store.getState().artsApi.queries[queryKey]?.requestId;
 
@@ -192,7 +188,7 @@ describe(DetailsPage.name, () => {
       })
     );
 
-    renderWithRouter();
+    renderWithId();
 
     await waitFor(() => {
       expect(screen.getByText('Unknown')).toBeInTheDocument();

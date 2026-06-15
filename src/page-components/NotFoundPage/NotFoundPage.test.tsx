@@ -1,20 +1,14 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { MemoryRouter } from 'react-router';
 import NotFoundPage from './NotFoundPage.tsx';
 
-vi.mock('../components/LazyImage/LazyImage.tsx', () => ({
+vi.mock('../../components/LazyImage/LazyImage.tsx', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => (
     <img src={src} alt={alt} />
   ),
 }));
 
-const renderComponent = () =>
-  render(
-    <MemoryRouter>
-      <NotFoundPage />
-    </MemoryRouter>
-  );
+const renderComponent = () => render(<NotFoundPage />);
 
 describe(NotFoundPage.name, () => {
   it('should render the page heading', () => {
