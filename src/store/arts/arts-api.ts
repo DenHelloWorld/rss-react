@@ -1,7 +1,7 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_TAGS } from '../../consts/api-tags.const.ts';
 
-export interface AICArtwork {
+export type AICArtwork = {
   id: number;
   title: string;
   artist_display: string;
@@ -9,35 +9,35 @@ export interface AICArtwork {
   thumbnail?: {
     alt_text: string;
   };
-}
-export interface AICPaginationResponse {
+};
+export type AICPaginationResponse = {
   total: number;
   limit: number;
   offset: number;
   total_pages: number;
   current_page: number;
-}
+};
 export const API_URL = {
   baseURL: 'https://api.artic.edu/api/v1/artworks',
   searchEndpoint: 'search',
 };
-export interface AICResponse {
+export type AICResponse = {
   data: AICArtwork[];
   pagination: AICPaginationResponse;
-}
-export interface AICSingleResponse {
+};
+export type AICSingleResponse = {
   data: AICArtworkDetails;
-}
-export interface AICArtworkDetails extends AICArtwork {
+};
+export type AICArtworkDetails = {
   date_display?: string;
   medium_display?: string;
   place_of_origin?: string;
   dimensions?: string;
-}
+} & AICArtwork;
 const LIST_FIELDS = 'id,title,artist_display,image_id,thumbnail';
 const DETAILS_FIELDS =
   'id,title,artist_display,image_id,thumbnail,date_display,medium_display,place_of_origin,dimensions';
-const CACHE_TTL = Number(import.meta.env.CACHE_TTL) || 60;
+const CACHE_TTL = Number(process.env.NEXT_PUBLIC_CACHE_TTL) || 60;
 
 export const artsApi = createApi({
   reducerPath: 'artsApi',

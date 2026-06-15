@@ -1,3 +1,5 @@
+'use client';
+
 import { useArtworkSelection } from '../../hooks/useArtworkSelection/useArtworkSelection.ts';
 import { useArtworksDownload } from '../../hooks/useArtworksDownload/useArtworksDownload.ts';
 

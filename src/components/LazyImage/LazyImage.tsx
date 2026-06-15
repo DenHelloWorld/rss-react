@@ -1,10 +1,12 @@
+'use client';
+
 import { useState } from 'react';
 
-interface LazyImageProps {
+type LazyImageProps = {
   src: string;
   alt: string;
   className?: string;
-}
+};
 
 const LazyImage = ({ src, alt, className }: LazyImageProps) => {
   const [isImageLoadError, setIsImageLoadError] = useState(false);

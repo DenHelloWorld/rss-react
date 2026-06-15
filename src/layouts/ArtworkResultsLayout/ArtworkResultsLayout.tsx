@@ -1,33 +1,33 @@
-import { Outlet, useMatch, useNavigate, useSearchParams } from 'react-router';
-import ArtworkResults from '../../components/ArtworkResults/ArtworkResults.tsx';
-import { ROUTES } from '../../consts/routes.const.ts';
-import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
-import Flyout from '../Flyout/Flyout.tsx';
-import { useArtworkSelection } from '../../hooks/useArtworkSelection/useArtworkSelection.ts';
+'use client';
+
+import { usePathname } from 'next/navigation';
+import ArtworkResults from '../../components/ArtworkResults/ArtworkResults';
+import { ROUTES } from '../../consts/routes.const';
+import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock';
+import Flyout from '../Flyout/Flyout';
+import { useArtworkSelection } from '../../hooks/useArtworkSelection/useArtworkSelection';
+import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
 
 const ArtworkResultsLayout = () => {
-  const isDetailsLocation = !!useMatch(`${ROUTES.DETAILS.path}/:id`);
-  const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
+  const pathname = usePathname();
+  const isDetailsLocation = pathname.startsWith(`/${ROUTES.DETAILS.path}`);
+  const updateSearchParams = useUpdateSearchParams();
   const { count } = useArtworkSelection();
 
-  const handleClose = () =>
-    void navigate({
-      pathname: ROUTES.ROOT.path,
-      search: searchParams.toString(),
-    });
+  const handleClose = () => {
+    updateSearchParams({}, '/');
+  };
+
+  const clickableBlockProps = useClickableBlock({ onClick: handleClose });
 
   return (
     <>
       <div
-        {...useClickableBlock({
-          onClick: handleClose,
-        })}
+        {...clickableBlockProps}
         className={`relative main-panel ${isDetailsLocation ? 'main-panel--aside' : ''}`}
       >
         <ArtworkResults />
       </div>
-      <Outlet />
 
       {!!count && <Flyout />}
     </>

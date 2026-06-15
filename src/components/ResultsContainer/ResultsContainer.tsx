@@ -1,13 +1,13 @@
 import LoadingIndicator from '../LoadIndicator/LoadIndicator.tsx';
 import type { ReactNode } from 'react';
 
-interface ResultsContainerProps {
+type ResultsContainerProps = {
   searchTerm: string;
   isFetching: boolean;
   errorMessage: string | null;
   isEmpty: boolean;
   children: ReactNode;
-}
+};
 
 const ResultsContainer = ({
   searchTerm,

@@ -14,6 +14,8 @@ export default tseslint.config(
       'dist',
       'build',
       'coverage',
+      '.next',
+      'next-env.d.ts',
       '**/*.min.js',
       'node_modules',
       'src/test-utils/**',
@@ -56,9 +58,23 @@ export default tseslint.config(
       // Catch bugs: hooks must be called unconditionally and at the top level
       ...reactHooks.configs.recommended.rules,
       // Enforce that only components are exported from files used with Fast Refresh
+      // allowExportNames: Next.js special exports that coexist with components
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        {
+          allowConstantExport: true,
+          allowExportNames: [
+            'metadata',
+            'generateMetadata',
+            'viewport',
+            'generateViewport',
+            'dynamic',
+            'revalidate',
+            'fetchCache',
+            'runtime',
+            'config',
+          ],
+        },
       ],
       // Experimental React Compiler – flags code that breaks the compiler
       'react-compiler/react-compiler': 'error',
@@ -78,6 +94,7 @@ export default tseslint.config(
 
       // ── TypeScript strict rules ───────────────────────────────────────────────
       // Already covered by strictTypeChecked, but listed here for visibility:
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-unsafe-call': 'error',

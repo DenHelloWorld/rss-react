@@ -1,10 +1,12 @@
-interface PaginationProps {
+'use client';
+
+type PaginationProps = {
   total: number;
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
   isFetching?: boolean;
-}
+};
 
 const Pagination = ({
   currentPage,

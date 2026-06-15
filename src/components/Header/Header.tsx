@@ -1,39 +1,39 @@
-import { NavLink } from 'react-router';
-import { ROUTES } from '../../consts/routes.const.ts';
-import { useIsHomeActive } from '../../hooks/useIsHomeActive.ts';
-import type { ReactNode } from 'react';
-import ThemeButton from '../ThemeButton/ThemeButton.tsx';
+'use client';
 
-interface HeaderProps {
-  children: ReactNode;
-}
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { ROUTES } from '../../consts/routes.const';
+import ThemeButton from '../ThemeButton/ThemeButton';
+import ArtworkSearch from '../ArtworkSearch/ArtworkSearch';
+import ErrorTrigger from '../ErrorTrigger/ErrorTrigger';
 
-const Header = ({ children }: HeaderProps) => {
-  const isHomeActive = useIsHomeActive();
+const Header = () => {
+  const pathname = usePathname();
+  const isHome =
+    pathname === ROUTES.ROOT.path ||
+    pathname.startsWith(`/${ROUTES.DETAILS.path}`);
 
   return (
     <header className="header">
       <div className="header-container">
         <nav className="navigation">
-          <NavLink
-            to={ROUTES.ROOT.path}
-            className={`link ${isHomeActive ? 'link--active' : ''}`}
+          <Link
+            href={ROUTES.ROOT.path}
+            className={`link ${isHome ? 'link--active' : ''}`}
           >
             {ROUTES.ROOT.label}
-          </NavLink>
-          <NavLink
-            to={ROUTES.ABOUT.path}
-            className={({ isActive }) =>
-              `link ${isActive ? 'link--active' : ''}`
-            }
+          </Link>
+          <Link
+            href={`/${ROUTES.ABOUT.path}`}
+            className={`link ${pathname === `/${ROUTES.ABOUT.path}` ? 'link--active' : ''}`}
           >
             {ROUTES.ABOUT.label}
-          </NavLink>
-
+          </Link>
           <ThemeButton />
+          <ErrorTrigger />
         </nav>
 
-        {children}
+        {isHome && <ArtworkSearch />}
       </div>
     </header>
   );

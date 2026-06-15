@@ -1,6 +1,8 @@
-import { Link } from 'react-router';
-import { ROUTES } from '../../consts/routes.const.ts';
-import LazyImage from '../../components/LazyImage/LazyImage.tsx';
+'use client';
+
+import Link from 'next/link';
+import { ROUTES } from '../../consts/routes.const';
+import LazyImage from '../../components/LazyImage/LazyImage';
 
 const NotFoundPage = () => {
   return (
@@ -15,7 +17,7 @@ const NotFoundPage = () => {
         <p className="text-center">
           Sorry, the page you are looking for does not exist.
         </p>
-        <Link to={ROUTES.ROOT.path} className="button w-fit">
+        <Link href={ROUTES.ROOT.path} className="button w-fit">
           <svg>
             <use href="/icons.svg#refresh" />
           </svg>

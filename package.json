@@ -4,11 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint .",
     "format:fix": "prettier --write .",
-    "preview": "vite preview",
     "prepare": "husky",
     "test": "vitest",
     "test:watch": "vitest",
@@ -18,7 +18,10 @@
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
     "@tailwindcss/vite": "^4.2.2",
+    "@types/js-cookie": "^3.0.6",
     "eslint-plugin-jsx-a11y": "^6.10.2",
+    "js-cookie": "^3.0.8",
+    "next": "^16.2.9",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-redux": "^9.3.0",
@@ -27,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@tailwindcss/postcss": "^4.3.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/node": "^24.12.2",

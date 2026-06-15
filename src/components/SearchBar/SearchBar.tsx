@@ -1,12 +1,14 @@
+'use client';
+
 import { type ChangeEvent, useState, type KeyboardEvent } from 'react';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 
-export interface SearchBarProps {
+export type SearchBarProps = {
   initialValue: string;
   onSearch: (term: string) => void;
   onRefetch: () => void;
   isDisabled?: boolean;
-}
+};
 
 const SearchBar = ({
   initialValue,

@@ -1,10 +1,10 @@
 import type { AICArtwork } from '../../store/arts/arts-api.ts';
 import { getArtworkImageUrl } from '../../store/arts/arts-api.ts';
 
-export interface CSVColumn<T> {
+export type CSVColumn<T> = {
   header: string;
   getValue: (item: T) => string | number | boolean | null | undefined;
-}
+};
 
 export const ARTWORK_COLUMNS: CSVColumn<AICArtwork>[] = [
   { header: 'ID', getValue: (item) => item.id },

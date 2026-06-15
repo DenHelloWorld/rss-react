@@ -1,36 +1,39 @@
-import { useNavigate, useParams, useSearchParams } from 'react-router';
-import { useRef } from 'react';
+'use client';
+
+import { useParams } from 'next/navigation';
+import { useRef, useEffect } from 'react';
 import {
   useGetArtByIdQuery,
   getArtworkImageUrl,
-} from '../../store/arts/arts-api.ts';
-import { ROUTES } from '../../consts/routes.const.ts';
-import { useInvalidateArtById } from '../../hooks/useArtsInvalidation/useArtsInvalidation.ts';
-import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator.tsx';
-import LazyImage from '../../components/LazyImage/LazyImage.tsx';
-import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
-import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage.ts';
-import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
+} from '../../store/arts/arts-api';
+import { useInvalidateArtById } from '../../hooks/useArtsInvalidation/useArtsInvalidation';
+import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator';
+import LazyImage from '../../components/LazyImage/LazyImage';
+import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock';
+import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
+import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage';
+import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const';
 
 const DetailsPage = () => {
-  const { id } = useParams();
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
+  const updateSearchParams = useUpdateSearchParams();
   const sectionRef = useRef<HTMLElement>(null);
   const invalidateArtById = useInvalidateArtById();
 
-  const { data, isFetching, error } = useGetArtByIdQuery(id ?? '', {
+  useEffect(() => {
+    sectionRef.current?.focus();
+  }, []);
+
+  const { data, isFetching, error } = useGetArtByIdQuery(id, {
     skip: !id,
   });
 
   const artwork = data?.data;
   const errorMessage = useErrorMessage(error);
 
-  const handleClose = () =>
-    void navigate({
-      pathname: ROUTES.ROOT.path,
-      search: searchParams.toString(),
-    });
+  const handleClose = () => {
+    updateSearchParams({}, '/');
+  };
 
   const clickableBlockProps = useClickableBlock({
     onClick: handleClose,

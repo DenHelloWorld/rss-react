@@ -1,23 +1,31 @@
-import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const.ts';
-import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage.ts';
-import { STORAGE_KEYS } from '../../utils/local-storage/local-storage.ts';
-import { useSearchParams } from 'react-router';
+'use client';
+
+// TODO: Feature 9 — convert to server component. Replace useCookies, useSearchParams,
+// useUpdateSearchParams, and RTK Query with server-side fetch + searchParams prop from page.tsx.
+
+import { useSearchParams } from 'next/navigation';
+import { useCookies } from '../../hooks/useCookies/useCookies';
+import { COOKIE_KEYS } from '../../utils/cookie-storage/cookie-storage';
+import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const';
 import {
   useSearchArtsQuery,
   getArtworkImageUrl,
-} from '../../store/arts/arts-api.ts';
-import ResultsContainer from '../ResultsContainer/ResultsContainer.tsx';
-import AICCard from '../AICCard/AICCard.tsx';
-import ErrorTrigger from '../ErrorTrigger/ErrorTrigger.tsx';
-import Pagination from '../Pagination/Pagination.tsx';
-import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage.ts';
+} from '../../store/arts/arts-api';
+import ResultsContainer from '../ResultsContainer/ResultsContainer';
+import AICCard from '../AICCard/AICCard';
+import Pagination from '../Pagination/Pagination';
+import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage';
+import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
 
 const ArtworkResults = () => {
-  const [storedSearchTerm] = useLocalStorage(STORAGE_KEYS.SEARCH_TERM);
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [storedSearchTerm] = useCookies(COOKIE_KEYS.SEARCH_TERM);
+  const searchParams = useSearchParams();
+  const updateSearchParams = useUpdateSearchParams();
+
   const searchTerm =
     searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
   const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '';
+
   const { data, isFetching, error } = useSearchArtsQuery({
     query: searchTerm,
     page: Number(currentPage),
@@ -26,7 +34,10 @@ const ArtworkResults = () => {
   const errorMessage = useErrorMessage(error);
 
   const handlePageChange = (newPage: number) => {
-    setSearchParams({ query: searchTerm, page: String(newPage) });
+    updateSearchParams({
+      [ROUTE_QUERY_PARAMS.QUERY]: searchTerm,
+      [ROUTE_QUERY_PARAMS.PAGE]: String(newPage),
+    });
   };
 
   return (
@@ -42,7 +53,6 @@ const ArtworkResults = () => {
             <AICCard art={art} getImageUrl={getArtworkImageUrl} />
           </li>
         ))}
-        <ErrorTrigger />
       </ResultsContainer>
 
       {data && (

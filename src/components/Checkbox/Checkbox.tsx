@@ -1,3 +1,5 @@
+'use client';
+
 import {
   type ChangeEvent,
   type KeyboardEvent,
@@ -6,10 +8,10 @@ import {
 } from 'react';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 
-interface CheckboxProps {
+type CheckboxProps = {
   checked: boolean;
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-}
+};
 
 const Checkbox = ({ checked, onChange }: CheckboxProps) => {
   const handleClick = useCallback(
@@ -19,11 +21,11 @@ const Checkbox = ({ checked, onChange }: CheckboxProps) => {
     []
   );
 
+  const clickableBlockProps = useClickableBlock({ onClick: handleClick });
+
   return (
     <label
-      {...useClickableBlock({
-        onClick: handleClick,
-      })}
+      {...clickableBlockProps}
       className={`button button--icon w-8 h-8 ${checked ? '' : 'button--outline'}`}
     >
       <input
