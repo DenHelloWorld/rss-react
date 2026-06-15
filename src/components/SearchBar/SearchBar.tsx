@@ -3,7 +3,7 @@
 import { type ChangeEvent, useState, type KeyboardEvent } from 'react';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const.ts';
 
-export type SearchBarProps = {
+type SearchBarProps = {
   initialValue: string;
   onSearch: (term: string) => void;
   onRefetch: () => void;

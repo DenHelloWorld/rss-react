@@ -1,10 +1,10 @@
 import { Component, type ReactNode } from 'react';
 
-export type ErrorBoundaryState = {
+type ErrorBoundaryState = {
   hasError: boolean;
 };
 
-export type ErrorBoundaryProps = {
+type ErrorBoundaryProps = {
   children: ReactNode;
   fallback?: ReactNode;
 };

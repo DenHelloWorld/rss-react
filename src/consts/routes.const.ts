@@ -18,9 +18,5 @@ export const ROUTE_QUERY_PARAMS = {
   PAGE: 'page',
 } as const;
 
-export const ROUTE_QUERY_KEYS = {
-  ARTWORKS: 'artworks',
-} as const;
-
 export const isPositiveIntegerString = (value: string): boolean =>
   /^[1-9]\d*$/.test(value);
