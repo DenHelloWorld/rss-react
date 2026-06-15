@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import { ROUTES } from '../../consts/routes.const';
 import ThemeButton from '../ThemeButton/ThemeButton';
@@ -33,7 +34,11 @@ const Header = () => {
           <ErrorTrigger />
         </nav>
 
-        {isHome && <ArtworkSearch />}
+        {isHome && (
+          <Suspense>
+            <ArtworkSearch />
+          </Suspense>
+        )}
       </div>
     </header>
   );

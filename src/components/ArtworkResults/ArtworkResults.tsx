@@ -1,11 +1,11 @@
 'use client';
 
-// TODO: Feature 9 — convert to server component. Replace useCookies, useSearchParams,
+// TODO: Feature 9 — convert to server component. Replace useSearchParams,
 // useUpdateSearchParams, and RTK Query with server-side fetch + searchParams prop from page.tsx.
 
 import { useSearchParams } from 'next/navigation';
-import { useCookies } from '../../hooks/useCookies/useCookies';
-import { COOKIE_KEYS } from '../../utils/cookie-storage/cookie-storage';
+import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage';
+import { STORAGE_KEYS } from '../../utils/local-storage/local-storage';
 import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const';
 import {
   useSearchArtsQuery,
@@ -18,7 +18,7 @@ import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage';
 import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
 
 const ArtworkResults = () => {
-  const [storedSearchTerm] = useCookies(COOKIE_KEYS.SEARCH_TERM);
+  const [storedSearchTerm] = useLocalStorage(STORAGE_KEYS.SEARCH_TERM);
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
 

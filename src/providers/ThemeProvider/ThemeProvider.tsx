@@ -1,20 +1,15 @@
+'use client';
+
 import { type ReactNode, useEffect } from 'react';
-import { useCookies } from '../../hooks/useCookies/useCookies';
-import { COOKIE_KEYS } from '../../utils/cookie-storage/cookie-storage';
+import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage';
+import { STORAGE_KEYS } from '../../utils/local-storage/local-storage';
 import { ThemeContext } from '../../context/ThemeContext/ThemeContext.ts';
 import { type Theme, THEME } from '../../consts/theme.const.ts';
 
-const ThemeProvider = ({
-  children,
-  initialTheme,
-}: {
-  children: ReactNode;
-  initialTheme: string;
-}) => {
-  const [storedTheme, setStoredTheme] = useCookies(COOKIE_KEYS.THEME);
+const ThemeProvider = ({ children }: { children: ReactNode }) => {
+  const [storedTheme, setStoredTheme] = useLocalStorage(STORAGE_KEYS.THEME);
 
-  const theme =
-    (storedTheme ?? initialTheme) === THEME.DARK ? THEME.DARK : THEME.LIGHT;
+  const theme = storedTheme === THEME.DARK ? THEME.DARK : THEME.LIGHT;
 
   useEffect(() => {
     const isDark = theme === THEME.DARK;

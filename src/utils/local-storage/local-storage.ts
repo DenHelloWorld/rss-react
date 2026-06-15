@@ -1,17 +1,24 @@
 export const STORAGE_KEYS = {
   EXAMPLE: 'example',
+  SEARCH_TERM: 'search_term',
+  THEME: 'theme',
 } as const;
 
 export type StorageSchema = {
   [STORAGE_KEYS.EXAMPLE]: string;
+  [STORAGE_KEYS.SEARCH_TERM]: string;
+  [STORAGE_KEYS.THEME]: string;
 };
 
 export type StorageKeyType = (typeof STORAGE_KEYS)[keyof typeof STORAGE_KEYS];
+
+const isClient = typeof window !== 'undefined';
 
 export function setItem<K extends keyof StorageSchema>(
   key: K,
   value: StorageSchema[K]
 ): void {
+  if (!isClient) return;
   try {
     localStorage.setItem(key, JSON.stringify(value));
   } catch (error) {
@@ -22,6 +29,7 @@ export function setItem<K extends keyof StorageSchema>(
 export function getItem<T extends keyof StorageSchema>(
   key: T
 ): StorageSchema[T] | null {
+  if (!isClient) return null;
   try {
     const item = localStorage.getItem(key);
     if (item === null) return null;
@@ -33,6 +41,7 @@ export function getItem<T extends keyof StorageSchema>(
 }
 
 export function removeItem(key: StorageKeyType): void {
+  if (!isClient) return;
   try {
     localStorage.removeItem(key);
   } catch (error) {
@@ -41,6 +50,7 @@ export function removeItem(key: StorageKeyType): void {
 }
 
 export function clearStorage(): void {
+  if (!isClient) return;
   try {
     localStorage.clear();
   } catch (error) {
