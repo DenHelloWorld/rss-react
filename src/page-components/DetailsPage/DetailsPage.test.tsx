@@ -1,5 +1,7 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useRouter } from '../../i18n/navigation';
+import { createMockRouter } from '../../test-utils/mock-router';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 import { artsApi, API_URL } from '../../store/arts/arts-api.ts';
@@ -54,6 +56,7 @@ describe(DetailsPage.name, () => {
   beforeEach(() => {
     vi.clearAllMocks();
     AICServerMock.resetHandlers();
+    vi.mocked(useRouter).mockReturnValue(createMockRouter(mockPush));
   });
 
   afterEach(() => {

@@ -1,12 +1,15 @@
 import { render, screen, fireEvent } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
-import { useRouter, useParams } from 'next/navigation';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { useParams } from 'next/navigation';
 import AICCard from './AICCard';
 import type { AICArtwork } from '../../store/arts/arts-api.ts';
 import { UI_TEST_TEXT } from '../../test-utils/ui-test-text.const.ts';
 import { MOCK_ART } from '../../test-utils/mock-data.ts';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
+
+import { useRouter } from '../../i18n/navigation';
+import { createMockRouter } from '../../test-utils/mock-router';
 
 describe(AICCard.name, () => {
   const mockArt: AICArtwork = MOCK_ART;
@@ -15,12 +18,8 @@ describe(AICCard.name, () => {
   const mockPush = vi.fn();
 
   beforeEach(() => {
-    vi.mocked(useRouter).mockReturnValue({
-      push: mockPush,
-      back: vi.fn(),
-      replace: vi.fn(),
-    } as ReturnType<typeof useRouter>);
     vi.mocked(useParams).mockReturnValue({});
+    vi.mocked(useRouter).mockReturnValue(createMockRouter(mockPush));
   });
 
   const renderCard = (art = mockArt) =>

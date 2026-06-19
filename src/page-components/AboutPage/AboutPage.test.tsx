@@ -1,16 +1,16 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import AboutPage from './AboutPage.tsx';
 
-vi.mock('../components/LazyImage/LazyImage.tsx', () => ({
+vi.mock('../../components/LazyImage/LazyImage.tsx', () => ({
   default: ({ src, alt }: { src: string; alt: string }) => (
     <img src={src} alt={alt} />
   ),
 }));
 
 describe(AboutPage.name, () => {
-  beforeEach(() => {
-    render(<AboutPage />);
+  beforeEach(async () => {
+    render(await AboutPage());
   });
 
   it('should render the page heading', () => {

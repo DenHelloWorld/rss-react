@@ -1,3 +1,4 @@
+import React from 'react';
 import '@testing-library/jest-dom';
 import { afterEach, vi } from 'vitest';
 
@@ -7,6 +8,76 @@ vi.mock('next/navigation', () => ({
   usePathname: vi.fn(() => '/'),
   useParams: vi.fn(() => ({})),
 }));
+
+vi.mock('next-intl/navigation', () => ({
+  createNavigation: () => ({
+    Link: ({ href, children }: { href: string; children: unknown }) => children,
+    useRouter: vi.fn(() => ({
+      push: vi.fn(),
+      replace: vi.fn(),
+      back: vi.fn(),
+    })),
+    usePathname: vi.fn(() => '/'),
+    redirect: vi.fn(),
+    getPathname: vi.fn(),
+  }),
+}));
+
+vi.mock('../i18n/navigation', () => ({
+  usePathname: vi.fn(() => '/'),
+  useRouter: vi.fn(() => ({ push: vi.fn(), replace: vi.fn(), back: vi.fn() })),
+  Link: ({
+    href,
+    children,
+    className,
+  }: {
+    href: string;
+    children: unknown;
+    className?: string;
+  }) =>
+    React.createElement('a', { href, className }, children as React.ReactNode),
+  redirect: vi.fn(),
+  getPathname: vi.fn(),
+}));
+
+vi.mock('next-intl/server', async () => {
+  const en = (await import('../../messages/en.json')).default as Record<
+    string,
+    Record<string, string>
+  >;
+  const t =
+    (namespace: string) => (key: string, params?: Record<string, unknown>) => {
+      let value = en[namespace]?.[key] ?? key;
+      if (params) {
+        Object.entries(params).forEach(([k, v]) => {
+          value = value.replace(`{${k}}`, String(v));
+        });
+      }
+      return value;
+    };
+  return {
+    getTranslations: vi.fn(async (namespace: string) => t(namespace)),
+    setRequestLocale: vi.fn(),
+  };
+});
+
+vi.mock('next-intl', async () => {
+  const en = (await import('../../messages/en.json')).default as Record<
+    string,
+    Record<string, string>
+  >;
+  const t =
+    (namespace: string) => (key: string, params?: Record<string, unknown>) => {
+      let value = en[namespace]?.[key] ?? key;
+      if (params) {
+        Object.entries(params).forEach(([k, v]) => {
+          value = value.replace(`{${k}}`, String(v));
+        });
+      }
+      return value;
+    };
+  return { useTranslations: t };
+});
 import { cleanup } from '@testing-library/react';
 import { CONSOLE_ERROR_SPY, CONSOLE_WARN_SPY } from './console-spies.const.ts';
 import { AICServerMock } from './server.ts';

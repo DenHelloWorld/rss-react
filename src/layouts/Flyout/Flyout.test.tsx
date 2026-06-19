@@ -26,16 +26,16 @@ describe(Flyout.name, () => {
       </Provider>
     );
 
-  it('should show "Selected: 0" when no items selected', () => {
+  it('should show "0 item selected" when no items selected', () => {
     renderFlyout();
-    expect(screen.getByText('Selected: 0')).toBeInTheDocument();
+    expect(screen.getByText('0 item selected')).toBeInTheDocument();
   });
 
   it('should display the count of selected items', () => {
     testStore.dispatch(toggleSelect(MOCK_ART));
     renderFlyout();
 
-    expect(screen.getByText('Selected: 1')).toBeInTheDocument();
+    expect(screen.getByText('1 item selected')).toBeInTheDocument();
   });
 
   it('should clear all selections when "Unselect all" is clicked', () => {
@@ -43,12 +43,12 @@ describe(Flyout.name, () => {
     renderFlyout();
 
     fireEvent.click(screen.getByText('Unselect all'));
-    expect(screen.getByText('Selected: 0')).toBeInTheDocument();
+    expect(screen.getByText('0 item selected')).toBeInTheDocument();
   });
 
   it('should render download button', () => {
     renderFlyout();
-    expect(screen.getByText('Download')).toBeInTheDocument();
+    expect(screen.getByText('Download CSV')).toBeInTheDocument();
   });
 
   it('should call downloadAsCsv when download button is clicked', () => {
@@ -60,7 +60,7 @@ describe(Flyout.name, () => {
     testStore.dispatch(toggleSelect(MOCK_ART));
     renderFlyout();
 
-    fireEvent.click(screen.getByText('Download'));
+    fireEvent.click(screen.getByText('Download CSV'));
     expect(downloadSpy).toHaveBeenCalledWith([MOCK_ART]);
   });
 });

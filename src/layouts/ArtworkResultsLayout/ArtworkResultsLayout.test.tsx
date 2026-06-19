@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
-import { usePathname } from 'next/navigation';
+import { usePathname } from '../../i18n/navigation';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 import ArtworkResultsLayout from './ArtworkResultsLayout.tsx';
