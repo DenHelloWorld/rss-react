@@ -2,6 +2,7 @@
 
 import { useParams } from 'next/navigation';
 import { useRef, useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 import {
   useGetArtByIdQuery,
   getArtworkImageUrl,
@@ -15,6 +16,7 @@ import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const';
 
 const DetailsPage = () => {
+  const t = useTranslations('DetailsPage');
   const { id } = useParams<{ id: string }>();
   const updateSearchParams = useUpdateSearchParams();
   const sectionRef = useRef<HTMLElement>(null);
@@ -44,6 +46,18 @@ const DetailsPage = () => {
     invalidateArtById(Number(id));
   };
 
+  const closeButton = (
+    <button
+      aria-label={t('close')}
+      className="button button--error button--icon"
+      onClick={handleClose}
+    >
+      <svg>
+        <use href="/icons.svg#close" />
+      </svg>
+    </button>
+  );
+
   if (errorMessage || (!artwork && !isFetching)) {
     return (
       <section
@@ -51,17 +65,7 @@ const DetailsPage = () => {
         {...clickableBlockProps}
         className="mx-auto container shell relative"
       >
-        <div className="flex justify-end">
-          <button
-            aria-label="Close"
-            className="button button--error button--icon"
-            onClick={handleClose}
-          >
-            <svg>
-              <use href="/icons.svg#close" />
-            </svg>
-          </button>
-        </div>
+        <div className="flex justify-end">{closeButton}</div>
         <p className="error-message my-4 w-fit mx-auto">{errorMessage}</p>
       </section>
     );
@@ -82,25 +86,17 @@ const DetailsPage = () => {
 
             <div className="flex gap-4">
               <button
-                aria-label="refresh button"
+                aria-label={t('refresh')}
                 className="button button--warning"
                 onClick={handleRefetch}
               >
                 <svg>
                   <use href="/icons.svg#refresh" />
                 </svg>
-                Refresh
+                {t('refresh')}
               </button>
 
-              <button
-                aria-label="Close"
-                className="button button--error button--icon"
-                onClick={handleClose}
-              >
-                <svg>
-                  <use href="/icons.svg#close" />
-                </svg>
-              </button>
+              {closeButton}
             </div>
           </div>
 
@@ -117,29 +113,29 @@ const DetailsPage = () => {
               <div className="flex-1 flex flex-col gap-6">
                 <div className="grid grid-cols-2 gap-y-6 gap-x-4 details-grid-border pt-6">
                   <section>
-                    <h3 className="details-label mb-2">Artist</h3>
+                    <h3 className="details-label mb-2">{t('artist')}</h3>
                     <p className="details-artist">{artwork.artist_display}</p>
                   </section>
                   <div>
-                    <h4 className="details-label mb-1">Origin</h4>
+                    <h4 className="details-label mb-1">{t('origin')}</h4>
                     <p className="details-value">
-                      {artwork.place_of_origin ?? 'Unknown'}
+                      {artwork.place_of_origin ?? t('unknown')}
                     </p>
                   </div>
                   <div>
-                    <h4 className="details-label mb-1">Date</h4>
+                    <h4 className="details-label mb-1">{t('date')}</h4>
                     <p className="details-value">{artwork.date_display}</p>
                   </div>
                   <div className="col-span-2">
-                    <h4 className="details-label mb-1">Dimensions</h4>
+                    <h4 className="details-label mb-1">{t('dimensions')}</h4>
                     <p className="details-value">
-                      {artwork.dimensions ?? 'Dimensions not available'}
+                      {artwork.dimensions ?? t('dimensionsNotAvailable')}
                     </p>
                   </div>
                 </div>
 
                 <section className="details-meta-box">
-                  <h4 className="details-label mb-2">Medium</h4>
+                  <h4 className="details-label mb-2">{t('medium')}</h4>
                   <p className="details-medium">{artwork.medium_display}</p>
                 </section>
               </div>

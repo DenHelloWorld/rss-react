@@ -17,13 +17,13 @@ const SearchBar = ({
   isDisabled = false,
 }: SearchBarProps) => {
   const [query, setQuery] = useState(initialValue);
+
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
   };
 
   const onHandleSearch = () => {
     const trimmedQuery = query.trim();
-
     setQuery(trimmedQuery);
     onSearch(trimmedQuery);
   };

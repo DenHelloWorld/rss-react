@@ -1,15 +1,16 @@
+import { getTranslations } from 'next-intl/server';
 import { URLs } from '../../consts/urls.const.ts';
 import LazyImage from '../../components/LazyImage/LazyImage.tsx';
 
-const AboutPage = () => {
+const AboutPage = async () => {
+  const t = await getTranslations('AboutPage');
+
   return (
     <section className="mx-auto container shell">
-      <h1 className="title text-left">About the Project</h1>
+      <h1 className="title text-left">{t('title')}</h1>
       <div className="about-content">
         <p className="about-description">
-          This application was developed as part of the React course. It allows
-          users to explore the Art Institute of Chicago&#39;s collection using
-          their{' '}
+          {t('description')}{' '}
           <a
             href={URLs.articApiDocs}
             target="_blank"
@@ -19,20 +20,20 @@ const AboutPage = () => {
             <svg>
               <use href="/icons.svg#open-in-new" />
             </svg>
-            public API
+            {t('apiLinkLabel')}
           </a>
           .
         </p>
 
         <div className="about-author-section">
-          <h2 className="about-subtitle">Author</h2>
+          <h2 className="about-subtitle">{t('authorTitle')}</h2>
 
           <div className="about-avatar-wrapper">
-            <LazyImage src={URLs.authorGithubAvatar} alt="GitHub Avatar" />
+            <LazyImage src={URLs.authorGithubAvatar} alt={t('avatarAlt')} />
           </div>
 
           <p className="about-author-text">
-            Developed by{' '}
+            {t('authorText')}{' '}
             <a
               href={URLs.authorGithub}
               target="_blank"
@@ -44,7 +45,7 @@ const AboutPage = () => {
               </svg>
               DenHelloWorld
             </a>
-            , a student at RS School.
+            {t('authorSuffix')}
           </p>
         </div>
 
@@ -58,7 +59,7 @@ const AboutPage = () => {
             <svg>
               <use href="/icons.svg#open-in-new" />
             </svg>
-            RS School React Course
+            {t('courseButton')}
           </a>
         </div>
       </div>

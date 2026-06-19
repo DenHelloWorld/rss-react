@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import LoadingIndicator from '../LoadIndicator/LoadIndicator.tsx';
 import type { ReactNode } from 'react';
 
@@ -16,9 +17,10 @@ const ResultsContainer = ({
   isEmpty,
   children,
 }: ResultsContainerProps) => {
+  const t = useTranslations('ResultsContainer');
   const displayTitle = searchTerm
-    ? `Results for "${searchTerm}"`
-    : 'Art Collection';
+    ? t('resultsFor', { term: searchTerm })
+    : t('defaultTitle');
 
   return (
     <section className="shell relative h-full">
@@ -42,7 +44,7 @@ const ResultsContainer = ({
 
           {!errorMessage && isEmpty && (
             <p className="text-gray-400 italic text-center py-10">
-              No items found. Try another request!
+              {t('empty')}
             </p>
           )}
         </>

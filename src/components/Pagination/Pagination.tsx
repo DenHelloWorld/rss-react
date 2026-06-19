@@ -1,5 +1,7 @@
 'use client';
 
+import { useTranslations } from 'next-intl';
+
 type PaginationProps = {
   total: number;
   currentPage: number;
@@ -15,6 +17,7 @@ const Pagination = ({
   total,
   isFetching,
 }: PaginationProps) => {
+  const t = useTranslations('Pagination');
   const handlePrev = () => {
     onPageChange(currentPage - 1);
   };
@@ -48,7 +51,9 @@ const Pagination = ({
         </svg>
       </button>
 
-      <span className="text-xs text-gray-500">Total: {total}</span>
+      <span className="text-xs text-gray-500">
+        {t('total', { count: total })}
+      </span>
     </div>
   );
 };

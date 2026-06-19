@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 
 const ErrorTrigger = () => {
+  const t = useTranslations('ErrorTrigger');
   const [isError, setIsError] = useState(false);
 
   if (isError) {
-    throw new Error('Test crash triggered by ErrorTrigger component!');
+    throw new Error(t('error'));
   }
 
   const handleTrigger = () => {
@@ -18,7 +20,7 @@ const ErrorTrigger = () => {
       <svg>
         <use href="/icons.svg#bomb" />
       </svg>
-      triggers an error
+      {t('label')}
     </button>
   );
 };

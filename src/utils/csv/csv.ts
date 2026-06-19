@@ -21,9 +21,9 @@ export const ARTWORK_COLUMNS: CSVColumn<AICArtwork>[] = [
   },
 ];
 
-export function escapeValue(
+export const escapeValue = (
   value: string | number | boolean | null | undefined
-): string {
+): string => {
   if (value === null || value === undefined) return '""';
 
   const cleanString = String(value).replace(/[\r\n]+/g, ' ');
@@ -33,9 +33,9 @@ export function escapeValue(
   }
 
   return `"${cleanString}"`;
-}
+};
 
-export function generateCSV<T>(items: T[], columns: CSVColumn<T>[]): string {
+export const generateCSV = <T>(items: T[], columns: CSVColumn<T>[]): string => {
   if (!items.length) return '';
 
   const headers = columns.map((col) => escapeValue(col.header)).join(';');
@@ -45,9 +45,9 @@ export function generateCSV<T>(items: T[], columns: CSVColumn<T>[]): string {
   );
 
   return [headers, ...rows].join('\n');
-}
+};
 
-export function downloadBlob(blob: Blob, filename: string): void {
+export const downloadBlob = (blob: Blob, filename: string): void => {
   if (typeof window === 'undefined') return;
 
   const url = URL.createObjectURL(blob);
@@ -63,4 +63,4 @@ export function downloadBlob(blob: Blob, filename: string): void {
     document.body.removeChild(link);
     URL.revokeObjectURL(url);
   }, 100);
-}
+};
