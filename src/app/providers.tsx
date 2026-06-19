@@ -6,8 +6,13 @@ import { store } from '../store/store';
 import ThemeProvider from '../providers/ThemeProvider/ThemeProvider';
 import ErrorBoundary from '../components/ErrorBoundary/ErrorBoundary';
 
-const Providers = ({ children }: { children: ReactNode }) => (
-  <ErrorBoundary>
+type ProvidersProps = {
+  children: ReactNode;
+  resetLabel: string;
+};
+
+const Providers = ({ children, resetLabel }: ProvidersProps) => (
+  <ErrorBoundary resetLabel={resetLabel}>
     <ThemeProvider>
       <Provider store={store}>{children}</Provider>
     </ThemeProvider>
