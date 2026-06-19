@@ -4,8 +4,6 @@
 // useUpdateSearchParams, and RTK Query with server-side fetch + searchParams prop from page.tsx.
 
 import { useSearchParams } from 'next/navigation';
-import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage';
-import { STORAGE_KEYS } from '../../utils/local-storage/local-storage';
 import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const';
 import {
   useSearchArtsQuery,
@@ -18,12 +16,10 @@ import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage';
 import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
 
 const ArtworkResults = () => {
-  const [storedSearchTerm] = useLocalStorage(STORAGE_KEYS.SEARCH_TERM);
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
 
-  const searchTerm =
-    searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
+  const searchTerm = searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? '';
   const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '';
 
   const { data, isFetching, error } = useSearchArtsQuery({

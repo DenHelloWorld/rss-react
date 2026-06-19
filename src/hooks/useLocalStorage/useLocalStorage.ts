@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import {
   getItem,
   setItem,
@@ -13,12 +13,9 @@ export const useLocalStorage = <K extends keyof StorageSchema>(
   (value: StorageSchema[K]) => void,
   () => void,
 ] => {
-  const [storedValue, setStoredValue] = useState<StorageSchema[K] | null>(null);
-
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setStoredValue(getItem(key));
-  }, [key]);
+  const [storedValue, setStoredValue] = useState<StorageSchema[K] | null>(() =>
+    getItem(key)
+  );
 
   const setValue = useCallback(
     (value: StorageSchema[K]) => {

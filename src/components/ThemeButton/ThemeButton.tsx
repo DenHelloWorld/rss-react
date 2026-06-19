@@ -16,15 +16,13 @@ const ThemeButton = () => {
       onClick={toggleTheme}
       className="button button--icon button--outline text-blue-500"
     >
-      {theme === THEME.LIGHT ? (
-        <svg>
-          <use href="/icons.svg#sunny" />
-        </svg>
-      ) : (
-        <svg>
-          <use href="/icons.svg#moon-stars" />
-        </svg>
-      )}
+      <svg>
+        <use
+          href={
+            theme === THEME.LIGHT ? '/icons.svg#sunny' : '/icons.svg#moon-stars'
+          }
+        />
+      </svg>
     </button>
   );
 };
