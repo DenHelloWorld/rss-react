@@ -1,27 +1,23 @@
-'use client';
-
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '../../i18n/navigation';
 import { ROUTES } from '../../consts/routes.const';
 import LazyImage from '../../components/LazyImage/LazyImage';
 
-const NotFoundPage = () => {
+const NotFoundPage = async () => {
+  const t = await getTranslations('NotFoundPage');
+
   return (
     <section className="mx-auto container shell">
-      <h1 className="title text-left">Page Not Found</h1>
+      <h1 className="title text-left">{t('title')}</h1>
 
       <div className="text-center flex flex-col items-center gap-4 w-full md:max-w-1/2 mx-auto">
-        <LazyImage
-          src="./404.webp"
-          alt="Sorry, the page you are looking for does not exist"
-        />
-        <p className="text-center">
-          Sorry, the page you are looking for does not exist.
-        </p>
+        <LazyImage src="./404.webp" alt={t('description')} />
+        <p className="text-center">{t('description')}</p>
         <Link href={ROUTES.ROOT.path} className="button w-fit">
           <svg>
             <use href="/icons.svg#refresh" />
           </svg>
-          Return to {ROUTES.ROOT.label}
+          {t('returnButton')}
         </Link>
       </div>
     </section>

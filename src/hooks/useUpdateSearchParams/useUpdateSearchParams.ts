@@ -1,4 +1,5 @@
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '../../i18n/navigation';
 
 // TODO: Feature 9 — remove this hook once the search results page is migrated
 // to a server component. searchParams will be passed as a prop from page.tsx,

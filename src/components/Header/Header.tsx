@@ -1,44 +1,31 @@
-'use client';
-
-import Link from 'next/link';
-import { Suspense } from 'react';
-import { usePathname } from 'next/navigation';
+import { getTranslations } from 'next-intl/server';
 import { ROUTES } from '../../consts/routes.const';
-import ThemeButton from '../ThemeButton/ThemeButton';
-import ArtworkSearch from '../ArtworkSearch/ArtworkSearch';
+import ThemeButtonDynamic from '../ThemeButton/ThemeButtonDynamic';
 import ErrorTrigger from '../ErrorTrigger/ErrorTrigger';
+import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
+import NavLink from '../NavLink/NavLink';
+import HeaderSearch from './HeaderSearch';
 
-const Header = () => {
-  const pathname = usePathname();
-  const isHome =
-    pathname === ROUTES.ROOT.path ||
-    pathname.startsWith(`/${ROUTES.DETAILS.path}`);
+const Header = async () => {
+  const t = await getTranslations('Header');
 
   return (
     <header className="header">
       <div className="header-container">
         <nav className="navigation">
-          <Link
+          <NavLink
             href={ROUTES.ROOT.path}
-            className={`link ${isHome ? 'link--active' : ''}`}
+            activeFor={[ROUTES.ROOT.path, `/${ROUTES.DETAILS.path}`]}
           >
-            {ROUTES.ROOT.label}
-          </Link>
-          <Link
-            href={`/${ROUTES.ABOUT.path}`}
-            className={`link ${pathname === `/${ROUTES.ABOUT.path}` ? 'link--active' : ''}`}
-          >
-            {ROUTES.ABOUT.label}
-          </Link>
-          <ThemeButton />
+            {t('home')}
+          </NavLink>
+          <NavLink href={`/${ROUTES.ABOUT.path}`}>{t('about')}</NavLink>
+          <LanguageSwitcher />
+          <ThemeButtonDynamic />
           <ErrorTrigger />
         </nav>
 
-        {isHome && (
-          <Suspense>
-            <ArtworkSearch />
-          </Suspense>
-        )}
+        <HeaderSearch />
       </div>
     </header>
   );

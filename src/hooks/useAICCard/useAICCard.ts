@@ -1,6 +1,7 @@
 import { type ChangeEvent, useEffect, useRef } from 'react';
 import type React from 'react';
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
+import { useRouter } from '../../i18n/navigation';
 import { ROUTES } from '../../consts/routes.const';
 import { useArtworkSelection } from '../useArtworkSelection/useArtworkSelection';
 import type { AICArtwork } from '../../store/arts/arts-api';

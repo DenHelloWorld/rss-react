@@ -1,6 +1,6 @@
 'use client';
 
-import { usePathname } from 'next/navigation';
+import { usePathname } from '../../i18n/navigation';
 import ArtworkResults from '../../components/ArtworkResults/ArtworkResults';
 import { ROUTES } from '../../consts/routes.const';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock';
