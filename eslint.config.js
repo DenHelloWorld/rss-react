@@ -66,6 +66,7 @@ export default tseslint.config(
           allowExportNames: [
             'metadata',
             'generateMetadata',
+            'generateStaticParams',
             'viewport',
             'generateViewport',
             'dynamic',
