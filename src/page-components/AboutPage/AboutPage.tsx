@@ -29,7 +29,14 @@ const AboutPage = async () => {
           <h2 className="about-subtitle">{t('authorTitle')}</h2>
 
           <div className="about-avatar-wrapper">
-            <LazyImage src={URLs.authorGithubAvatar} alt={t('avatarAlt')} />
+            <LazyImage
+              src={URLs.authorGithubAvatar}
+              alt={t('avatarAlt')}
+              loading="eager"
+              unoptimized={false}
+              width={280}
+              height={280}
+            />
           </div>
 
           <p className="about-author-text">

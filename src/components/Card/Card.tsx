@@ -34,7 +34,12 @@ const Card = ({
       {...clickableProps}
     >
       <div className="card-image-container">
-        <LazyImage src={imageUrl} alt={description} />
+        <LazyImage
+          src={imageUrl}
+          alt={description}
+          unoptimized
+          loading="eager"
+        />
       </div>
 
       <div className="card-content">

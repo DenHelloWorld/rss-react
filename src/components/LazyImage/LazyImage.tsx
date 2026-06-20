@@ -1,19 +1,16 @@
 'use client';
 
+import Image, { type ImageProps } from 'next/image';
 import { useState } from 'react';
 
-type LazyImageProps = {
-  src: string;
-  alt: string;
-  className?: string;
-};
+type LazyImageProps = ImageProps;
 
-const LazyImage = ({ src, alt, className }: LazyImageProps) => {
+const LazyImage = ({ className, ...imageProps }: LazyImageProps) => {
   const [isImageLoadError, setIsImageLoadError] = useState(false);
   const [isImageLoaded, setIsImageLoaded] = useState(false);
 
   return (
-    <div className="relative w-full h-full flex align-middle justify-center bg-app-bg">
+    <div className="relative w-full h-full flex items-center justify-center bg-app-bg">
       {isImageLoadError && (
         <svg className="card-placeholder" role="presentation">
           <use href="/icons.svg#broken-image" />
@@ -22,11 +19,11 @@ const LazyImage = ({ src, alt, className }: LazyImageProps) => {
       {!isImageLoaded && !isImageLoadError && <div className="skeleton" />}
 
       {!isImageLoadError && (
-        <img
-          loading="lazy"
-          src={src}
-          alt={alt}
-          className={` ${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto ${className ?? ''}`}
+        <Image
+          width={0}
+          height={0}
+          {...imageProps}
+          className={`${isImageLoaded ? 'opacity-100' : 'opacity-0'} m-auto ${className ?? ''}`}
           onLoad={() => {
             setIsImageLoaded(true);
           }}

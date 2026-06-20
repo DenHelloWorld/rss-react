@@ -31,6 +31,7 @@ const DetailsPage = () => {
   });
 
   const artwork = data?.data;
+  const imageUrl = artwork ? getArtworkImageUrl(String(artwork.image_id)) : '';
   const errorMessage = useErrorMessage(error);
 
   const handleClose = () => {
@@ -104,9 +105,11 @@ const DetailsPage = () => {
             <div className="flex flex-col md:flex-row gap-8 mt-6">
               <div className="flex-1 overflow-hidden">
                 <LazyImage
-                  src={getArtworkImageUrl(String(artwork.image_id))}
+                  src={imageUrl}
                   alt={artwork.title}
                   className="w-full h-full object-contain"
+                  loading="eager"
+                  unoptimized
                 />
               </div>
 
