@@ -3,7 +3,7 @@
 // TODO: Feature 9 — convert to server component. Replace useSearchParams,
 // useUpdateSearchParams, and RTK Query with server-side fetch + HTML form action.
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage';
 import { STORAGE_KEYS } from '../../utils/local-storage/local-storage';
@@ -25,14 +25,11 @@ const ArtworkSearch = () => {
     searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
   const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '1';
 
-  const queryOnMount = useRef(searchParams.get(ROUTE_QUERY_PARAMS.QUERY));
-  const storedOnMount = useRef(storedSearchTerm);
-
   useEffect(() => {
-    if (!queryOnMount.current && storedOnMount.current) {
-      updateSearchParams({ [ROUTE_QUERY_PARAMS.QUERY]: storedOnMount.current });
+    if (!searchParams.get(ROUTE_QUERY_PARAMS.QUERY) && storedSearchTerm) {
+      updateSearchParams({ [ROUTE_QUERY_PARAMS.QUERY]: storedSearchTerm });
     }
-  }, [updateSearchParams]);
+  }, []);
 
   const { isFetching } = useSearchArtsQuery({
     query: searchTerm,
