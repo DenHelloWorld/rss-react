@@ -1,14 +1,15 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import { useParams } from 'next/navigation';
 import { useRouter } from '../../i18n/navigation';
-import { createMockRouter } from '../../test-utils/mock-router';
+import { createMockRouter } from '../../test-utils/mocks/router';
 import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 import { artsApi, API_URL } from '../../store/arts/arts-api.ts';
 import type { AICArtworkDetails } from '../../store/arts/arts-api.ts';
 import { API_TAGS } from '../../consts/api-tags.const.ts';
 import { HTTP_STATUS } from '../../consts/http-status.const.ts';
-import { AICServerMock } from '../../test-utils/server';
+import { AICServerMock } from '../../test-utils/mocks/server';
 import { http, HttpResponse } from 'msw';
 import DetailsPage from './DetailsPage.tsx';
 
@@ -16,21 +17,7 @@ vi.mock('../../components/LoadIndicator/LoadIndicator.tsx', () => ({
   default: () => <div>Loading...</div>,
 }));
 
-vi.mock('../../components/LazyImage/LazyImage.tsx', () => ({
-  default: ({ src, alt }: { src: string; alt: string }) => (
-    <img src={src} alt={alt} />
-  ),
-}));
-
 const mockPush = vi.fn();
-const mockUseParams = vi.fn();
-
-vi.mock('next/navigation', () => ({
-  useRouter: () => ({ push: mockPush }),
-  useParams: () => mockUseParams() as Record<string, string>,
-  useSearchParams: () => new URLSearchParams(),
-  usePathname: vi.fn(() => '/'),
-}));
 
 const MOCK_DETAILS: AICArtworkDetails = {
   id: 123,
@@ -44,7 +31,7 @@ const MOCK_DETAILS: AICArtworkDetails = {
 };
 
 const renderWithId = (id = '123') => {
-  mockUseParams.mockReturnValue({ id });
+  vi.mocked(useParams).mockReturnValue({ id });
   return render(
     <Provider store={store}>
       <DetailsPage />
@@ -117,7 +104,7 @@ describe(DetailsPage.name, () => {
   });
 
   it('should not call API if id is missing', () => {
-    mockUseParams.mockReturnValue({});
+    vi.mocked(useParams).mockReturnValue({});
     render(
       <Provider store={store}>
         <DetailsPage />

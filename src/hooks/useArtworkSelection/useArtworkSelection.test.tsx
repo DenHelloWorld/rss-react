@@ -1,4 +1,4 @@
-import { renderHook, act } from '@testing-library/react';
+﻿import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useArtworkSelection } from './useArtworkSelection.ts';
 import { Provider } from 'react-redux';
@@ -6,7 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import artsReducer from '../../store/arts/arts-slice.ts';
 import type { ReactNode } from 'react';
 import type { AICArtwork } from '../../store/arts/arts-api.ts';
-import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { MOCK_ART } from '../../test-utils/mocks/mock-data.ts';
 
 const createTestStore = () =>
   configureStore({

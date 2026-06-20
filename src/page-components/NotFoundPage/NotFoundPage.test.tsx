@@ -1,12 +1,6 @@
 import { render, screen } from '@testing-library/react';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import NotFoundPage from './NotFoundPage.tsx';
-
-vi.mock('../../components/LazyImage/LazyImage.tsx', () => ({
-  default: ({ src, alt }: { src: string; alt: string }) => (
-    <img src={src} alt={alt} />
-  ),
-}));
 
 describe(NotFoundPage.name, () => {
   it('should render the page heading', async () => {

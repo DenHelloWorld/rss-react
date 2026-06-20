@@ -1,10 +1,10 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+﻿import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import artsReducer, { toggleSelect } from '../../store/arts/arts-slice.ts';
 import Flyout from './Flyout';
-import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { MOCK_ART } from '../../test-utils/mocks/mock-data.ts';
 import * as useArtworksDownloadModule from '../../hooks/useArtworksDownload/useArtworksDownload.ts';
 
 const createTestStore = () =>

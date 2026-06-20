@@ -1,8 +1,8 @@
-import { renderHook } from '@testing-library/react';
+﻿import { renderHook } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import { useArtworksDownload } from './useArtworksDownload.ts';
 import * as CSVService from '../../utils/csv/csv.ts';
-import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { MOCK_ART } from '../../test-utils/mocks/mock-data.ts';
 import { CONSOLE_ERROR_SPY } from '../../test-utils/console-spies.const.ts';
 
 describe('useArtworksDownload', () => {

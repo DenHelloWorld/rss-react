@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+﻿import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import {
   escapeValue,
   generateCSV,
@@ -9,7 +9,7 @@ import {
   getArtworkImageUrl,
   type AICArtwork,
 } from '../../store/arts/arts-api.ts';
-import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { MOCK_ART } from '../../test-utils/mocks/mock-data.ts';
 
 describe('csv-service', () => {
   describe('escapeValue', () => {

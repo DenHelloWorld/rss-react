@@ -2,7 +2,7 @@ import type {
   AICArtwork,
   AICArtworkDetails,
   AICPaginationResponse,
-} from '../store/arts/arts-api.ts';
+} from '../../store/arts/arts-api.ts';
 
 export const MOCK_ART: AICArtwork = {
   id: 123,
