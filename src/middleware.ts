@@ -1,3 +1,8 @@
+/**
+ * Named "middleware.ts" instead of "proxy.ts" (Next.js 16 convention) intentionally:
+ * proxy.ts is not picked up in Vercel production builds due to a Next.js bug.
+ * @see https://github.com/vercel/next.js/issues/85243
+ */
 import createMiddleware from 'next-intl/middleware';
 import { type NextRequest, NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
