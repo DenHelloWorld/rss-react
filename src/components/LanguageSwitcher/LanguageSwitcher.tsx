@@ -1,8 +1,8 @@
 'use client';
 
 import './LanguageSwitcher.css';
-import { useTranslations, useLocale } from 'next-intl';
-import { useSearchParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
+import { useParams, useSearchParams } from 'next/navigation';
 import { usePathname, useRouter } from '../../i18n/navigation';
 import { LOCALES, type Locale } from '../../consts/locales.const';
 
@@ -16,7 +16,8 @@ const LanguageSwitcher = () => {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const currentLocale = useLocale();
+  const params = useParams();
+  const currentLocale = params.locale as Locale;
 
   const handleChange = (locale: Locale) => {
     const query = searchParams.toString();
