@@ -28,7 +28,7 @@ const LocaleLayout = async ({ children, details, params }: Props) => {
   const t = await getTranslations('ErrorPage');
 
   return (
-    <NextIntlClientProvider>
+    <NextIntlClientProvider locale={locale}>
       <Providers resetLabel={t('reset')}>
         <div className="app-wrapper">
           <Header />
