@@ -13,6 +13,10 @@ export const ROUTES = {
   },
 } as const;
 
+export const API_ROUTES = {
+  DOWNLOAD_CSV: '/api/download-csv',
+} as const;
+
 export const ROUTE_QUERY_PARAMS = {
   QUERY: 'query',
   PAGE: 'page',
