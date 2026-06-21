@@ -3,6 +3,8 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { type Locale } from '../../../consts/locales.const';
 import AboutPage from '../../../page-components/AboutPage/AboutPage';
 
+export const dynamic = 'force-static';
+
 type Props = {
   params: Promise<{ locale: Locale }>;
 };

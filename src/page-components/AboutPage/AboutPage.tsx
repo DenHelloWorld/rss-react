@@ -1,6 +1,6 @@
+import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { URLs } from '../../consts/urls.const.ts';
-import LazyImage from '../../components/LazyImage/LazyImage.tsx';
 
 const AboutPage = async () => {
   const t = await getTranslations('AboutPage');
@@ -29,13 +29,13 @@ const AboutPage = async () => {
           <h2 className="about-subtitle">{t('authorTitle')}</h2>
 
           <div className="about-avatar-wrapper">
-            <LazyImage
+            <Image
               src={URLs.authorGithubAvatar}
               alt={t('avatarAlt')}
               loading="eager"
-              unoptimized={false}
               width={280}
               height={280}
+              className="m-auto"
             />
           </div>
 
