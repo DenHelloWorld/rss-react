@@ -174,7 +174,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       'no-console': 'off',
-      '@typescript-eslint/no-unnecessary-type-assertion': 'off'
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
     },
   }
 );

@@ -67,9 +67,17 @@ const ArtworkSearch = () => {
 
   const handleRefetch = () => {
     setIsNavigating(true);
-    void revalidateAll().then(() => {
-      router.refresh();
-    });
+
+    const runRefetch = async () => {
+      try {
+        await revalidateAll();
+        router.refresh();
+      } finally {
+        setIsNavigating(false);
+      }
+    };
+
+    void runRefetch();
   };
 
   return (
