@@ -162,6 +162,14 @@ export default tseslint.config(
     },
   },
 
+  // ─── Server actions must be async per Next.js requirements ───────────────────
+  {
+    files: ['src/actions/**/*.ts'],
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+    },
+  },
+
   // ─── Relaxed rules for test files ────────────────────────────────────────────
   {
     files: ['**/*.{test,spec}.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],

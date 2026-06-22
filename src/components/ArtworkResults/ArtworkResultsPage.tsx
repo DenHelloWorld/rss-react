@@ -1,4 +1,5 @@
 import { Suspense } from 'react';
+import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import ResultsContainer from '../ResultsContainer/ResultsContainer';
 import Pagination from '../Pagination/Pagination';
 import { fetchArtworks } from '../../store/arts/arts-api';
@@ -15,6 +16,7 @@ const ArtworkResultsPage = async ({ query, currentPage }: Props) => {
   try {
     data = await fetchArtworks(query, currentPage);
   } catch (err) {
+    if (isRedirectError(err)) throw err;
     errorMessage = getErrorMessage(err);
   }
 

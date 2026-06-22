@@ -1,3 +1,4 @@
+import { unstable_cache } from 'next/cache';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { API_TAGS } from '../../consts/api-tags.const.ts';
 
@@ -37,7 +38,7 @@ export type AICArtworkDetails = {
 const LIST_FIELDS = 'id,title,artist_display,image_id,thumbnail';
 const DETAILS_FIELDS =
   'id,title,artist_display,image_id,thumbnail,date_display,medium_display,place_of_origin,dimensions';
-const CACHE_TTL = Number(process.env.NEXT_PUBLIC_CACHE_TTL) || 60;
+const CACHE_TTL = Number(process.env.NEXT_PUBLIC_CACHE_TTL) || 300;
 
 const buildArtsQueryParams = (
   query: string | undefined,
@@ -62,17 +63,6 @@ export const artsApi = createApi({
   keepUnusedDataFor: CACHE_TTL,
   tagTypes: [API_TAGS.ARTS],
   endpoints: (builder) => ({
-    searchArts: builder.query<
-      AICResponse,
-      { query: string | undefined; page: number; limit?: number }
-    >({
-      query: ({ query, page, limit = 10 }) => ({
-        url: query ? API_URL.searchEndpoint : '',
-        params: buildArtsQueryParams(query, page, limit),
-      }),
-      providesTags: () => [{ type: API_TAGS.ARTS, id: API_TAGS.LIST }],
-    }),
-
     getArtById: builder.query<AICSingleResponse, string>({
       query: (id) => ({
         url: id,
@@ -88,22 +78,30 @@ export const artsApi = createApi({
   }),
 });
 
-export const { useSearchArtsQuery, useGetArtByIdQuery } = artsApi;
+export const { useGetArtByIdQuery } = artsApi;
 
 export const getArtworkImageUrl = (imageId: string): string =>
   `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
 
-export const fetchArtworks = async (
+const cachedFetchArtworks = unstable_cache(
+  async (query: string, page: number, limit: number): Promise<AICResponse> => {
+    const params = new URLSearchParams(
+      buildArtsQueryParams(query, page, limit)
+    );
+    const url = query
+      ? `${API_URL.baseURL}/${API_URL.searchEndpoint}?${params}`
+      : `${API_URL.baseURL}?${params}`;
+
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`AIC API error: ${String(res.status)}`);
+    return res.json() as Promise<AICResponse>;
+  },
+  [API_TAGS.ARTS],
+  { revalidate: CACHE_TTL, tags: [API_TAGS.ARTS] }
+);
+
+export const fetchArtworks = (
   query: string,
   page: number,
   limit = 10
-): Promise<AICResponse> => {
-  const params = new URLSearchParams(buildArtsQueryParams(query, page, limit));
-  const url = query
-    ? `${API_URL.baseURL}/${API_URL.searchEndpoint}?${params}`
-    : `${API_URL.baseURL}?${params}`;
-
-  const res = await fetch(url, { next: { revalidate: CACHE_TTL } });
-  if (!res.ok) throw new Error(`AIC API error: ${String(res.status)}`);
-  return res.json() as Promise<AICResponse>;
-};
+): Promise<AICResponse> => cachedFetchArtworks(query, page, limit);
