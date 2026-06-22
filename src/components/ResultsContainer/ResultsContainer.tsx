@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { type AICResponse } from '../../store/arts/arts-api';
-import { useNavigationLoading } from '../../contexts/NavigationLoadingContext';
+import { useNavigationLoading } from '../../hooks/useNavigationLoading/useNavigationLoading';
 import LoadingIndicator from '../LoadIndicator/LoadIndicator';
 import AICCard from '../AICCard/AICCard';
 

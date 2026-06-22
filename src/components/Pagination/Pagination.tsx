@@ -4,7 +4,7 @@ import { useTransition, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const';
-import { useNavigationLoading } from '../../contexts/NavigationLoadingContext';
+import { useNavigationLoading } from '../../hooks/useNavigationLoading/useNavigationLoading';
 
 type PaginationProps = {
   total: number;

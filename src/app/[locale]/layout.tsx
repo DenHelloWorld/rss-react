@@ -11,7 +11,7 @@ import Providers from '../providers';
 import Header from '../../components/Header/Header';
 import MainPanel from '../../components/MainPanel/MainPanel';
 import Flyout from '../../layouts/Flyout/Flyout';
-import { NavigationLoadingProvider } from '../../contexts/NavigationLoadingContext';
+import { NavigationLoadingProvider } from '../../providers/NavigationLoadingProvider/NavigationLoadingProvider';
 import { type ReactNode } from 'react';
 
 type Props = {

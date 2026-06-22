@@ -10,7 +10,7 @@ import { artsApi } from '../../store/arts/arts-api';
 import { useAppDispatch } from '../../store/store';
 import { API_TAGS } from '../../consts/api-tags.const';
 import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
-import { useNavigationLoading } from '../../contexts/NavigationLoadingContext';
+import { useNavigationLoading } from '../../hooks/useNavigationLoading/useNavigationLoading';
 
 const ArtworkSearch = () => {
   const dispatch = useAppDispatch();
