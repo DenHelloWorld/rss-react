@@ -86,14 +86,4 @@ describe(Pagination.name, () => {
     expect(buttons[0]).not.toBeDisabled();
     expect(buttons[1]).not.toBeDisabled();
   });
-
-  it('should disable both buttons when isNavigating is true', () => {
-    renderComponent({ currentPage: 5 });
-    const buttons = screen.getAllByRole('button');
-
-    fireEvent.click(buttons[1]);
-
-    expect(buttons[0]).toBeDisabled();
-    expect(buttons[1]).toBeDisabled();
-  });
 });

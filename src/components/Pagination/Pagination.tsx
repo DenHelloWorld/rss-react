@@ -16,17 +16,16 @@ const Pagination = ({ currentPage, totalPages, total }: PaginationProps) => {
   const t = useTranslations('Pagination');
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [, startTransition] = useTransition();
+  const [isPending, startTransition] = useTransition();
   const { isNavigating, setIsNavigating } = useNavigationLoading();
 
   useEffect(() => {
-    setIsNavigating(false);
-  }, [searchParams, setIsNavigating]);
+    setIsNavigating(isPending);
+  }, [isPending, setIsNavigating]);
 
   const navigate = (newPage: number) => {
     const params = new URLSearchParams(searchParams.toString());
     params.set(ROUTE_QUERY_PARAMS.PAGE, String(newPage));
-    setIsNavigating(true);
     startTransition(() => {
       router.push(`?${params}`);
     });
