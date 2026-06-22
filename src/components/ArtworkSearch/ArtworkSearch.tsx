@@ -1,41 +1,38 @@
 'use client';
 
-// TODO: Feature 9 — convert to server component. Replace useSearchParams,
-// useUpdateSearchParams, and RTK Query with server-side fetch + HTML form action.
-
 import { useEffect } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useLocalStorage } from '../../hooks/useLocalStorage/useLocalStorage';
 import { STORAGE_KEYS } from '../../utils/local-storage/local-storage';
 import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const';
 import SearchBar from '../SearchBar/SearchBar';
-import { useSearchArtsQuery } from '../../store/arts/arts-api';
-import { useInvalidateArtsList } from '../../hooks/useArtsInvalidation/useArtsInvalidation';
+import { artsApi } from '../../store/arts/arts-api';
+import { useAppDispatch } from '../../store/store';
+import { API_TAGS } from '../../consts/api-tags.const';
 import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
+import { useNavigationLoading } from '../../contexts/NavigationLoadingContext';
 
 const ArtworkSearch = () => {
-  const invalidateArtsList = useInvalidateArtsList();
+  const dispatch = useAppDispatch();
+  const invalidateArtsList = () =>
+    dispatch(
+      artsApi.util.invalidateTags([{ type: API_TAGS.ARTS, id: API_TAGS.LIST }])
+    );
   const [storedSearchTerm, setStoredSearchTerm] = useLocalStorage(
     STORAGE_KEYS.SEARCH_TERM
   );
   const searchParams = useSearchParams();
   const updateSearchParams = useUpdateSearchParams();
+  const { isNavigating } = useNavigationLoading();
 
   const searchTerm =
     searchParams.get(ROUTE_QUERY_PARAMS.QUERY) ?? storedSearchTerm ?? '';
-  const currentPage = searchParams.get(ROUTE_QUERY_PARAMS.PAGE) ?? '1';
 
   useEffect(() => {
     if (!searchParams.get(ROUTE_QUERY_PARAMS.QUERY) && storedSearchTerm) {
       updateSearchParams({ [ROUTE_QUERY_PARAMS.QUERY]: storedSearchTerm });
     }
-  }, []);
-
-  const { isFetching } = useSearchArtsQuery({
-    query: searchTerm,
-    page: Number(currentPage),
-    limit: 9,
-  });
+  }, [searchParams, storedSearchTerm, updateSearchParams]);
 
   const handleSearch = (value: string) => {
     const trimmedValue = value.trim();
@@ -50,7 +47,7 @@ const ArtworkSearch = () => {
 
   return (
     <SearchBar
-      isDisabled={isFetching}
+      isDisabled={isNavigating}
       initialValue={searchTerm}
       onSearch={handleSearch}
       onRefetch={invalidateArtsList}

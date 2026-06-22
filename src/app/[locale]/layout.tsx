@@ -9,7 +9,10 @@ import { routing } from '../../i18n/routing';
 import { type Locale } from '../../consts/locales.const';
 import Providers from '../providers';
 import Header from '../../components/Header/Header';
-import type { ReactNode } from 'react';
+import MainPanel from '../../components/MainPanel/MainPanel';
+import Flyout from '../../layouts/Flyout/Flyout';
+import { NavigationLoadingProvider } from '../../contexts/NavigationLoadingContext';
+import { type ReactNode } from 'react';
 
 type Props = {
   children: ReactNode;
@@ -35,13 +38,16 @@ const LocaleLayout = async ({ children, details, params }: Props) => {
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <Providers resetLabel={t('reset')}>
-        <div className="app-wrapper">
-          <Header locale={locale} />
-          <main className="main">
-            {children}
-            {details}
-          </main>
-        </div>
+        <NavigationLoadingProvider>
+          <div className="app-wrapper">
+            <Header locale={locale} />
+            <main className="main">
+              <MainPanel>{children}</MainPanel>
+              {details}
+            </main>
+            <Flyout />
+          </div>
+        </NavigationLoadingProvider>
       </Providers>
     </NextIntlClientProvider>
   );

@@ -1,35 +1,49 @@
 'use client';
 
+import { useTransition, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
+import { ROUTE_QUERY_PARAMS } from '../../consts/routes.const';
+import { useNavigationLoading } from '../../contexts/NavigationLoadingContext';
 
 type PaginationProps = {
   total: number;
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
-  isFetching?: boolean;
 };
 
-const Pagination = ({
-  currentPage,
-  totalPages,
-  onPageChange,
-  total,
-  isFetching,
-}: PaginationProps) => {
+const Pagination = ({ currentPage, totalPages, total }: PaginationProps) => {
   const t = useTranslations('Pagination');
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [, startTransition] = useTransition();
+  const { isNavigating, setIsNavigating } = useNavigationLoading();
+
+  useEffect(() => {
+    setIsNavigating(false);
+  }, [searchParams, setIsNavigating]);
+
+  const navigate = (newPage: number) => {
+    const params = new URLSearchParams(searchParams.toString());
+    params.set(ROUTE_QUERY_PARAMS.PAGE, String(newPage));
+    setIsNavigating(true);
+    startTransition(() => {
+      router.push(`?${params}`);
+    });
+  };
+
   const handlePrev = () => {
-    onPageChange(currentPage - 1);
+    navigate(currentPage - 1);
   };
   const handleNext = () => {
-    onPageChange(currentPage + 1);
+    navigate(currentPage + 1);
   };
 
   return (
     <div className="pagination">
       <button
         className="button button--icon"
-        disabled={currentPage <= 1 || isFetching}
+        disabled={currentPage <= 1 || isNavigating}
         onClick={handlePrev}
       >
         <svg>
@@ -43,7 +57,7 @@ const Pagination = ({
 
       <button
         className="button button--icon"
-        disabled={currentPage >= totalPages || isFetching}
+        disabled={currentPage >= totalPages || isNavigating}
         onClick={handleNext}
       >
         <svg>

@@ -24,3 +24,7 @@ export const ROUTE_QUERY_PARAMS = {
 
 export const isPositiveIntegerString = (value: string): boolean =>
   /^[1-9]\d*$/.test(value);
+
+export const isDetailsPathname = (pathname: string): boolean =>
+  pathname === `/${ROUTES.DETAILS.path}` ||
+  pathname.startsWith(`/${ROUTES.DETAILS.path}/`);

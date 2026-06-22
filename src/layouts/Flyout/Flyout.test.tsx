@@ -26,10 +26,10 @@ describe(Flyout.name, () => {
       </Provider>
     );
 
-  it('should show "0 item selected" when no items selected', () => {
-    renderFlyout();
+  it('should not render when no items selected', () => {
+    const { container } = renderFlyout();
 
-    expect(screen.getByText('0 item selected')).toBeInTheDocument();
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('should display the count of selected items', () => {
@@ -47,10 +47,12 @@ describe(Flyout.name, () => {
 
     fireEvent.click(screen.getByText('Unselect all'));
 
-    expect(screen.getByText('0 item selected')).toBeInTheDocument();
+    expect(screen.queryByText('1 item selected')).not.toBeInTheDocument();
   });
 
-  it('should render download button', () => {
+  it('should render download button when items selected', () => {
+    testStore.dispatch(toggleSelect(MOCK_ART));
+
     renderFlyout();
 
     expect(screen.getByText('Download CSV')).toBeInTheDocument();

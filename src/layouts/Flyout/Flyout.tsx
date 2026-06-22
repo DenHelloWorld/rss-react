@@ -9,6 +9,8 @@ const Flyout = () => {
   const { count, selectedEntities, clearAll } = useArtworkSelection();
   const { downloadAsCsv } = useArtworksDownload();
 
+  if (!count) return null;
+
   const handleDownload = () => {
     downloadAsCsv(selectedEntities);
   };

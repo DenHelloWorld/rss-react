@@ -6,21 +6,23 @@ import { useTranslations } from 'next-intl';
 import {
   useGetArtByIdQuery,
   getArtworkImageUrl,
+  artsApi,
 } from '../../store/arts/arts-api';
-import { useInvalidateArtById } from '../../hooks/useArtsInvalidation/useArtsInvalidation';
+import { useAppDispatch } from '../../store/store';
+import { API_TAGS } from '../../consts/api-tags.const';
 import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator';
 import LazyImage from '../../components/LazyImage/LazyImage';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock';
 import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
-import { useErrorMessage } from '../../hooks/useErrorMessage/useErrorMessage';
+import { getErrorMessage } from '../../utils/error/error';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const';
 
 const DetailsPage = () => {
   const t = useTranslations('DetailsPage');
   const { id } = useParams<{ id: string }>();
+  const dispatch = useAppDispatch();
   const updateSearchParams = useUpdateSearchParams();
   const sectionRef = useRef<HTMLElement>(null);
-  const invalidateArtById = useInvalidateArtById();
 
   useEffect(() => {
     sectionRef.current?.focus();
@@ -32,7 +34,7 @@ const DetailsPage = () => {
 
   const artwork = data?.data;
   const imageUrl = artwork ? getArtworkImageUrl(String(artwork.image_id)) : '';
-  const errorMessage = useErrorMessage(error);
+  const errorMessage = getErrorMessage(error);
 
   const handleClose = () => {
     updateSearchParams({}, '/');
@@ -44,7 +46,9 @@ const DetailsPage = () => {
   });
 
   const handleRefetch = () => {
-    invalidateArtById(Number(id));
+    dispatch(
+      artsApi.util.invalidateTags([{ type: API_TAGS.ARTS, id: Number(id) }])
+    );
   };
 
   const closeButton = (

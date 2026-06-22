@@ -39,6 +39,21 @@ const DETAILS_FIELDS =
   'id,title,artist_display,image_id,thumbnail,date_display,medium_display,place_of_origin,dimensions';
 const CACHE_TTL = Number(process.env.NEXT_PUBLIC_CACHE_TTL) || 60;
 
+const buildArtsQueryParams = (
+  query: string | undefined,
+  page: number,
+  limit = 10
+): Record<string, string> => {
+  const safePage = Number.isInteger(page) && page > 0 ? page : 1;
+  const params: Record<string, string> = {
+    fields: LIST_FIELDS,
+    limit: String(limit),
+    page: String(safePage),
+  };
+  if (query) params.q = query;
+  return params;
+};
+
 export const artsApi = createApi({
   reducerPath: 'artsApi',
   baseQuery: fetchBaseQuery({
@@ -51,23 +66,10 @@ export const artsApi = createApi({
       AICResponse,
       { query: string | undefined; page: number; limit?: number }
     >({
-      query: ({ query, page, limit = 9 }) => {
-        const safePage = Number.isInteger(page) && page > 0 ? page : 1;
-        const params: Record<string, string> = {
-          fields: LIST_FIELDS,
-          limit: String(limit),
-          page: String(safePage),
-        };
-
-        if (query) {
-          params.q = query;
-        }
-
-        return {
-          url: query ? API_URL.searchEndpoint : '',
-          params,
-        };
-      },
+      query: ({ query, page, limit = 10 }) => ({
+        url: query ? API_URL.searchEndpoint : '',
+        params: buildArtsQueryParams(query, page, limit),
+      }),
       providesTags: () => [{ type: API_TAGS.ARTS, id: API_TAGS.LIST }],
     }),
 
@@ -90,3 +92,18 @@ export const { useSearchArtsQuery, useGetArtByIdQuery } = artsApi;
 
 export const getArtworkImageUrl = (imageId: string): string =>
   `https://www.artic.edu/iiif/2/${imageId}/full/843,/0/default.jpg`;
+
+export const fetchArtworks = async (
+  query: string,
+  page: number,
+  limit = 10
+): Promise<AICResponse> => {
+  const params = new URLSearchParams(buildArtsQueryParams(query, page, limit));
+  const url = query
+    ? `${API_URL.baseURL}/${API_URL.searchEndpoint}?${params}`
+    : `${API_URL.baseURL}?${params}`;
+
+  const res = await fetch(url, { next: { revalidate: CACHE_TTL } });
+  if (!res.ok) throw new Error(`AIC API error: ${String(res.status)}`);
+  return res.json() as Promise<AICResponse>;
+};

@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
-import { Suspense } from 'react';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { type Locale } from '../../consts/locales.const';
-import ArtworkResultsLayout from '../../layouts/ArtworkResultsLayout/ArtworkResultsLayout';
+import ArtworkResultsPage from '../../components/ArtworkResults/ArtworkResultsPage';
 
 type Props = {
   params: Promise<{ locale: Locale }>;
+  searchParams: Promise<{ query?: string; page?: string }>;
 };
 
 export const generateMetadata = async ({
@@ -16,15 +16,12 @@ export const generateMetadata = async ({
   return { title: t('title') };
 };
 
-const HomePage = async ({ params }: Props) => {
+const HomePage = async ({ params, searchParams }: Props) => {
   const { locale } = await params;
+  const { query = '', page = '1' } = await searchParams;
   setRequestLocale(locale);
 
-  return (
-    <Suspense>
-      <ArtworkResultsLayout />
-    </Suspense>
-  );
+  return <ArtworkResultsPage query={query} currentPage={Number(page)} />;
 };
 
 export default HomePage;

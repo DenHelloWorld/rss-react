@@ -1,25 +1,25 @@
 import { describe, it, expect } from 'vitest';
-import { useErrorMessage } from './useErrorMessage.ts';
+import { getErrorMessage } from './error.ts';
 
-describe('useErrorMessage', () => {
+describe('getErrorMessage', () => {
   it('should return null when error is null', () => {
-    expect(useErrorMessage(null)).toBeNull();
+    expect(getErrorMessage(null)).toBeNull();
   });
 
   it('should return null when error is undefined', () => {
-    expect(useErrorMessage(undefined)).toBeNull();
+    expect(getErrorMessage(undefined)).toBeNull();
   });
 
   it('should return Error message for Error instances', () => {
     const error = new Error('Something went wrong');
-    expect(useErrorMessage(error)).toBe('Something went wrong');
+    expect(getErrorMessage(error)).toBe('Something went wrong');
   });
 
   it('should return default message for unknown error types', () => {
-    expect(useErrorMessage(42)).toBe('An unknown error has occurred');
+    expect(getErrorMessage(42)).toBe('An unknown error has occurred');
   });
 
   it('should return default message for string errors', () => {
-    expect(useErrorMessage('oops')).toBe('An unknown error has occurred');
+    expect(getErrorMessage('oops')).toBe('An unknown error has occurred');
   });
 });

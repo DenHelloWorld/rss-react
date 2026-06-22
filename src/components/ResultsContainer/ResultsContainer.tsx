@@ -1,26 +1,25 @@
-import { useTranslations } from 'next-intl';
-import LoadingIndicator from '../LoadIndicator/LoadIndicator.tsx';
-import type { ReactNode } from 'react';
+'use client';
 
-type ResultsContainerProps = {
-  searchTerm: string;
-  isFetching: boolean;
+import { useTranslations } from 'next-intl';
+import { type AICResponse } from '../../store/arts/arts-api';
+import { useNavigationLoading } from '../../contexts/NavigationLoadingContext';
+import LoadingIndicator from '../LoadIndicator/LoadIndicator';
+import AICCard from '../AICCard/AICCard';
+
+type Props = {
+  data: AICResponse | null;
   errorMessage: string | null;
-  isEmpty: boolean;
-  children: ReactNode;
+  searchTerm: string;
 };
 
-const ResultsContainer = ({
-  searchTerm,
-  isFetching,
-  errorMessage,
-  isEmpty,
-  children,
-}: ResultsContainerProps) => {
+const ResultsContainer = ({ data, errorMessage, searchTerm }: Props) => {
   const t = useTranslations('ResultsContainer');
+  const { isNavigating } = useNavigationLoading();
+
   const displayTitle = searchTerm
     ? t('resultsFor', { term: searchTerm })
     : t('defaultTitle');
+  const isEmpty = !data?.data.length;
 
   return (
     <section className="shell relative h-full">
@@ -34,20 +33,24 @@ const ResultsContainer = ({
         </div>
       )}
 
-      {isFetching ? (
-        <LoadingIndicator />
-      ) : (
-        <>
-          {!errorMessage && !isEmpty && (
-            <ul className="cards-grid">{children}</ul>
-          )}
+      {isNavigating && (
+        <div className="flex h-full items-center justify-center">
+          <LoadingIndicator />
+        </div>
+      )}
 
-          {!errorMessage && isEmpty && (
-            <p className="text-gray-400 italic text-center py-10">
-              {t('empty')}
-            </p>
-          )}
-        </>
+      {!isNavigating && !errorMessage && !isEmpty && (
+        <ul className="cards-grid">
+          {data.data.map((art) => (
+            <li key={art.id}>
+              <AICCard art={art} />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {!isNavigating && !errorMessage && isEmpty && (
+        <p className="text-gray-400 italic text-center py-10">{t('empty')}</p>
       )}
     </section>
   );
