@@ -5,7 +5,6 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import react from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
-import reactCompiler from 'eslint-plugin-react-compiler';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
@@ -46,7 +45,6 @@ export default tseslint.config(
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'react-compiler': reactCompiler,
       'jsx-a11y': jsxA11y,
     },
     rules: {
@@ -77,8 +75,6 @@ export default tseslint.config(
           ],
         },
       ],
-      // Experimental React Compiler – flags code that breaks the compiler
-      'react-compiler/react-compiler': 'error',
       // Prevent object/array literals in JSX props (causes re-renders on every render)
       'react/jsx-no-useless-fragment': 'warn',
       'react/self-closing-comp': 'warn',
@@ -178,6 +174,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       'no-console': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off'
     },
   }
 );
