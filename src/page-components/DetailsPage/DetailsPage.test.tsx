@@ -58,6 +58,7 @@ describe(DetailsPage.name, () => {
     });
 
     fireEvent.click(screen.getByRole('button', { name: /close/i }));
+
     expect(mockPush).toHaveBeenCalledWith(expect.stringContaining('/'));
   });
 
@@ -99,7 +100,6 @@ describe(DetailsPage.name, () => {
     await waitFor(() => {
       expect(screen.queryByText('Starry Night')).not.toBeInTheDocument();
     });
-
     expect(screen.getByRole('button', { name: /close/i })).toBeInTheDocument();
   });
 

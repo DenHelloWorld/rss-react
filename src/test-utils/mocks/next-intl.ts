@@ -1,5 +1,6 @@
 import { vi } from 'vitest';
 import en from '../../../messages/en.json';
+import { DEFAULT_LOCALE } from '../../consts/locales.const';
 
 const translations = en as Record<string, Record<string, string>>;
 
@@ -15,9 +16,17 @@ const createTranslator =
   };
 
 vi.mock('next-intl/server', () => ({
-  getTranslations: vi.fn(async (namespace: string) =>
-    createTranslator(namespace)
+  getTranslations: vi.fn(
+    async (namespaceOrOptions: string | { namespace: string }) => {
+      const namespace =
+        typeof namespaceOrOptions === 'string'
+          ? namespaceOrOptions
+          : namespaceOrOptions.namespace;
+      return createTranslator(namespace);
+    }
   ),
+  getMessages: vi.fn(async () => en),
+  getLocale: vi.fn(async () => DEFAULT_LOCALE),
   setRequestLocale: vi.fn(),
 }));
 

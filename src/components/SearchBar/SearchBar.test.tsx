@@ -61,6 +61,7 @@ describe(SearchBar.name, () => {
         onRefetch={mockOnRefetch}
       />
     );
+
     const input = screen.getByRole('textbox');
 
     fireEvent.keyDown(input, {
@@ -135,6 +136,7 @@ describe(SearchBar.name, () => {
     );
 
     const refreshButton = container.querySelector('.button--warning');
+
     fireEvent.click(refreshButton!);
 
     expect(mockOnRefetch).toHaveBeenCalledTimes(1);

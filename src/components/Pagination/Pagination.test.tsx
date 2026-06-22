@@ -68,6 +68,7 @@ describe(Pagination.name, () => {
     render(<Pagination {...defaultProps} currentPage={1} totalPages={1} />);
 
     const buttons = screen.getAllByRole('button');
+
     expect(buttons[0]).toBeDisabled();
     expect(buttons[1]).toBeDisabled();
   });

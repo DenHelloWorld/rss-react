@@ -7,6 +7,7 @@ import { THEME } from '../../consts/theme.const.ts';
 describe(ThemeButton.name, () => {
   it('should render light theme icon when theme is LIGHT', () => {
     const setTheme = vi.fn();
+
     render(
       <ThemeContext.Provider
         value={{ theme: THEME.LIGHT as 'light', setTheme }}
@@ -21,6 +22,7 @@ describe(ThemeButton.name, () => {
 
   it('should render dark theme icon when theme is DARK', () => {
     const setTheme = vi.fn();
+
     render(
       <ThemeContext.Provider value={{ theme: THEME.DARK as 'dark', setTheme }}>
         <ThemeButton />
@@ -33,6 +35,7 @@ describe(ThemeButton.name, () => {
 
   it('should call setTheme with DARK when currently LIGHT', () => {
     const setTheme = vi.fn();
+
     render(
       <ThemeContext.Provider
         value={{ theme: THEME.LIGHT as 'light', setTheme }}
@@ -42,11 +45,13 @@ describe(ThemeButton.name, () => {
     );
 
     fireEvent.click(screen.getByRole('button'));
+
     expect(setTheme).toHaveBeenCalledWith(THEME.DARK);
   });
 
   it('should call setTheme with LIGHT when currently DARK', () => {
     const setTheme = vi.fn();
+
     render(
       <ThemeContext.Provider value={{ theme: THEME.DARK as 'dark', setTheme }}>
         <ThemeButton />
@@ -54,6 +59,7 @@ describe(ThemeButton.name, () => {
     );
 
     fireEvent.click(screen.getByRole('button'));
+
     expect(setTheme).toHaveBeenCalledWith(THEME.LIGHT);
   });
 });

@@ -14,12 +14,14 @@ describe('POST /api/download-csv', () => {
 
   it('should return 200 with text/csv content type', async () => {
     const res = await POST(makeRequest([MOCK_ART]));
+
     expect(res.status).toBe(200);
     expect(res.headers.get('Content-Type')).toBe('text/csv;charset=utf-8;');
   });
 
   it('should return correct Content-Disposition filename', async () => {
     const res = await POST(makeRequest([MOCK_ART]));
+
     expect(res.headers.get('Content-Disposition')).toBe(
       'attachment; filename="1_artworks.csv"'
     );
@@ -38,12 +40,15 @@ describe('POST /api/download-csv', () => {
   it('should return empty body for empty items array', async () => {
     const res = await POST(makeRequest([]));
     const text = await res.text();
+
     expect(text).toBe('');
   });
 
   it('should reflect item count in filename for multiple items', async () => {
     const items = [MOCK_ART, { ...MOCK_ART, id: 456 }];
+
     const res = await POST(makeRequest(items));
+
     expect(res.headers.get('Content-Disposition')).toBe(
       'attachment; filename="2_artworks.csv"'
     );

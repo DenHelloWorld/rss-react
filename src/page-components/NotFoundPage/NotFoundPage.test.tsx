@@ -11,6 +11,7 @@ const defaultProps = {
 describe(NotFoundPage.name, () => {
   it('should render the page heading', () => {
     render(<NotFoundPage {...defaultProps} />);
+
     expect(
       screen.getByRole('heading', { name: /page not found/i })
     ).toBeInTheDocument();
@@ -18,6 +19,7 @@ describe(NotFoundPage.name, () => {
 
   it('should render the description text', () => {
     render(<NotFoundPage {...defaultProps} />);
+
     expect(
       screen.getByText(/sorry, the page you are looking for does not exist/i)
     ).toBeInTheDocument();
@@ -25,6 +27,7 @@ describe(NotFoundPage.name, () => {
 
   it('should render the image with correct alt text', () => {
     render(<NotFoundPage {...defaultProps} />);
+
     expect(
       screen.getByAltText(/sorry, the page you are looking for does not exist/i)
     ).toBeInTheDocument();
@@ -32,7 +35,9 @@ describe(NotFoundPage.name, () => {
 
   it('should render the return button', () => {
     render(<NotFoundPage {...defaultProps} />);
+
     const link = screen.getByRole('link', { name: /return to home/i });
+
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/');
   });

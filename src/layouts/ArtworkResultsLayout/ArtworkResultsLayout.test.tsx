@@ -19,20 +19,26 @@ const renderLayout = () =>
 describe(ArtworkResultsLayout.name, () => {
   it('should render ArtworkResults', () => {
     vi.mocked(usePathname).mockReturnValue('/');
+
     renderLayout();
+
     expect(screen.getByText('ArtworkResults')).toBeInTheDocument();
   });
 
   it('should not have main-panel--aside class on root route', () => {
     vi.mocked(usePathname).mockReturnValue('/');
+
     renderLayout();
+
     const panel = screen.getByText('ArtworkResults').closest('.main-panel');
     expect(panel).not.toHaveClass('main-panel--aside');
   });
 
   it('should have main-panel--aside class on details route', () => {
     vi.mocked(usePathname).mockReturnValue('/details/123');
+
     renderLayout();
+
     const panel = screen.getByText('ArtworkResults').closest('.main-panel');
     expect(panel).toHaveClass('main-panel--aside');
   });

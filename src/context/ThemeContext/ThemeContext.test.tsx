@@ -12,6 +12,7 @@ describe('ThemeContext', () => {
     };
 
     const { container } = render(<TestComponent />);
+
     expect(container.querySelector('[data-theme]')).toHaveAttribute(
       'data-theme',
       THEME.LIGHT

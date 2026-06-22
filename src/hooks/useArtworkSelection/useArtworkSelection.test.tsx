@@ -1,4 +1,4 @@
-﻿import { renderHook, act } from '@testing-library/react';
+import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import { useArtworkSelection } from './useArtworkSelection.ts';
 import { Provider } from 'react-redux';
@@ -37,6 +37,7 @@ describe('useArtworkSelection', () => {
     const { result } = renderHook(() => useArtworkSelection(), {
       wrapper: wrapper(testStore),
     });
+
     expect(result.current.selectedEntities).toEqual([]);
     expect(result.current.count).toBe(0);
   });
@@ -79,6 +80,7 @@ describe('useArtworkSelection', () => {
       result.current.toggle(MOCK_ART);
       result.current.toggle(mockArt2);
     });
+
     expect(result.current.count).toBe(2);
 
     act(() => {
@@ -112,11 +114,13 @@ describe('useArtworkSelection', () => {
     act(() => {
       result.current.toggle(MOCK_ART);
     });
+
     expect(result.current.isSelected(MOCK_ART.id)).toBe(true);
 
     act(() => {
       result.current.toggle(MOCK_ART);
     });
+
     expect(result.current.isSelected(MOCK_ART.id)).toBe(false);
   });
 });
