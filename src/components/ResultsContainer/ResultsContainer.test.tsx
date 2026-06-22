@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { store } from '../../store/store.ts';
 import ResultsContainer from './ResultsContainer';
 
-vi.mock('../../contexts/NavigationLoadingContext', () => ({
+vi.mock('../../hooks/useNavigationLoading/useNavigationLoading', () => ({
   useNavigationLoading: () => ({ isNavigating: false }),
 }));
 import { UI_TEST_TEXT } from '../../test-utils/ui-test-text.const.ts';
