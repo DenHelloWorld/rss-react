@@ -1,6 +1,10 @@
 import { NextIntlClientProvider, hasLocale } from 'next-intl';
 import { notFound } from 'next/navigation';
-import { getTranslations, setRequestLocale } from 'next-intl/server';
+import {
+  getMessages,
+  getTranslations,
+  setRequestLocale,
+} from 'next-intl/server';
 import { routing } from '../../i18n/routing';
 import { type Locale } from '../../consts/locales.const';
 import Providers from '../providers';
@@ -25,13 +29,14 @@ const LocaleLayout = async ({ children, details, params }: Props) => {
 
   setRequestLocale(locale);
 
-  const t = await getTranslations('ErrorPage');
+  const messages = await getMessages({ locale });
+  const t = await getTranslations({ locale, namespace: 'ErrorPage' });
 
   return (
-    <NextIntlClientProvider locale={locale}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <Providers resetLabel={t('reset')}>
         <div className="app-wrapper">
-          <Header />
+          <Header locale={locale} />
           <main className="main">
             {children}
             {details}

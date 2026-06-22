@@ -1,10 +1,12 @@
-import { getTranslations } from 'next-intl/server';
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { Link } from '../../i18n/navigation';
 import { ROUTES } from '../../consts/routes.const';
 import NotFoundPage from '../../page-components/NotFoundPage/NotFoundPage';
 
-const NotFound = async () => {
-  const t = await getTranslations('NotFoundPage');
+const NotFound = () => {
+  const t = useTranslations('NotFoundPage');
 
   return (
     <NotFoundPage

@@ -5,9 +5,12 @@ import ErrorTrigger from '../ErrorTrigger/ErrorTrigger';
 import LanguageSwitcher from '../LanguageSwitcher/LanguageSwitcher';
 import NavLink from '../NavLink/NavLink';
 import HeaderSearch from './HeaderSearch';
+import type { Locale } from '../../consts/locales.const';
 
-const Header = async () => {
-  const t = await getTranslations('Header');
+type Props = { locale: Locale };
+
+const Header = async ({ locale }: Props) => {
+  const t = await getTranslations({ locale, namespace: 'Header' });
 
   return (
     <header className="header">

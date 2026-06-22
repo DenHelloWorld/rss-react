@@ -1,9 +1,12 @@
 import Image from 'next/image';
 import { getTranslations } from 'next-intl/server';
 import { URLs } from '../../consts/urls.const.ts';
+import type { Locale } from '../../consts/locales.const.ts';
 
-const AboutPage = async () => {
-  const t = await getTranslations('AboutPage');
+type Props = { locale: Locale };
+
+const AboutPage = async ({ locale }: Props) => {
+  const t = await getTranslations({ locale, namespace: 'AboutPage' });
 
   return (
     <section className="mx-auto container shell">
