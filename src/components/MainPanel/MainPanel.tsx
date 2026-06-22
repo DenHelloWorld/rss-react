@@ -1,10 +1,10 @@
 'use client';
 
 import { type ReactNode } from 'react';
-import { usePathname } from '../../i18n/navigation';
+import { useSearchParams } from 'next/navigation';
+import { usePathname, useRouter } from '../../i18n/navigation';
 import { isDetailsPathname } from '../../consts/routes.const';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock';
-import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
 
 type Props = {
   children: ReactNode;
@@ -13,10 +13,11 @@ type Props = {
 const MainPanel = ({ children }: Props) => {
   const pathname = usePathname();
   const isDetailsLocation = isDetailsPathname(pathname);
-  const updateSearchParams = useUpdateSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
   const handleClose = () => {
-    updateSearchParams({}, '/');
+    router.push(`/?${searchParams.toString()}`);
   };
 
   const clickableBlockProps = useClickableBlock({ onClick: handleClose });

@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useRef, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import {
@@ -12,8 +12,8 @@ import { useAppDispatch } from '../../store/store';
 import { API_TAGS } from '../../consts/api-tags.const';
 import LoadingIndicator from '../../components/LoadIndicator/LoadIndicator';
 import LazyImage from '../../components/LazyImage/LazyImage';
+import { useRouter } from '../../i18n/navigation';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock';
-import { useUpdateSearchParams } from '../../hooks/useUpdateSearchParams/useUpdateSearchParams';
 import { getErrorMessage } from '../../utils/error/error';
 import { KEYBOARD_KEYS } from '../../consts/keyboard-keys.const';
 
@@ -21,7 +21,8 @@ const DetailsPage = () => {
   const t = useTranslations('DetailsPage');
   const { id } = useParams<{ id: string }>();
   const dispatch = useAppDispatch();
-  const updateSearchParams = useUpdateSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -37,7 +38,7 @@ const DetailsPage = () => {
   const errorMessage = getErrorMessage(error);
 
   const handleClose = () => {
-    updateSearchParams({}, '/');
+    router.push(`/?${searchParams.toString()}`);
   };
 
   const clickableBlockProps = useClickableBlock({
