@@ -1,79 +1,76 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import Pagination from './Pagination';
+import { NavigationLoadingProvider } from '../../providers/NavigationLoadingProvider/NavigationLoadingProvider';
+
+const mockPush = vi.fn();
+
+const mockSearchParams = new URLSearchParams('query=cats');
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({ push: mockPush }),
+  useSearchParams: () => mockSearchParams,
+}));
+
+vi.mock('next-intl', () => ({
+  useTranslations: () => (key: string, values?: Record<string, number>) =>
+    key === 'total' ? `Total: ${String(values?.count ?? 0)}` : key,
+}));
+
+const renderComponent = (props = {}) =>
+  render(
+    <NavigationLoadingProvider>
+      <Pagination total={100} currentPage={5} totalPages={10} {...props} />
+    </NavigationLoadingProvider>
+  );
 
 describe(Pagination.name, () => {
-  const mockOnPageChange = vi.fn();
-
-  const defaultProps = {
-    total: 100,
-    currentPage: 5,
-    totalPages: 10,
-    onPageChange: mockOnPageChange,
-  };
-
   it('should render current page and total pages info', () => {
-    render(<Pagination {...defaultProps} />);
+    renderComponent();
 
     expect(screen.getByText('5')).toBeInTheDocument();
     expect(screen.getByText('10')).toBeInTheDocument();
     expect(screen.getByText(/Total: 100/i)).toBeInTheDocument();
   });
 
-  it('should call onPageChange with next page when right button is clicked', () => {
-    render(<Pagination {...defaultProps} />);
-
+  it('should navigate to next page when right button is clicked', () => {
+    renderComponent();
     const buttons = screen.getAllByRole('button');
-    const nextButton = buttons[1];
 
-    fireEvent.click(nextButton);
+    fireEvent.click(buttons[1]);
 
-    expect(mockOnPageChange).toHaveBeenCalledWith(6);
+    expect(mockPush).toHaveBeenCalledWith('?query=cats&page=6');
   });
 
-  it('should call onPageChange with previous page when left button is clicked', () => {
-    render(<Pagination {...defaultProps} />);
-
+  it('should navigate to previous page when left button is clicked', () => {
+    renderComponent();
     const buttons = screen.getAllByRole('button');
-    const prevButton = buttons[0];
 
-    fireEvent.click(prevButton);
+    fireEvent.click(buttons[0]);
 
-    expect(mockOnPageChange).toHaveBeenCalledWith(4);
+    expect(mockPush).toHaveBeenCalledWith('?query=cats&page=4');
   });
 
   it('should disable prev button on the first page', () => {
-    render(<Pagination {...defaultProps} currentPage={1} />);
+    renderComponent({ currentPage: 1 });
 
     const buttons = screen.getAllByRole('button');
-    const prevButton = buttons[0];
-    const nextButton = buttons[1];
 
-    expect(prevButton).toBeDisabled();
-    expect(nextButton).not.toBeDisabled();
+    expect(buttons[0]).toBeDisabled();
+    expect(buttons[1]).not.toBeDisabled();
   });
 
   it('should disable next button on the last page', () => {
-    render(<Pagination {...defaultProps} currentPage={10} />);
+    renderComponent({ currentPage: 10 });
 
     const buttons = screen.getAllByRole('button');
-    const prevButton = buttons[0];
-    const nextButton = buttons[1];
 
-    expect(prevButton).not.toBeDisabled();
-    expect(nextButton).toBeDisabled();
+    expect(buttons[0]).not.toBeDisabled();
+    expect(buttons[1]).toBeDisabled();
   });
 
   it('should handle zero or one page total', () => {
-    render(<Pagination {...defaultProps} currentPage={1} totalPages={1} />);
-
-    const buttons = screen.getAllByRole('button');
-    expect(buttons[0]).toBeDisabled();
-    expect(buttons[1]).toBeDisabled();
-  });
-
-  it('should disable both buttons when isFetching is true', () => {
-    render(<Pagination {...defaultProps} currentPage={5} isFetching={true} />);
+    renderComponent({ currentPage: 1, totalPages: 1 });
 
     const buttons = screen.getAllByRole('button');
 
@@ -81,8 +78,8 @@ describe(Pagination.name, () => {
     expect(buttons[1]).toBeDisabled();
   });
 
-  it('should not disable buttons on middle page when isFetching is false', () => {
-    render(<Pagination {...defaultProps} currentPage={5} isFetching={false} />);
+  it('should not disable buttons on middle page', () => {
+    renderComponent({ currentPage: 5 });
 
     const buttons = screen.getAllByRole('button');
 

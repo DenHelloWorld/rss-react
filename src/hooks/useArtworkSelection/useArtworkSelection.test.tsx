@@ -6,7 +6,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import artsReducer from '../../store/arts/arts-slice.ts';
 import type { ReactNode } from 'react';
 import type { AICArtwork } from '../../store/arts/arts-api.ts';
-import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { MOCK_ART } from '../../test-utils/mocks/mock-data.ts';
 
 const createTestStore = () =>
   configureStore({
@@ -37,6 +37,7 @@ describe('useArtworkSelection', () => {
     const { result } = renderHook(() => useArtworkSelection(), {
       wrapper: wrapper(testStore),
     });
+
     expect(result.current.selectedEntities).toEqual([]);
     expect(result.current.count).toBe(0);
   });
@@ -79,6 +80,7 @@ describe('useArtworkSelection', () => {
       result.current.toggle(MOCK_ART);
       result.current.toggle(mockArt2);
     });
+
     expect(result.current.count).toBe(2);
 
     act(() => {
@@ -112,11 +114,13 @@ describe('useArtworkSelection', () => {
     act(() => {
       result.current.toggle(MOCK_ART);
     });
+
     expect(result.current.isSelected(MOCK_ART.id)).toBe(true);
 
     act(() => {
       result.current.toggle(MOCK_ART);
     });
+
     expect(result.current.isSelected(MOCK_ART.id)).toBe(false);
   });
 });

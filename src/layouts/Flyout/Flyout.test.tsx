@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import artsReducer, { toggleSelect } from '../../store/arts/arts-slice.ts';
 import Flyout from './Flyout';
-import { MOCK_ART } from '../../test-utils/mock-data.ts';
+import { MOCK_ART } from '../../test-utils/mocks/mock-data.ts';
 import * as useArtworksDownloadModule from '../../hooks/useArtworksDownload/useArtworksDownload.ts';
 
 const createTestStore = () =>
@@ -26,29 +26,36 @@ describe(Flyout.name, () => {
       </Provider>
     );
 
-  it('should show "Selected: 0" when no items selected', () => {
-    renderFlyout();
-    expect(screen.getByText('Selected: 0')).toBeInTheDocument();
+  it('should not render when no items selected', () => {
+    const { container } = renderFlyout();
+
+    expect(container).toBeEmptyDOMElement();
   });
 
   it('should display the count of selected items', () => {
     testStore.dispatch(toggleSelect(MOCK_ART));
+
     renderFlyout();
 
-    expect(screen.getByText('Selected: 1')).toBeInTheDocument();
+    expect(screen.getByText('1 item selected')).toBeInTheDocument();
   });
 
   it('should clear all selections when "Unselect all" is clicked', () => {
     testStore.dispatch(toggleSelect(MOCK_ART));
+
     renderFlyout();
 
     fireEvent.click(screen.getByText('Unselect all'));
-    expect(screen.getByText('Selected: 0')).toBeInTheDocument();
+
+    expect(screen.queryByText('1 item selected')).not.toBeInTheDocument();
   });
 
-  it('should render download button', () => {
+  it('should render download button when items selected', () => {
+    testStore.dispatch(toggleSelect(MOCK_ART));
+
     renderFlyout();
-    expect(screen.getByText('Download')).toBeInTheDocument();
+
+    expect(screen.getByText('Download CSV')).toBeInTheDocument();
   });
 
   it('should call downloadAsCsv when download button is clicked', () => {
@@ -56,11 +63,12 @@ describe(Flyout.name, () => {
     vi.spyOn(useArtworksDownloadModule, 'useArtworksDownload').mockReturnValue({
       downloadAsCsv: downloadSpy,
     });
-
     testStore.dispatch(toggleSelect(MOCK_ART));
+
     renderFlyout();
 
-    fireEvent.click(screen.getByText('Download'));
+    fireEvent.click(screen.getByText('Download CSV'));
+
     expect(downloadSpy).toHaveBeenCalledWith([MOCK_ART]);
   });
 });

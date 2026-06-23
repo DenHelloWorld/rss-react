@@ -13,14 +13,18 @@ export const ROUTES = {
   },
 } as const;
 
+export const API_ROUTES = {
+  DOWNLOAD_CSV: '/api/download-csv',
+} as const;
+
 export const ROUTE_QUERY_PARAMS = {
   QUERY: 'query',
   PAGE: 'page',
 } as const;
 
-export const ROUTE_QUERY_KEYS = {
-  ARTWORKS: 'artworks',
-} as const;
-
 export const isPositiveIntegerString = (value: string): boolean =>
   /^[1-9]\d*$/.test(value);
+
+export const isDetailsPathname = (pathname: string): boolean =>
+  pathname === `/${ROUTES.DETAILS.path}` ||
+  pathname.startsWith(`/${ROUTES.DETAILS.path}/`);

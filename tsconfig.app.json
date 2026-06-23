@@ -4,12 +4,7 @@
     "target": "es2023",
     "lib": ["ES2023", "DOM", "DOM.Iterable"],
     "module": "esnext",
-    "types": [
-      "vitest/globals",
-      "@testing-library/jest-dom",
-      "vite/client",
-      "msw"
-    ],
+    "types": ["vitest/globals", "@testing-library/jest-dom", "msw"],
     "skipLibCheck": true,
 
     /* Bundler mode */
@@ -24,7 +19,8 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+    "plugins": [{ "name": "next" }]
   },
   "include": [
     "src/**/*.ts",
@@ -33,6 +29,7 @@
     "src/**/*.test.tsx",
     "src/**/*.test.ts",
     "src/test-utils/**/*",
-    "node_modules/@types/node/globals.d.ts"
+    "node_modules/@types/node/globals.d.ts",
+    "next-env.d.ts"
   ]
 }

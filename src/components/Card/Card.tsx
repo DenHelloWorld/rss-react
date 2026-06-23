@@ -1,8 +1,10 @@
+'use client';
+
 import LazyImage from '../LazyImage/LazyImage.tsx';
 import { useClickableBlock } from '../../hooks/useClickableBlock/useClickableBlock.ts';
 import type { ReactNode, RefObject } from 'react';
 
-interface CardProps {
+type CardProps = {
   title: string;
   description: string;
   imageUrl: string;
@@ -12,7 +14,7 @@ interface CardProps {
 
   cardRef?: RefObject<HTMLElement | null>;
   children?: ReactNode;
-}
+};
 
 const Card = ({
   title,
@@ -32,7 +34,12 @@ const Card = ({
       {...clickableProps}
     >
       <div className="card-image-container">
-        <LazyImage src={imageUrl} alt={description} />
+        <LazyImage
+          src={imageUrl}
+          alt={description}
+          unoptimized
+          loading="eager"
+        />
       </div>
 
       <div className="card-content">

@@ -1,9 +1,15 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
 import { useArtworkSelection } from '../../hooks/useArtworkSelection/useArtworkSelection.ts';
 import { useArtworksDownload } from '../../hooks/useArtworksDownload/useArtworksDownload.ts';
 
 const Flyout = () => {
+  const t = useTranslations('Flyout');
   const { count, selectedEntities, clearAll } = useArtworkSelection();
   const { downloadAsCsv } = useArtworksDownload();
+
+  if (!count) return null;
 
   const handleDownload = () => {
     downloadAsCsv(selectedEntities);
@@ -11,13 +17,13 @@ const Flyout = () => {
 
   return (
     <div className="flyout-panel">
-      <span className="flyout-count">Selected: {count}</span>
+      <span className="flyout-count">{t('selected', { count })}</span>
 
       <button onClick={clearAll} className="button button--sm button--error">
         <svg>
           <use href="/icons.svg#remove-selection" />
         </svg>
-        Unselect all
+        {t('unselect')}
       </button>
 
       <button
@@ -27,7 +33,7 @@ const Flyout = () => {
         <svg>
           <use href="/icons.svg#download" />
         </svg>
-        Download
+        {t('downloadCsv')}
       </button>
     </div>
   );

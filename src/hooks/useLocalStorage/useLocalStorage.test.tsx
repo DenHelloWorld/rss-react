@@ -12,7 +12,7 @@ vi.mock('../../utils/local-storage/local-storage.ts', () => ({
   getItem: vi.fn(),
   setItem: vi.fn(),
   removeItem: vi.fn(),
-  STORAGE_KEYS: { SEARCH_TERM: 'search_term', THEME: 'theme' },
+  STORAGE_KEYS: { EXAMPLE: 'example' },
 }));
 
 const getItemMock = vi.mocked(getItem);
@@ -28,18 +28,14 @@ describe('useLocalStorage', () => {
     const mockValue = 'Monet';
     getItemMock.mockReturnValue(mockValue);
 
-    const { result } = renderHook(() =>
-      useLocalStorage(STORAGE_KEYS.SEARCH_TERM)
-    );
+    const { result } = renderHook(() => useLocalStorage(STORAGE_KEYS.EXAMPLE));
 
     expect(result.current[0]).toBe(mockValue);
-    expect(getItemMock).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM);
+    expect(getItemMock).toHaveBeenCalledWith(STORAGE_KEYS.EXAMPLE);
   });
 
   it('should update value and call setItem', () => {
-    const { result } = renderHook(() =>
-      useLocalStorage(STORAGE_KEYS.SEARCH_TERM)
-    );
+    const { result } = renderHook(() => useLocalStorage(STORAGE_KEYS.EXAMPLE));
     const newValue = 'Van Gogh';
 
     act(() => {
@@ -47,22 +43,17 @@ describe('useLocalStorage', () => {
     });
 
     expect(result.current[0]).toBe(newValue);
-    expect(setItemMock).toHaveBeenCalledWith(
-      STORAGE_KEYS.SEARCH_TERM,
-      newValue
-    );
+    expect(setItemMock).toHaveBeenCalledWith(STORAGE_KEYS.EXAMPLE, newValue);
   });
 
   it('should remove value and call removeItem', () => {
-    const { result } = renderHook(() =>
-      useLocalStorage(STORAGE_KEYS.SEARCH_TERM)
-    );
+    const { result } = renderHook(() => useLocalStorage(STORAGE_KEYS.EXAMPLE));
 
     act(() => {
       result.current[2]();
     });
 
     expect(result.current[0]).toBeNull();
-    expect(removeItemMock).toHaveBeenCalledWith(STORAGE_KEYS.SEARCH_TERM);
+    expect(removeItemMock).toHaveBeenCalledWith(STORAGE_KEYS.EXAMPLE);
   });
 });

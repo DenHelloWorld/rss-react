@@ -27,6 +27,7 @@ describe(LazyImage.name, () => {
 
   it('should hide skeleton and show image on load', () => {
     const { container } = render(<LazyImage {...defaultProps} />);
+
     const img = screen.getByRole('img');
 
     fireEvent.load(img);
@@ -37,6 +38,7 @@ describe(LazyImage.name, () => {
 
   it('should show placeholder on image error', () => {
     const { container } = render(<LazyImage {...defaultProps} />);
+
     const img = screen.getByRole('img');
 
     fireEvent.error(img);

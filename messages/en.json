@@ -1,0 +1,70 @@
+{
+  "Header": {
+    "home": "Home",
+    "about": "About"
+  },
+  "SearchBar": {
+    "placeholder": "Search artworks...",
+    "button": "Search"
+  },
+  "HomePage": {
+    "title": "Art Collection"
+  },
+  "AboutPage": {
+    "title": "About the Project",
+    "avatarAlt": "GitHub Avatar",
+    "description": "This application was developed as part of the React course. It allows users to explore the Art Institute of Chicago's collection using their",
+    "apiLinkLabel": "public API",
+    "authorTitle": "Author",
+    "authorText": "Developed by",
+    "authorSuffix": ", a student at RS School.",
+    "courseButton": "RS School React Course"
+  },
+  "NotFoundPage": {
+    "title": "Page Not Found",
+    "description": "Sorry, the page you are looking for does not exist.",
+    "returnButton": "Return to Home"
+  },
+  "ResultsContainer": {
+    "defaultTitle": "Art Collection",
+    "resultsFor": "Results for \"{term}\"",
+    "empty": "No items found. Try another request!"
+  },
+  "Pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {current} of {total}",
+    "total": "Total: {count}"
+  },
+  "Flyout": {
+    "selected": "{count} item selected",
+    "downloadCsv": "Download CSV",
+    "unselect": "Unselect all"
+  },
+  "DetailsPage": {
+    "artist": "Artist",
+    "origin": "Origin",
+    "date": "Date",
+    "dimensions": "Dimensions",
+    "medium": "Medium",
+    "refresh": "Refresh",
+    "unknown": "Unknown",
+    "dimensionsNotAvailable": "Dimensions not available",
+    "close": "Close"
+  },
+  "ThemeButton": {
+    "light": "Light",
+    "dark": "Dark"
+  },
+  "ErrorTrigger": {
+    "label": "Triggers an error",
+    "error": "Test crash triggered by ErrorTrigger component!"
+  },
+  "ErrorPage": {
+    "reset": "Push to Reset"
+  },
+  "LanguageSwitcher": {
+    "en": "EN",
+    "ru": "RU"
+  }
+}

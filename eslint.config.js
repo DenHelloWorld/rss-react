@@ -5,7 +5,6 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 import react from 'eslint-plugin-react';
 import tseslint from 'typescript-eslint';
 import eslintPluginPrettier from 'eslint-plugin-prettier/recommended';
-import reactCompiler from 'eslint-plugin-react-compiler';
 import jsxA11y from 'eslint-plugin-jsx-a11y';
 
 export default tseslint.config(
@@ -14,6 +13,8 @@ export default tseslint.config(
       'dist',
       'build',
       'coverage',
+      '.next',
+      'next-env.d.ts',
       '**/*.min.js',
       'node_modules',
       'src/test-utils/**',
@@ -44,7 +45,6 @@ export default tseslint.config(
       react,
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
-      'react-compiler': reactCompiler,
       'jsx-a11y': jsxA11y,
     },
     rules: {
@@ -56,12 +56,25 @@ export default tseslint.config(
       // Catch bugs: hooks must be called unconditionally and at the top level
       ...reactHooks.configs.recommended.rules,
       // Enforce that only components are exported from files used with Fast Refresh
+      // allowExportNames: Next.js special exports that coexist with components
       'react-refresh/only-export-components': [
         'warn',
-        { allowConstantExport: true },
+        {
+          allowConstantExport: true,
+          allowExportNames: [
+            'metadata',
+            'generateMetadata',
+            'generateStaticParams',
+            'viewport',
+            'generateViewport',
+            'dynamic',
+            'revalidate',
+            'fetchCache',
+            'runtime',
+            'config',
+          ],
+        },
       ],
-      // Experimental React Compiler – flags code that breaks the compiler
-      'react-compiler/react-compiler': 'error',
       // Prevent object/array literals in JSX props (causes re-renders on every render)
       'react/jsx-no-useless-fragment': 'warn',
       'react/self-closing-comp': 'warn',
@@ -78,6 +91,7 @@ export default tseslint.config(
 
       // ── TypeScript strict rules ───────────────────────────────────────────────
       // Already covered by strictTypeChecked, but listed here for visibility:
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-unsafe-call': 'error',
@@ -144,6 +158,14 @@ export default tseslint.config(
     },
   },
 
+  // ─── Server actions must be async per Next.js requirements ───────────────────
+  {
+    files: ['src/actions/**/*.ts'],
+    rules: {
+      '@typescript-eslint/require-await': 'off',
+    },
+  },
+
   // ─── Relaxed rules for test files ────────────────────────────────────────────
   {
     files: ['**/*.{test,spec}.{ts,tsx}', '**/__tests__/**/*.{ts,tsx}'],
@@ -152,6 +174,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       'no-console': 'off',
+      '@typescript-eslint/no-unnecessary-type-assertion': 'off',
     },
   }
 );

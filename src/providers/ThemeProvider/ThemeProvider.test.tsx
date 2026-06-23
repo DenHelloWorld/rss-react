@@ -1,10 +1,9 @@
 import { ThemeContext } from '../../context/ThemeContext/ThemeContext.ts';
 import { THEME } from '../../consts/theme.const.ts';
 import ThemeProvider from './ThemeProvider.tsx';
-import { localStorageMock } from '../../test-utils/storage-mock.ts';
 import { act, render, screen } from '@testing-library/react';
-import { STORAGE_KEYS } from '../../utils/local-storage/local-storage.ts';
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach } from 'vitest';
+import { STORAGE_KEYS } from '../../utils/local-storage/local-storage';
 
 const TestComponent = () => (
   <ThemeContext.Consumer>
@@ -24,6 +23,11 @@ const TestComponent = () => (
 );
 
 describe(ThemeProvider.name, () => {
+  beforeEach(() => {
+    localStorage.removeItem(STORAGE_KEYS.THEME);
+    document.documentElement.className = '';
+  });
+
   it('should apply light theme by default', () => {
     act(() => {
       render(
@@ -37,7 +41,7 @@ describe(ThemeProvider.name, () => {
   });
 
   it('should apply theme stored in localStorage', () => {
-    localStorageMock.setItem(STORAGE_KEYS.THEME, JSON.stringify(THEME.DARK));
+    localStorage.setItem(STORAGE_KEYS.THEME, JSON.stringify(THEME.DARK));
 
     act(() => {
       render(
@@ -60,16 +64,14 @@ describe(ThemeProvider.name, () => {
       );
     });
 
-    const button = screen.getByText('Set Dark');
     act(() => {
-      button.click();
+      screen.getByText('Set Dark').click();
     });
 
     expect(screen.getByTestId('theme-value')).toHaveTextContent(THEME.DARK);
     expect(document.documentElement).toHaveClass(THEME.DARK);
-
-    expect(localStorageMock.getItem(STORAGE_KEYS.THEME)).toBe(
-      JSON.stringify(THEME.DARK)
+    expect(JSON.parse(localStorage.getItem(STORAGE_KEYS.THEME)!)).toBe(
+      THEME.DARK
     );
   });
 });

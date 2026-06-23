@@ -1,0 +1,70 @@
+{
+  "Header": {
+    "home": "Главная",
+    "about": "О проекте"
+  },
+  "SearchBar": {
+    "placeholder": "Поиск произведений...",
+    "button": "Найти"
+  },
+  "HomePage": {
+    "title": "Коллекция произведений"
+  },
+  "AboutPage": {
+    "title": "О проекте",
+    "avatarAlt": "GitHub аватар",
+    "description": "Это приложение разработано в рамках курса React. Оно позволяет исследовать коллекцию Чикагского института искусств с помощью их",
+    "apiLinkLabel": "публичного API",
+    "authorTitle": "Автор",
+    "authorText": "Разработано",
+    "authorSuffix": ", студентом RS School.",
+    "courseButton": "Курс React RS School"
+  },
+  "NotFoundPage": {
+    "title": "Страница не найдена",
+    "description": "Извините, такая страница не существует.",
+    "returnButton": "Вернуться на главную"
+  },
+  "ResultsContainer": {
+    "defaultTitle": "Коллекция произведений",
+    "resultsFor": "Результаты для \"{term}\"",
+    "empty": "Ничего не найдено. Попробуйте другой запрос!"
+  },
+  "Pagination": {
+    "previous": "Назад",
+    "next": "Вперёд",
+    "page": "Страница {current} из {total}",
+    "total": "Всего: {count}"
+  },
+  "Flyout": {
+    "selected": "Выбрано: {count}",
+    "downloadCsv": "Скачать CSV",
+    "unselect": "Снять выбор"
+  },
+  "DetailsPage": {
+    "artist": "Художник",
+    "origin": "Происхождение",
+    "date": "Дата",
+    "dimensions": "Размеры",
+    "medium": "Материал",
+    "refresh": "Обновить",
+    "unknown": "Неизвестно",
+    "dimensionsNotAvailable": "Размеры не указаны",
+    "close": "Закрыть"
+  },
+  "ThemeButton": {
+    "light": "Светлая",
+    "dark": "Тёмная"
+  },
+  "ErrorTrigger": {
+    "label": "Вызвать ошибку",
+    "error": "Тестовая ошибка, вызванная компонентом ErrorTrigger!"
+  },
+  "ErrorPage": {
+    "reset": "Сбросить"
+  },
+  "LanguageSwitcher": {
+    "en": "EN",
+    "ru": "RU"
+  }
+}

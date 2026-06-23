@@ -48,7 +48,6 @@ describe(ErrorTrigger.name, () => {
     fireEvent.click(button);
 
     expect(screen.getByText(testBoundaryContent)).toBeInTheDocument();
-
     expect(CONSOLE_ERROR_SPY).toHaveBeenCalled();
   });
 });

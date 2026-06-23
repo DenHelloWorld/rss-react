@@ -2,8 +2,13 @@ import '@testing-library/jest-dom';
 import { afterEach, vi } from 'vitest';
 import { cleanup } from '@testing-library/react';
 import { CONSOLE_ERROR_SPY, CONSOLE_WARN_SPY } from './console-spies.const.ts';
-import { AICServerMock } from './server.ts';
-import { localStorageMock, StorageMock } from './storage-mock.ts';
+import { AICServerMock } from './mocks/server.ts';
+import { localStorageMock, StorageMock } from './mocks/storage-mock.ts';
+
+import './mocks/next-image.tsx';
+import './mocks/next-navigation.ts';
+import './mocks/i18n-navigation.ts';
+import './mocks/next-intl.ts';
 
 beforeAll(() => AICServerMock.listen({ onUnhandledRequest: 'error' }));
 
@@ -33,15 +38,17 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
-global.IntersectionObserver = vi.fn().mockImplementation(() => ({
-  observe: vi.fn(),
-  unobserve: vi.fn(),
-  disconnect: vi.fn(),
-  root: null,
-  rootMargin: '',
-  thresholds: [],
-  takeRecords: vi.fn(() => []),
-}));
+global.IntersectionObserver = vi.fn().mockImplementation(function () {
+  return {
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+    root: null,
+    rootMargin: '',
+    thresholds: [],
+    takeRecords: vi.fn(() => []),
+  };
+});
 
 Object.defineProperty(window, 'localStorage', {
   value: localStorageMock,

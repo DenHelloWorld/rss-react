@@ -16,9 +16,7 @@ describe(SearchBar.name, () => {
       />
     );
 
-    const input = screen.getByRole('textbox');
-
-    expect(input).toHaveValue('Art');
+    expect(screen.getByRole('textbox')).toHaveValue('Art');
   });
 
   it('updates input value on change', () => {
@@ -30,30 +28,54 @@ describe(SearchBar.name, () => {
       />
     );
 
-    const input = screen.getByRole('textbox');
+    fireEvent.change(screen.getByRole('textbox'), {
+      target: { value: 'Sunflowers' },
+    });
 
-    fireEvent.change(input, { target: { value: 'Sunflowers' } });
-
-    expect(input).toHaveValue('Sunflowers');
+    expect(screen.getByRole('textbox')).toHaveValue('Sunflowers');
   });
 
-  it('calls onSearch with trimmed value when button is clicked', () => {
+  it('search button has type submit', () => {
     const { container } = render(
       <SearchBar
-        initialValue="  Monet  "
+        initialValue="Monet"
         onSearch={mockOnSearch}
         onRefetch={mockOnRefetch}
       />
     );
 
-    const searchButton = container.querySelector('.button--success');
-
-    fireEvent.click(searchButton!);
-
-    expect(mockOnSearch).toHaveBeenCalledWith('Monet');
+    expect(container.querySelector('.button--success')).toHaveAttribute(
+      'type',
+      'submit'
+    );
   });
 
-  it('triggers search on Enter key press', () => {
+  it('search button submits the form', () => {
+    const { container } = render(
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+        }}
+      >
+        <SearchBar
+          initialValue="Gogh"
+          onSearch={mockOnSearch}
+          onRefetch={mockOnRefetch}
+        />
+      </form>
+    );
+
+    const submitSpy = vi.fn((e: Event) => {
+      e.preventDefault();
+    });
+    container.querySelector('form')!.addEventListener('submit', submitSpy);
+
+    fireEvent.click(container.querySelector('.button--success')!);
+
+    expect(submitSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not call onSearch on Enter key press (submit handled natively by form)', () => {
     render(
       <SearchBar
         initialValue="Gogh"
@@ -61,35 +83,15 @@ describe(SearchBar.name, () => {
         onRefetch={mockOnRefetch}
       />
     );
-    const input = screen.getByRole('textbox');
 
-    fireEvent.keyDown(input, {
+    fireEvent.keyDown(screen.getByRole('textbox'), {
       key: KEYBOARD_KEYS.ENTER,
-      code: KEYBOARD_KEYS.ENTER,
     });
 
-    expect(mockOnSearch).toHaveBeenCalledWith('Gogh');
+    expect(mockOnSearch).not.toHaveBeenCalled();
   });
 
-  it('clears input when clear button is clicked', () => {
-    const { container } = render(
-      <SearchBar
-        initialValue="To be cleared"
-        onSearch={mockOnSearch}
-        onRefetch={mockOnRefetch}
-      />
-    );
-
-    const clearButton = container.querySelector('.button--error');
-
-    fireEvent.click(clearButton!);
-
-    const input = screen.getByRole('textbox');
-
-    expect(input).toHaveValue('');
-  });
-
-  it('does not trigger search on non-Enter key press', () => {
+  it('does not call onSearch on non-Enter key press', () => {
     render(
       <SearchBar
         initialValue="Test"
@@ -98,31 +100,23 @@ describe(SearchBar.name, () => {
       />
     );
 
-    const input = screen.getByRole('textbox');
+    fireEvent.keyDown(screen.getByRole('textbox'), { key: KEYBOARD_KEYS.ESC });
 
-    fireEvent.keyDown(input, {
-      key: KEYBOARD_KEYS.ESC,
-      code: KEYBOARD_KEYS.ESC,
-    });
-
-    expect(mockOnSearch).not.toHaveBeenCalledWith('Test');
+    expect(mockOnSearch).not.toHaveBeenCalled();
   });
 
-  it('disables buttons when isDisabled is true', () => {
+  it('calls onSearch with empty string when clear is clicked', () => {
     const { container } = render(
       <SearchBar
-        initialValue="Art"
+        initialValue="To be cleared"
         onSearch={mockOnSearch}
         onRefetch={mockOnRefetch}
-        isDisabled={true}
       />
     );
 
-    const buttons = container.querySelectorAll('button');
+    fireEvent.click(container.querySelector('.button--error')!);
 
-    buttons.forEach((button) => {
-      expect(button).toBeDisabled();
-    });
+    expect(mockOnSearch).toHaveBeenCalledWith('');
   });
 
   it('calls onRefetch when refresh button is clicked', () => {
@@ -134,25 +128,35 @@ describe(SearchBar.name, () => {
       />
     );
 
-    const refreshButton = container.querySelector('.button--warning');
-    fireEvent.click(refreshButton!);
+    fireEvent.click(container.querySelector('.button--warning')!);
 
     expect(mockOnRefetch).toHaveBeenCalledTimes(1);
   });
 
-  it('does not disable buttons when isDisabled is false (default)', () => {
+  it('does not show clear button when input is empty', () => {
     const { container } = render(
       <SearchBar
-        initialValue="Art"
+        initialValue=""
         onSearch={mockOnSearch}
         onRefetch={mockOnRefetch}
       />
     );
 
-    const buttons = container.querySelectorAll('button');
+    expect(container.querySelector('.button--error')).not.toBeInTheDocument();
+  });
 
-    buttons.forEach((button) => {
-      expect(button).not.toBeDisabled();
+  it('disables all buttons when isDisabled is true', () => {
+    const { container } = render(
+      <SearchBar
+        initialValue="Art"
+        onSearch={mockOnSearch}
+        onRefetch={mockOnRefetch}
+        isDisabled
+      />
+    );
+
+    container.querySelectorAll('button').forEach((btn) => {
+      expect(btn).toBeDisabled();
     });
   });
 });

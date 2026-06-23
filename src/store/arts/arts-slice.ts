@@ -1,9 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 import type { AICArtwork } from './arts-api.ts';
 
-interface ArtsState {
+type ArtsState = {
   selectedEntities: AICArtwork[];
-}
+};
 
 const initialState: ArtsState = {
   selectedEntities: [],

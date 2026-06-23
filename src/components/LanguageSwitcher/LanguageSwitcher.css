@@ -1,0 +1,17 @@
+@reference "../../index.css";
+
+.language-switcher {
+  @apply flex gap-1;
+}
+
+.language-switcher__btn {
+  @apply text-sm text-app-text-muted px-2 py-0.5 rounded transition-colors duration-300 cursor-pointer;
+
+  &:hover:not(:disabled) {
+    @apply text-app-text;
+  }
+
+  &.language-switcher__btn--active {
+    @apply text-app-text font-medium border border-app-border;
+  }
+}
